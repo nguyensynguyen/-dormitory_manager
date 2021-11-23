@@ -14,6 +14,32 @@ class UIHelper{
         return SafeArea(
           child: Scaffold(
             backgroundColor: Colors.transparent,
+            body:Container(
+              decoration: BoxDecoration(
+                color: AppColors.colorWhite,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(AppDimensions.radius2w),
+                  topLeft: Radius.circular(AppDimensions.radius2w),
+                ),
+              ),
+              child: widget ?? Container(),
+            ),
+          ),
+        );
+      },
+      animationType: DialogTransitionType.slideFromBottomFade,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 500),
+    );
+}
+
+  static showDialogLogin({context,Widget widget}){
+    showAnimatedDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -32,7 +58,6 @@ class UIHelper{
                   ),
                   child: widget ?? Container(),
                 ),
-
               ],
             ),
           ),
@@ -42,5 +67,5 @@ class UIHelper{
       curve: Curves.fastOutSlowIn,
       duration: Duration(milliseconds: 500),
     );
-}
+  }
 }

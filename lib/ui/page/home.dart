@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dormitory_manager/resources/colors.dart';
+import 'package:dormitory_manager/ui/page/report.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -19,21 +20,12 @@ class HomePageState extends State<HomePage> {
     Bill(),
     Container(child: Text("hop dong"),),
     Container(child: Text("thong bao"),),
-    Container(child: Text("su co"),),
+    Container(child: Report(),),
 
   ];
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent, // transparent status bar
-        systemNavigationBarColor: Colors.black, // navigation bar color
-        statusBarIconBrightness: Platform.isAndroid
-        ? Brightness.dark
-            : Brightness.light, // status bar icons' color
-        systemNavigationBarIconBrightness:
-        Platform.isAndroid ? Brightness.light : Brightness.dark,
-    ),child:
+    return
       Scaffold(
         body: _tab[_curentIndex],
         bottomNavigationBar: BottomNavigationBar(
@@ -67,7 +59,6 @@ class HomePageState extends State<HomePage> {
             });
           },
         ),
-      )
     );
   }
 }

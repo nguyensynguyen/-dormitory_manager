@@ -114,4 +114,5 @@ class AppDimensions {
   static double radius2_5w = 2.5.w;
   static double radius2w = 2.0.w;
   static double radius1_5w = 1.5.w;
+  static double radius1_0w = 1.0.w;
 }
