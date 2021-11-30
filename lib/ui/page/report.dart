@@ -6,6 +6,7 @@ import 'package:dormitory_manager/resources/dimensions.dart';
 import 'package:dormitory_manager/resources/fontsizes.dart';
 import 'package:dormitory_manager/ui/widget/close_dialog.dart';
 import 'package:dormitory_manager/ui/widget/item_bill.dart';
+import 'package:dormitory_manager/ui/widget/item_report.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,7 +62,7 @@ class ReportState extends State<Report> {
                             fontWeight: FontWeight.bold),
                       ),
                       GestureDetector(
-                        onTap: ()=>_showDialog(),
+                        onTap: () => _showDialogReport(),
                         child: Container(
                           alignment: Alignment.center,
                           width: AppDimensions.d18w,
@@ -77,7 +78,6 @@ class ReportState extends State<Report> {
                             style: TextStyle(
                               color: AppColors.colorWhite,
                               fontSize: AppFontSizes.fs12,
-
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -117,14 +117,13 @@ class ReportState extends State<Report> {
           ),
         ),
         Expanded(
-          child: SingleChildScrollView(
-            child: ItemBill(),
-          ),
+          child: SingleChildScrollView(child: ItemReport()),
         ),
       ],
     );
   }
-  _showDialog() {
+
+  _showDialogReport() {
     return UIHelper.showDialogLogin(
         context: context,
         widget: Column(
@@ -136,7 +135,7 @@ class ReportState extends State<Report> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Chọn loại tài khoản",
+                      "Nhập nội dung",
                       style: TextStyle(
                           fontSize: AppFontSizes.fs14,
                           fontWeight: FontWeight.bold),
@@ -151,40 +150,250 @@ class ReportState extends State<Report> {
                 ],
               ),
             ),
-            Divider(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+              padding: EdgeInsets.all(AppDimensions.d1h),
               child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Quản lý",
-                  style: TextStyle(fontSize: AppFontSizes.fs12),
+                onTap: () => _showDialogSelect(),
+                child: Container(
+                  width: AppDimensions.d100w,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.colorGrey_300),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(AppDimensions.radius1_5w),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(AppDimensions.d0_5h),
+                    child: Row(
+                      children: [
+                        Text("p102"),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.colorGrey_400,
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-            Divider(),
-            SizedBox(
-              height: AppDimensions.d1h,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Tiêu đề",
+                    style: TextStyle(
+                      color: AppColors.colorBlack_87,
+                      fontSize: AppFontSizes.fs10,
+                    ),
+                  ),
+                  Container(
+                    child: CupertinoTextField(
+                      style: TextStyle(
+                          fontSize: AppFontSizes.fs10,
+                          color: AppColors.colorBlack_87),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Nội dung",
+                    style: TextStyle(
+                      color: AppColors.colorBlack_87,
+                      fontSize: AppFontSizes.fs10,
+                    ),
+                  ),
+                  Container(
+                    child: CupertinoTextField(
+                      maxLines: 10,
+                      style: TextStyle(
+                          fontSize: AppFontSizes.fs10,
+                          color: AppColors.colorBlack_87),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(),
+            Padding(
+              padding: EdgeInsets.all(AppDimensions.d1h),
               child: GestureDetector(
+                onTap: () {},
                 behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Người thuê",
-                  style: TextStyle(fontSize: AppFontSizes.fs12),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: AppDimensions.d100w,
+                  decoration: BoxDecoration(
+                    boxShadow: [],
+                    color: AppColors.colorOrange,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(AppDimensions.radius1_0w),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(AppDimensions.d2h),
+                    child: Text(
+                      "Gửi",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.colorWhite,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ));
+  }
+
+  _showDialogSelect() {
+    return UIHelper.showDialogLogin(
+        context: context,
+        widget: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Nhập nội dung",
+                      style: TextStyle(
+                          fontSize: AppFontSizes.fs14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  CloseDialog(
+                    color: AppColors.colorBlack_54,
+                    onClose: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(AppDimensions.d1h),
+              child: GestureDetector(
+                onTap: () => _showDialogSelect(),
+                child: Container(
+                  width: AppDimensions.d100w,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.colorGrey_300),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(AppDimensions.radius1_5w),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(AppDimensions.d0_5h),
+                    child: Row(
+                      children: [
+                        Text(
+                          "p102",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs10,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColors.colorGrey_400,
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-            SizedBox(
-              height: AppDimensions.d1h,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Tiêu đề",
+                    style: TextStyle(
+                      color: AppColors.colorBlack_87,
+                      fontSize: AppFontSizes.fs10,
+                    ),
+                  ),
+                  Container(
+                    child: CupertinoTextField(
+                      style: TextStyle(
+                          fontSize: AppFontSizes.fs10,
+                          color: AppColors.colorBlack_87),
+                    ),
+                  ),
+                ],
+              ),
             ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Nội dung",
+                    style: TextStyle(
+                      color: AppColors.colorBlack_87,
+                      fontSize: AppFontSizes.fs10,
+                    ),
+                  ),
+                  Container(
+                    child: CupertinoTextField(
+                      maxLines: 10,
+                      style: TextStyle(
+                          fontSize: AppFontSizes.fs10,
+                          color: AppColors.colorBlack_87),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(),
+            Padding(
+              padding: EdgeInsets.all(AppDimensions.d1h),
+              child: GestureDetector(
+                onTap: () {},
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  alignment: Alignment.center,
+                  width: AppDimensions.d100w,
+                  decoration: BoxDecoration(
+                    boxShadow: [],
+                    color: AppColors.colorOrange,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(AppDimensions.radius1_0w),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(AppDimensions.d2h),
+                    child: Text(
+                      "Gửi",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.colorWhite,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ));
   }

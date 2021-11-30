@@ -20,13 +20,9 @@ class Bill extends StatefulWidget {
 class BillState extends State<Bill> {
   @override
   Widget build(BuildContext context) {
-    var heightStatusBar = MediaQuery
-        .of(context)
-        .padding
-        .top;
+    var heightStatusBar = MediaQuery.of(context).padding.top;
     return Column(
       children: [
-
         Container(
           width: AppDimensions.d100w,
           height: AppDimensions.d14h,
@@ -66,9 +62,9 @@ class BillState extends State<Bill> {
                       ),
                       GestureDetector(
                           child: Icon(
-                            Icons.filter_list,
-                            color: AppColors.colorWhite,
-                          ))
+                        Icons.filter_list,
+                        color: AppColors.colorWhite,
+                      ))
                     ],
                   ),
                 ),
@@ -154,59 +150,57 @@ class BillState extends State<Bill> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () =>
-                      UIHelper.showDialogCommon(
-                          context: context,
-                          widget: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
+                  onTap: () => UIHelper.showDialogCommon(
+                      context: context,
+                      widget: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Row(
+                              Expanded(
+                                child: Text(
+                                  "Lập hóa đơn",
+                                  style: TextStyle(
+                                      color: AppColors.colorBlack_87,
+                                      fontSize: AppFontSizes.fs14,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              CloseDialog(
+                                color: AppColors.colorBlack_38,
+                                onClose: () => Navigator.pop(context),
+                              ),
+                            ],
+                          ),
+                          Divider(),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Lập hóa đơn",
-                                      style: TextStyle(
-                                          color: AppColors.colorBlack_87,
-                                          fontSize: AppFontSizes.fs14,
-                                          fontWeight: FontWeight.bold),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  CloseDialog(
-                                    color: AppColors.colorBlack_38,
-                                    onClose: () => Navigator.pop(context),
-                                  ),
+                                  _buildTop(),
+                                  Divider(),
+                                  _buildfirst(),
+                                  Divider(),
+                                  _buildSecond(),
+                                  Divider(),
+                                  _buildBottom(),
+                                  Divider(),
+                                  _buildButton()
                                 ],
                               ),
-                              Divider(),
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: [
-                                      _buildTop(),
-                                      Divider(),
-                                      _buildfirst(),
-                                      Divider(),
-                                      _buildSecond(),
-                                      Divider(),
-                                      _buildBottom(),
-                                      Divider(),
-                                      _buildButton()
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          )),
+                            ),
+                          )
+                        ],
+                      )),
                   behavior: HitTestBehavior.opaque,
                   child: Container(
                     decoration: BoxDecoration(
                         border: Border.all(color: AppColors.colorWhite),
                         borderRadius:
-                        BorderRadius.circular(AppDimensions.radius1_0w)),
+                            BorderRadius.circular(AppDimensions.radius1_0w)),
                     child: Padding(
                       padding: EdgeInsets.all(AppDimensions.d1h),
                       child: Text(
@@ -310,28 +304,29 @@ class BillState extends State<Bill> {
           GestureDetector(
             onTap: () => _showDialog(),
             child: Container(
-                width: AppDimensions.d100w,
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.colorGrey_300),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(AppDimensions.radius1_5w),
-                  ),
+              width: AppDimensions.d100w,
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.colorGrey_300),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(AppDimensions.radius1_5w),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(AppDimensions.d1h),
-                  child: Row(
-                    children: [
-                      Text("p102"),
-                      Expanded(
-                        child: Container(),
-                      ),
-                      Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.colorGrey_400,
-                      )
-                    ],
-                  ),
-                )),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(AppDimensions.d1h),
+                child: Row(
+                  children: [
+                    Text("p102"),
+                    Expanded(
+                      child: Container(),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      color: AppColors.colorGrey_400,
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -710,7 +705,7 @@ class BillState extends State<Bill> {
 
   _buildButton() {
     return Padding(
-      padding:EdgeInsets.all(AppDimensions.d1h),
+      padding: EdgeInsets.all(AppDimensions.d1h),
       child: GestureDetector(
         onTap: () {},
         behavior: HitTestBehavior.opaque,
