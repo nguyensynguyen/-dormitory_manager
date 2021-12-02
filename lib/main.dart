@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
                   // theme: CupertinoThemeData(
                   //   primaryColor: AppColors.mainColor,
                   // ),
-                  home: HomePage(),
+                  home: Login(),
                 );
               },
             );

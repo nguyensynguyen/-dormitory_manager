@@ -35,7 +35,7 @@ class HomePageState extends State<HomePage> {
           items: [
             BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                title: Text("Home"),
+                title: Center(child: Text("Home")),
                 backgroundColor: Colors.green),
             BottomNavigationBarItem(
                 icon: Icon(Icons.library_books),

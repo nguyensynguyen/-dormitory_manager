@@ -770,7 +770,7 @@ class BillState extends State<Bill> {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  "Quản lý",
+                  "p102",
                   style: TextStyle(fontSize: AppFontSizes.fs12),
                 ),
               ),
@@ -787,7 +787,7 @@ class BillState extends State<Bill> {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  "Người thuê",
+                  "p103",
                   style: TextStyle(fontSize: AppFontSizes.fs12),
                 ),
               ),

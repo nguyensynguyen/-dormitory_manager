@@ -132,7 +132,7 @@ class ItemReport extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
                   child: Text(
-                    '"dhfjghjdbfgkjdfnbjdfnbkjdnbdk"',
+                    '"cửa sổ bị vỡ"',
                     style: TextStyle(
                         fontSize: AppFontSizes.fs12,
                         color: AppColors.colorBlack_54),

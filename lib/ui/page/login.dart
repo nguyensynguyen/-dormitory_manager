@@ -2,6 +2,7 @@ import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/resources/colors.dart';
 import 'package:dormitory_manager/resources/dimensions.dart';
 import 'package:dormitory_manager/resources/fontsizes.dart';
+import 'package:dormitory_manager/ui/page/home.dart';
 import 'package:dormitory_manager/ui/widget/close_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,10 @@ class LoginState extends State<Login> {
                         height: AppDimensions.d2h,
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                        },
                         behavior: HitTestBehavior.opaque,
                         child: Container(
                           alignment: Alignment.center,
