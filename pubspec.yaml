@@ -31,6 +31,11 @@ dependencies:
   sizer: any
   flutter_animated_dialog: any
   persistent_bottom_nav_bar: any
+  dio: any
+  flutter_bloc: any
+  liquid_progress_indicator: any
+  fluttertoast: any
+  shared_preferences: any
 
 dev_dependencies:
   flutter_test:

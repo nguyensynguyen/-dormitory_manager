@@ -1,5 +1,9 @@
 import 'dart:io';
 
+import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
+import 'package:dormitory_manager/bloc/bill/bloc.dart';
+import 'package:dormitory_manager/bloc/bill/event.dart';
+import 'package:dormitory_manager/bloc/bill/state.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/resources/colors.dart';
 import 'package:dormitory_manager/resources/dimensions.dart';
@@ -9,6 +13,7 @@ import 'package:dormitory_manager/ui/widget/item_bill.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Bill extends StatefulWidget {
   @override
@@ -18,205 +23,224 @@ class Bill extends StatefulWidget {
 }
 
 class BillState extends State<Bill> {
+  BillBloc _billBloc;
+  AppBloc _appBloc;
+  @override
+  void initState() {
+    _billBloc = BillBloc();
+    _appBloc = BlocProvider.of<AppBloc>(context);
+    _billBloc.add(GetAllBill(appBloc: _appBloc));
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var heightStatusBar = MediaQuery.of(context).padding.top;
-    return Column(
-      children: [
-        Container(
-          width: AppDimensions.d100w,
-          height: AppDimensions.d14h,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomLeft,
-              colors: [
-                Colors.green,
-                AppColors.colorFacebook,
-              ],
-            ),
-            color: AppColors.mainColor,
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(AppDimensions.radius3w),
-              bottomRight: Radius.circular(AppDimensions.radius3w),
-            ),
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: heightStatusBar,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(AppDimensions.d1h),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Hóa đơn",
-                        style: TextStyle(
-                            color: AppColors.colorWhite,
-                            fontSize: AppFontSizes.fs14,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      GestureDetector(
-                          child: Icon(
-                        Icons.filter_list,
-                        color: AppColors.colorWhite,
-                      ))
-                    ],
-                  ),
+    return  BlocBuilder(
+      cubit: _billBloc,
+      builder: (context,state){
+        if(state is Loading){
+          return UIHelper.loading();
+        }
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              width: AppDimensions.d100w,
+              height: AppDimensions.d14h,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Colors.green,
+                    AppColors.colorFacebook,
+                  ],
+                ),
+                color: AppColors.mainColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(AppDimensions.radius3w),
+                  bottomRight: Radius.circular(AppDimensions.radius3w),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(AppDimensions.d1h),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: heightStatusBar,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(AppDimensions.d1h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Hóa đơn",
+                            style: TextStyle(
+                                color: AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs14,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          GestureDetector(
+                              child: Icon(
+                                Icons.filter_list,
+                                color: AppColors.colorWhite,
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(AppDimensions.d1h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "10/2021",
+                          style: TextStyle(
+                              color: AppColors.colorWhite,
+                              fontSize: AppFontSizes.fs12),
+                        ),
+                        Text(
+                          "11/2021",
+                          style: TextStyle(
+                              color: AppColors.colorWhite,
+                              fontSize: AppFontSizes.fs12),
+                        ),
+                        Text(
+                          "12/2021",
+                          style: TextStyle(
+                              color: AppColors.colorWhite,
+                              fontSize: AppFontSizes.fs12),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: ItemBill(billBloc: _billBloc,),
+              ),
+            ),
+            Container(
+              width: AppDimensions.d100w,
+              height: AppDimensions.d10h,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Colors.green,
+                    AppColors.colorFacebook,
+                  ],
+                ),
+                color: AppColors.mainColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(AppDimensions.radius3w),
+                  topRight: Radius.circular(AppDimensions.radius3w),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2h),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "10/2021",
-                      style: TextStyle(
-                          color: AppColors.colorWhite,
-                          fontSize: AppFontSizes.fs12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Tổng tiền",
+                            style: TextStyle(
+                                color: AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs12),
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d1h,
+                          ),
+                          Text(
+                            "14.000.000 đ",
+                            style: TextStyle(
+                                color: AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs12,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      "11/2021",
-                      style: TextStyle(
-                          color: AppColors.colorWhite,
-                          fontSize: AppFontSizes.fs12),
-                    ),
-                    Text(
-                      "12/2021",
-                      style: TextStyle(
-                          color: AppColors.colorWhite,
-                          fontSize: AppFontSizes.fs12),
+                    GestureDetector(
+                      onTap: () => UIHelper.showDialogCommon(
+                          context: context,
+                          widget: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Lập hóa đơn",
+                                      style: TextStyle(
+                                          color: AppColors.colorBlack_87,
+                                          fontSize: AppFontSizes.fs14,
+                                          fontWeight: FontWeight.bold),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  CloseDialog(
+                                    color: AppColors.colorBlack_38,
+                                    onClose: () => Navigator.pop(context),
+                                  ),
+                                ],
+                              ),
+                              Divider(),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _buildTop(),
+                                      Divider(),
+                                      _buildfirst(),
+                                      Divider(),
+                                      _buildSecond(),
+                                      Divider(),
+                                      _buildBottom(),
+                                      Divider(),
+                                      _buildButton()
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          )),
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.colorWhite),
+                            borderRadius:
+                            BorderRadius.circular(AppDimensions.radius1_0w)),
+                        child: Padding(
+                          padding: EdgeInsets.all(AppDimensions.d1h),
+                          child: Text(
+                            "Lập hóa đơn",
+                            style: TextStyle(
+                                color: AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs12),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: ItemBill(),
-          ),
-        ),
-        Container(
-          width: AppDimensions.d100w,
-          height: AppDimensions.d10h,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomLeft,
-              colors: [
-                Colors.green,
-                AppColors.colorFacebook,
-              ],
             ),
-            color: AppColors.mainColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(AppDimensions.radius3w),
-              topRight: Radius.circular(AppDimensions.radius3w),
-            ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2h),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Tổng tiền",
-                        style: TextStyle(
-                            color: AppColors.colorWhite,
-                            fontSize: AppFontSizes.fs12),
-                      ),
-                      SizedBox(
-                        height: AppDimensions.d1h,
-                      ),
-                      Text(
-                        "14.000.000 đ",
-                        style: TextStyle(
-                            color: AppColors.colorWhite,
-                            fontSize: AppFontSizes.fs12,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => UIHelper.showDialogCommon(
-                      context: context,
-                      widget: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Lập hóa đơn",
-                                  style: TextStyle(
-                                      color: AppColors.colorBlack_87,
-                                      fontSize: AppFontSizes.fs14,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              CloseDialog(
-                                color: AppColors.colorBlack_38,
-                                onClose: () => Navigator.pop(context),
-                              ),
-                            ],
-                          ),
-                          Divider(),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildTop(),
-                                  Divider(),
-                                  _buildfirst(),
-                                  Divider(),
-                                  _buildSecond(),
-                                  Divider(),
-                                  _buildBottom(),
-                                  Divider(),
-                                  _buildButton()
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      )),
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.colorWhite),
-                        borderRadius:
-                            BorderRadius.circular(AppDimensions.radius1_0w)),
-                    child: Padding(
-                      padding: EdgeInsets.all(AppDimensions.d1h),
-                      child: Text(
-                        "Lập hóa đơn",
-                        style: TextStyle(
-                            color: AppColors.colorWhite,
-                            fontSize: AppFontSizes.fs12),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
@@ -707,7 +731,9 @@ class BillState extends State<Bill> {
     return Padding(
       padding: EdgeInsets.all(AppDimensions.d1h),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          _billBloc.add(CreateBill(appBloc: _appBloc));
+        },
         behavior: HitTestBehavior.opaque,
         child: Container(
           alignment: Alignment.center,
@@ -746,7 +772,7 @@ class BillState extends State<Bill> {
                 children: [
                   Expanded(
                     child: Text(
-                      "Chọn loại tài khoản",
+                      "Chọn phòng",
                       style: TextStyle(
                           fontSize: AppFontSizes.fs14,
                           fontWeight: FontWeight.bold),

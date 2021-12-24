@@ -1,0 +1,6 @@
+class BillState{}
+class Loading extends BillState{}
+class LoadDataBillDone extends BillState{}
+class LoadDataBillFail extends BillState{}
+class CreateBillDone extends BillState{}
+class CreateBillFail extends BillState{}

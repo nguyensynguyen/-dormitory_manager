@@ -1,16 +1,20 @@
 import 'dart:io';
 
+import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
+import 'package:dormitory_manager/bloc/setting/bloc.dart';
+import 'package:dormitory_manager/bloc/setting/state.dart';
 import 'package:dormitory_manager/ui/page/home.dart';
 import 'package:dormitory_manager/ui/page/login.dart';
+import 'package:dormitory_manager/ui/page/splash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -29,15 +33,17 @@ class MyApp extends StatelessWidget {
             return OrientationBuilder(
               builder: (context, orientation) {
                 SizerUtil().init(constraints, orientation);
-                return MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  title: 'Dormitory Manager',
-                  theme: ThemeData.light(),
-                  // theme: CupertinoThemeData(
-                  //   primaryColor: AppColors.mainColor,
-                  // ),
-                  home: Login(),
-                );
+                return BlocProvider<AppBloc>(
+                    create: (BuildContext context) => AppBloc(),
+                    child: MaterialApp(
+                      debugShowCheckedModeBanner: false,
+                      title: 'Dormitory Manager',
+                      theme: ThemeData.light(),
+                      // theme: CupertinoThemeData(
+                      //   primaryColor: AppColors.mainColor,
+                      // ),
+                      home: Splash(),
+                    ));
               },
             );
           },

@@ -1,3 +1,4 @@
+import 'package:dormitory_manager/bloc/bill/bloc.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/resources/colors.dart';
 import 'package:dormitory_manager/resources/dimensions.dart';
@@ -6,10 +7,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ItemBill extends StatelessWidget {
+  BillBloc billBloc;
+  ItemBill({this.billBloc});
   @override
   Widget build(BuildContext context) {
     List<Widget> listItem = [];
-    for (int i = 0; i <= 10; i++) {
+    for (int i = 0; i < billBloc.listRoomBill.length; i++) {
       listItem.add(Padding(
         padding: EdgeInsets.symmetric(horizontal: AppDimensions.d1h),
         child: Column(
@@ -31,13 +34,13 @@ class ItemBill extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Nguyen van A",
+                        "${billBloc.listRoomBill[i].room.roomName}",
                         style: TextStyle(
                             color: AppColors.colorBlack,
                             fontSize: AppFontSizes.fs12),
                       ),
                       Text(
-                        "p001",
+                        "ngày tạo:${billBloc.listRoomBill[i].dateCreate}",
                         style: TextStyle(
                             color: AppColors.colorBlack_38,
                             fontSize: AppFontSizes.fs10),
@@ -45,7 +48,7 @@ class ItemBill extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text("3.075.000 đ",
+                Text("${billBloc.listRoomBill[i].totalPrice} đ",
                     style: TextStyle(
                         color: AppColors.colorBlack,
                         fontSize: AppFontSizes.fs12,
@@ -62,7 +65,7 @@ class ItemBill extends StatelessWidget {
                     style: TextStyle(
                         color: AppColors.colorBlack,
                         fontSize: AppFontSizes.fs11)),
-                Text("120000 đ",
+                Text("${billBloc.listRoomBill[i].room.roomAmount} đ",
                     style: TextStyle(
                         color: AppColors.colorBlack,
                         fontSize: AppFontSizes.fs11)),
@@ -78,7 +81,7 @@ class ItemBill extends StatelessWidget {
                     style: TextStyle(
                         color: AppColors.colorBlack,
                         fontSize: AppFontSizes.fs11)),
-                Text("50000 đ",
+                Text("${billBloc.listRoomBill[i].totalService} đ",
                     style: TextStyle(
                         color: AppColors.colorBlack,
                         fontSize: AppFontSizes.fs11)),
