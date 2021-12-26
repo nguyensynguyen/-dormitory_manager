@@ -5,6 +5,9 @@ import 'package:dormitory_manager/bloc/app_bloc/state.dart';
 import 'package:dormitory_manager/model/manager.dart';
 import 'package:dormitory_manager/model/response/all_room.dart';
 import 'package:dormitory_manager/model/room.dart';
+import 'package:dormitory_manager/model/room_bill.dart';
+import 'package:dormitory_manager/model/room_bill_detail.dart';
+import 'package:dormitory_manager/model/service.dart';
 import 'package:dormitory_manager/model/user.dart';
 import 'package:dormitory_manager/provider/login_provider.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
@@ -23,8 +26,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   dynamic profile;
   int managerId;
   List<Room> listAllDataRoom;
-  @override
-  Stream<AppState> mapEventToState(AppEvent event) async* {
+  Room room;
+  RoomBill roomBill;
+  List<RoomBillDetail> roomBillDetail = [];
+  List<Service> listService;
+  double totalPrice = 0.0;
 
-  }
+  @override
+  Stream<AppState> mapEventToState(AppEvent event) async* {}
 }

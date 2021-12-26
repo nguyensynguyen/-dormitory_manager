@@ -5,6 +5,7 @@ import 'package:dormitory_manager/bloc/bill/bloc.dart';
 import 'package:dormitory_manager/bloc/bill/event.dart';
 import 'package:dormitory_manager/bloc/bill/state.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
+import 'package:dormitory_manager/model/service.dart';
 import 'package:dormitory_manager/resources/colors.dart';
 import 'package:dormitory_manager/resources/dimensions.dart';
 import 'package:dormitory_manager/resources/fontsizes.dart';
@@ -25,6 +26,7 @@ class Bill extends StatefulWidget {
 class BillState extends State<Bill> {
   BillBloc _billBloc;
   AppBloc _appBloc;
+
   @override
   void initState() {
     _billBloc = BillBloc();
@@ -33,13 +35,14 @@ class BillState extends State<Bill> {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     var heightStatusBar = MediaQuery.of(context).padding.top;
-    return  BlocBuilder(
+    return BlocBuilder(
       cubit: _billBloc,
-      builder: (context,state){
-        if(state is Loading){
+      builder: (context, state) {
+        if (state is Loading) {
           return UIHelper.loading();
         }
         return Column(
@@ -84,9 +87,9 @@ class BillState extends State<Bill> {
                           ),
                           GestureDetector(
                               child: Icon(
-                                Icons.filter_list,
-                                color: AppColors.colorWhite,
-                              ))
+                            Icons.filter_list,
+                            color: AppColors.colorWhite,
+                          ))
                         ],
                       ),
                     ),
@@ -122,7 +125,9 @@ class BillState extends State<Bill> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                child: ItemBill(billBloc: _billBloc,),
+                child: ItemBill(
+                  billBloc: _billBloc,
+                ),
               ),
             ),
             Container(
@@ -192,26 +197,45 @@ class BillState extends State<Bill> {
                                   ),
                                   CloseDialog(
                                     color: AppColors.colorBlack_38,
-                                    onClose: () => Navigator.pop(context),
+                                    onClose: () {
+                                      Navigator.pop(context);
+                                    },
                                   ),
                                 ],
                               ),
                               Divider(),
                               Expanded(
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      _buildTop(),
-                                      Divider(),
-                                      _buildfirst(),
-                                      Divider(),
-                                      _buildSecond(),
-                                      Divider(),
-                                      _buildBottom(),
-                                      Divider(),
-                                      _buildButton()
-                                    ],
+                                child:BlocListener(
+                                  listener: (context,state){
+                                    if(state is Loading){
+                                      UIHelper.showLoadingCommon(context: context);
+                                    }
+                                    if(state is CreateBillDone){
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  cubit: _billBloc,
+                                  child:  BlocBuilder(
+                                    cubit: _billBloc,
+                                    builder: (context, state) {
+                                      return SingleChildScrollView(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            _buildTop(),
+                                            Divider(),
+                                            _buildfirst(),
+                                            Divider(),
+                                            _buildSecond(_appBloc),
+                                            Divider(),
+                                            _buildBottom(_appBloc),
+                                            Divider(),
+                                            _buildButton()
+                                          ],
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               )
@@ -221,8 +245,8 @@ class BillState extends State<Bill> {
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border.all(color: AppColors.colorWhite),
-                            borderRadius:
-                            BorderRadius.circular(AppDimensions.radius1_0w)),
+                            borderRadius: BorderRadius.circular(
+                                AppDimensions.radius1_0w)),
                         child: Padding(
                           padding: EdgeInsets.all(AppDimensions.d1h),
                           child: Text(
@@ -287,7 +311,7 @@ class BillState extends State<Bill> {
             height: AppDimensions.d1h,
           ),
           GestureDetector(
-            onTap: () => _showDialog(),
+            onTap: () => _showDialog(_appBloc),
             child: Container(
                 width: AppDimensions.d100w,
                 decoration: BoxDecoration(
@@ -326,7 +350,9 @@ class BillState extends State<Bill> {
             height: AppDimensions.d1h,
           ),
           GestureDetector(
-            onTap: () => _showDialog(),
+            onTap: () {
+              _showDialog(_appBloc);
+            },
             child: Container(
               width: AppDimensions.d100w,
               decoration: BoxDecoration(
@@ -339,7 +365,8 @@ class BillState extends State<Bill> {
                 padding: EdgeInsets.all(AppDimensions.d1h),
                 child: Row(
                   children: [
-                    Text("p102"),
+                    Text(_appBloc.room?.roomName ??
+                        _appBloc.listAllDataRoom[0]?.roomName),
                     Expanded(
                       child: Container(),
                     ),
@@ -357,337 +384,283 @@ class BillState extends State<Bill> {
     );
   }
 
-  _buildSecond() {
+  _buildSecond(AppBloc appBloc) {
+    List<Widget> widget = []..insert(
+        0,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Dịch vụ sử dụng",
+                style: TextStyle(
+                  color: AppColors.colorBlack_87,
+                  fontSize: AppFontSizes.fs14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Text(
+              "Hãy chọn dịch vụ khách sử dụng",
+              style: TextStyle(
+                color: AppColors.colorBlack_87,
+                fontSize: AppFontSizes.fs10,
+              ),
+            ),
+            SizedBox(
+              height: AppDimensions.d1h,
+            ),
+          ],
+        ));
+    appBloc.listService =
+        appBloc.room?.service ?? appBloc.listAllDataRoom[0].service;
+    if (appBloc.room == null) {
+      appBloc?.room = appBloc.listAllDataRoom[0];
+    }
+    for (int i = 0; i < appBloc.listService.length; i++) {
+      if (appBloc.listService[i].startNumberTextEdit.text == "") {
+        appBloc.listService[i].startNumberTextEdit.text =
+            appBloc.listService[i].numberStart.toString();
+      }
+      widget.add(Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //điện
+          appBloc.listService[i].unit != ""
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: AppDimensions.d1h,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          color: AppColors.colorOrange,
+                          size: AppFontSizes.fs18,
+                        ),
+                        SizedBox(
+                          width: AppDimensions.d0_5h,
+                        ),
+                        RichText(
+                          text: TextSpan(children: <TextSpan>[
+                            TextSpan(
+                              text: "${appBloc.listService[i].serviceName}\n",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10,
+                              ),
+                            ),
+                            TextSpan(
+                              text:
+                                  "${appBloc.listService[i].unitPrice} ${appBloc.listService[i].unit ?? ''}",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs8,
+                              ),
+                            ),
+                          ]),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: AppDimensions.d1h,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Số cũ *",
+                                style: TextStyle(
+                                  color: AppColors.colorBlack_87,
+                                  fontSize: AppFontSizes.fs10,
+                                ),
+                              ),
+                              Container(
+                                child: CupertinoTextField(
+                                  controller: appBloc
+                                      .listService[i].startNumberTextEdit,
+                                  onChanged: (text) {
+                                    appBloc.listService[i].totalService =
+                                        (appBloc.listService[i].numberStart -
+                                                int.tryParse(appBloc
+                                                    .listService[i]
+                                                    .startNumberTextEdit
+                                                    .text)) *
+                                            appBloc.listService[i].unitPrice;
+
+                                    _billBloc.add(UpdateUIEvent());
+                                  },
+                                  placeholder:
+                                      "${appBloc.listService[i].numberStart}",
+                                  placeholderStyle:
+                                      TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: AppDimensions.d1h,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Số mới *",
+                                style: TextStyle(
+                                  color: AppColors.colorBlack_87,
+                                  fontSize: AppFontSizes.fs10,
+                                ),
+                              ),
+                              Container(
+                                child: CupertinoTextField(
+                                  controller:
+                                      appBloc.listService[i].endNumberTextEdit,
+                                  onChanged: (text) {
+                                    appBloc.listService[i].totalService =
+                                        (int.tryParse(appBloc.listService[i]
+                                                    .endNumberTextEdit?.text) -
+                                                int.tryParse(appBloc
+                                                    .listService[i]
+                                                    .startNumberTextEdit
+                                                    .text)) *
+                                            appBloc.listService[i].unitPrice;
+                                    _billBloc.add(UpdateUIEvent());
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: AppDimensions.d1h,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                          text: "Thành Tiền ",
+                          style: TextStyle(
+                            color: AppColors.colorBlack_87,
+                            fontSize: AppFontSizes.fs10,
+                          ),
+                        ),
+                        TextSpan(
+                          text: appBloc.listService[i].totalService < 0
+                              ? "0.0 đ"
+                              : "${appBloc.listService[i].totalService} đ",
+                          style: TextStyle(
+                              color: AppColors.colorBlack_87,
+                              fontSize: AppFontSizes.fs10,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ]),
+                    ),
+                    Divider(),
+                  ],
+                )
+              :
+
+              //vệ sinh
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        appBloc.listService[i].isCheck
+                            ? GestureDetector(
+                                onTap: () {
+                                  appBloc.listService[i].isCheck = false;
+                                  appBloc.listService[i].totalService = 0;
+                                  _billBloc.add(UpdateUIEvent());
+                                },
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: AppColors.colorOrange,
+                                  size: AppFontSizes.fs18,
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  appBloc.listService[i].isCheck = true;
+                                  appBloc.listService[i].totalService =
+                                      appBloc.listService[i].unitPrice;
+                                  _billBloc.add(UpdateUIEvent());
+                                },
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: AppColors.colorBlack,
+                                  size: AppFontSizes.fs18,
+                                ),
+                              ),
+                        SizedBox(
+                          width: AppDimensions.d0_5h,
+                        ),
+                        RichText(
+                          text: TextSpan(children: <TextSpan>[
+                            TextSpan(
+                              text: "${appBloc.listService[i].serviceName}\n",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "${appBloc.listService[i].unitPrice} đ",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs8,
+                              ),
+                            ),
+                          ]),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: AppDimensions.d1h,
+                    ),
+                    RichText(
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                          text: "Thành Tiền ",
+                          style: TextStyle(
+                            color: AppColors.colorBlack_87,
+                            fontSize: AppFontSizes.fs10,
+                          ),
+                        ),
+                        TextSpan(
+                          text: "${appBloc.listService[i].unitPrice} đ",
+                          style: TextStyle(
+                              color: AppColors.colorBlack_87,
+                              fontSize: AppFontSizes.fs10,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ]),
+                    ),
+                  ],
+                )
+        ],
+      ));
+    }
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2h),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Dịch vụ sử dụng",
-            style: TextStyle(
-              color: AppColors.colorBlack_87,
-              fontSize: AppFontSizes.fs14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            "Hãy chọn dịch vụ khách sử dụng",
-            style: TextStyle(
-              color: AppColors.colorBlack_87,
-              fontSize: AppFontSizes.fs10,
-            ),
-          ),
-          //điện
-          SizedBox(
-            height: AppDimensions.d1h,
-          ),
-          Row(
-            children: [
-              Icon(
-                Icons.check_circle,
-                color: AppColors.colorOrange,
-                size: AppFontSizes.fs18,
-              ),
-              SizedBox(
-                width: AppDimensions.d0_5h,
-              ),
-              RichText(
-                text: TextSpan(children: <TextSpan>[
-                  TextSpan(
-                    text: "Điện\n",
-                    style: TextStyle(
-                      color: AppColors.colorBlack_87,
-                      fontSize: AppFontSizes.fs10,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "3.000 đ/kwh",
-                    style: TextStyle(
-                      color: AppColors.colorBlack_87,
-                      fontSize: AppFontSizes.fs8,
-                    ),
-                  ),
-                ]),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: AppDimensions.d1h,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Số cũ *",
-                      style: TextStyle(
-                        color: AppColors.colorBlack_87,
-                        fontSize: AppFontSizes.fs10,
-                      ),
-                    ),
-                    Container(
-                      child: CupertinoTextField(),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: AppDimensions.d1h,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Số mới *",
-                      style: TextStyle(
-                        color: AppColors.colorBlack_87,
-                        fontSize: AppFontSizes.fs10,
-                      ),
-                    ),
-                    Container(
-                      child: CupertinoTextField(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: AppDimensions.d1h,
-          ),
-          RichText(
-            text: TextSpan(children: <TextSpan>[
-              TextSpan(
-                text: "Thành Tiền ",
-                style: TextStyle(
-                  color: AppColors.colorBlack_87,
-                  fontSize: AppFontSizes.fs10,
-                ),
-              ),
-              TextSpan(
-                text: "3.000.000 đ",
-                style: TextStyle(
-                    color: AppColors.colorBlack_87,
-                    fontSize: AppFontSizes.fs10,
-                    fontWeight: FontWeight.bold),
-              ),
-            ]),
-          ),
-//nước
-          Divider(),
-          Row(
-            children: [
-              Icon(
-                Icons.check_circle,
-                color: AppColors.colorOrange,
-                size: AppFontSizes.fs18,
-              ),
-              SizedBox(
-                width: AppDimensions.d0_5h,
-              ),
-              RichText(
-                text: TextSpan(children: <TextSpan>[
-                  TextSpan(
-                    text: "Nước\n",
-                    style: TextStyle(
-                      color: AppColors.colorBlack_87,
-                      fontSize: AppFontSizes.fs10,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "20.000 đ/m3",
-                    style: TextStyle(
-                      color: AppColors.colorBlack_87,
-                      fontSize: AppFontSizes.fs8,
-                    ),
-                  ),
-                ]),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: AppDimensions.d1h,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Số cũ *",
-                      style: TextStyle(
-                        color: AppColors.colorBlack_87,
-                        fontSize: AppFontSizes.fs10,
-                      ),
-                    ),
-                    Container(
-                      child: CupertinoTextField(),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: AppDimensions.d1h,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Số mới *",
-                      style: TextStyle(
-                        color: AppColors.colorBlack_87,
-                        fontSize: AppFontSizes.fs10,
-                      ),
-                    ),
-                    Container(
-                      child: CupertinoTextField(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: AppDimensions.d1h,
-          ),
-          RichText(
-            text: TextSpan(children: <TextSpan>[
-              TextSpan(
-                text: "Thành Tiền ",
-                style: TextStyle(
-                  color: AppColors.colorBlack_87,
-                  fontSize: AppFontSizes.fs10,
-                ),
-              ),
-              TextSpan(
-                text: "3.000.000 đ",
-                style: TextStyle(
-                    color: AppColors.colorBlack_87,
-                    fontSize: AppFontSizes.fs10,
-                    fontWeight: FontWeight.bold),
-              ),
-            ]),
-          ),
-
-          //vệ sinh
-          Divider(),
-          Row(
-            children: [
-              Icon(
-                Icons.check_circle,
-                color: AppColors.colorOrange,
-                size: AppFontSizes.fs18,
-              ),
-              SizedBox(
-                width: AppDimensions.d0_5h,
-              ),
-              RichText(
-                text: TextSpan(children: <TextSpan>[
-                  TextSpan(
-                    text: "Vệ sinh\n",
-                    style: TextStyle(
-                      color: AppColors.colorBlack_87,
-                      fontSize: AppFontSizes.fs10,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "40.000 đ",
-                    style: TextStyle(
-                      color: AppColors.colorBlack_87,
-                      fontSize: AppFontSizes.fs8,
-                    ),
-                  ),
-                ]),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: AppDimensions.d1h,
-          ),
-          RichText(
-            text: TextSpan(children: <TextSpan>[
-              TextSpan(
-                text: "Thành Tiền ",
-                style: TextStyle(
-                  color: AppColors.colorBlack_87,
-                  fontSize: AppFontSizes.fs10,
-                ),
-              ),
-              TextSpan(
-                text: "40.000 đ",
-                style: TextStyle(
-                    color: AppColors.colorBlack_87,
-                    fontSize: AppFontSizes.fs10,
-                    fontWeight: FontWeight.bold),
-              ),
-            ]),
-          ),
-
-          //Gửi xe
-          Divider(),
-          Row(
-            children: [
-              Icon(
-                Icons.check_circle,
-                color: AppColors.colorOrange,
-                size: AppFontSizes.fs18,
-              ),
-              SizedBox(
-                width: AppDimensions.d0_5h,
-              ),
-              RichText(
-                text: TextSpan(children: <TextSpan>[
-                  TextSpan(
-                    text: "Gửi xe\n",
-                    style: TextStyle(
-                      color: AppColors.colorBlack_87,
-                      fontSize: AppFontSizes.fs10,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "50.000 đ",
-                    style: TextStyle(
-                      color: AppColors.colorBlack_87,
-                      fontSize: AppFontSizes.fs8,
-                    ),
-                  ),
-                ]),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: AppDimensions.d1h,
-          ),
-          RichText(
-            text: TextSpan(children: <TextSpan>[
-              TextSpan(
-                text: "Thành Tiền ",
-                style: TextStyle(
-                  color: AppColors.colorBlack_87,
-                  fontSize: AppFontSizes.fs10,
-                ),
-              ),
-              TextSpan(
-                text: "50.000 đ",
-                style: TextStyle(
-                    color: AppColors.colorBlack_87,
-                    fontSize: AppFontSizes.fs10,
-                    fontWeight: FontWeight.bold),
-              ),
-            ]),
-          ),
-        ],
+        children: widget.map<Widget>((item) {
+          return item;
+        }).toList(),
       ),
     );
   }
 
-  _buildBottom() {
+  _buildBottom(AppBloc appBloc) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppDimensions.d1h),
       child: Column(
@@ -714,7 +687,9 @@ class BillState extends State<Bill> {
             children: [
               Text("Tổng tiền"),
               Text(
-                "7.500.000 đ",
+                totalPriceServiceInput(appBloc) < 0
+                    ? "0.0 đ"
+                    : "${totalPriceServiceInput(appBloc)} đ",
                 style: TextStyle(
                     fontSize: AppFontSizes.fs12,
                     color: AppColors.colorOrange,
@@ -760,68 +735,77 @@ class BillState extends State<Bill> {
     );
   }
 
-  _showDialog() {
+  double totalPriceServiceInput(AppBloc appBloc) {
+    appBloc.totalPrice = 0.0;
+    appBloc.listService.forEach((element) {
+      appBloc.totalPrice += element.totalService;
+      print(element.totalService);
+    });
+    return appBloc.totalPrice;
+  }
+
+  _showDialog(AppBloc appBloc) {
+    List<Widget> widget = []..insert(
+        0,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Chọn phòng",
+                  style: TextStyle(
+                      fontSize: AppFontSizes.fs14, fontWeight: FontWeight.bold),
+                ),
+              ),
+              CloseDialog(
+                color: AppColors.colorBlack_54,
+                onClose: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        ),
+      );
+    for (int i = 0; i < appBloc.listAllDataRoom.length; i++) {
+      widget.add(Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: AppDimensions.d1h,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                appBloc.room = appBloc.listAllDataRoom[i];
+                Navigator.pop(context);
+                _billBloc.add(UpdateUIEvent());
+              },
+              child: Text(
+                "${appBloc.listAllDataRoom[i].roomName}",
+                style: TextStyle(fontSize: AppFontSizes.fs12),
+              ),
+            ),
+          ),
+          Divider(),
+          SizedBox(
+            height: AppDimensions.d1h,
+          ),
+        ],
+      ));
+    }
     return UIHelper.showDialogLogin(
-        context: context,
-        widget: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "Chọn phòng",
-                      style: TextStyle(
-                          fontSize: AppFontSizes.fs14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  CloseDialog(
-                    color: AppColors.colorBlack_54,
-                    onClose: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ),
-            ),
-            Divider(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "p102",
-                  style: TextStyle(fontSize: AppFontSizes.fs12),
-                ),
-              ),
-            ),
-            Divider(),
-            SizedBox(
-              height: AppDimensions.d1h,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "p103",
-                  style: TextStyle(fontSize: AppFontSizes.fs12),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: AppDimensions.d1h,
-            ),
-          ],
-        ));
+      context: context,
+      widget: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: widget.map<Widget>((e) {
+          return e;
+        }).toList(),
+      ),
+    );
   }
 }

@@ -14,3 +14,4 @@ class CreateBillDetail extends BillEvent{
   AppBloc appBloc;
   CreateBillDetail({this.appBloc});
 }
+class UpdateUIEvent extends BillEvent{}
