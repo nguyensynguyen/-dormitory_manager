@@ -44,13 +44,11 @@ class LoginState extends State<Login> {
             UIHelper.showLoadingCommon(context: ctx);
           }
           if (state is LoginDone) {
-            _authBloc.add(GetDataRoomEvent(appBloc: _appBloc));
-          }
-          if (state is GetDataRoom) {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => HomePage()),
-                (Route<dynamic> route) => false);
+                    (Route<dynamic> route) => false);
           }
+
           if (state is LoginFail) {
             print("login fail");
             Navigator.pop(context);

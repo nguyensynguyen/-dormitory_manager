@@ -47,17 +47,5 @@ class LoginProvider {
     }
   }
 
-  Future<dynamic> getAllRoom({int id}) async {
-    try {
-      var res = await _dio.get(
-          "${ApiUrl.baseUrl + ApiUrl.getAppRoom}/${id}");
-      if (res.data['success']) {
-        return res.data;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      return null;
-    }
-  }
+
 }

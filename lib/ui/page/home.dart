@@ -1,10 +1,16 @@
+import 'package:dormitory_manager/bloc/all_room/bloc.dart';
+import 'package:dormitory_manager/bloc/all_room/event.dart';
+import 'package:dormitory_manager/bloc/all_room/state.dart';
 import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
 import 'package:dormitory_manager/bloc/auth/bloc.dart';
 import 'package:dormitory_manager/bloc/auth/event.dart';
 import 'package:dormitory_manager/bloc/auth/state.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
-import 'package:dormitory_manager/provider/manager_provider.dart';
 import 'package:dormitory_manager/resources/colors.dart';
+import 'package:dormitory_manager/resources/dimensions.dart';
+import 'package:dormitory_manager/resources/fontsizes.dart';
+import 'package:dormitory_manager/ui/page/contract.dart';
+import 'package:dormitory_manager/ui/page/notification.dart';
 import 'package:dormitory_manager/ui/page/report.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,24 +23,18 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  AppBloc _appBloc;
   int _curentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _appBloc = BlocProvider.of<AppBloc>(context);
   }
 
   final _tab = [
     BuildHome(),
     Bill(),
-    Container(
-      child: Text("hop dong"),
-    ),
-    Container(
-      child: Text("thong bao"),
-    ),
+    Contract(),
+    Notifications(),
     Container(
       child: Report(),
     ),
@@ -43,7 +43,12 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _tab[_curentIndex],
+      body: IndexedStack(
+        index: _curentIndex,
+        children: _tab.map<Widget>((ui) {
+          return ui;
+        }).toList(),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _curentIndex,
         type: BottomNavigationBarType.fixed,
@@ -51,7 +56,7 @@ class HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              title: Center(child: Text("Home")),
+              title: Center(child: Text("Trang chủ")),
               backgroundColor: Colors.green),
           BottomNavigationBarItem(
               icon: Icon(Icons.library_books),
@@ -90,37 +95,116 @@ class BuildHome extends StatefulWidget {
 class _buildHome extends State<BuildHome> {
   AuthBloc _authBloc;
   AppBloc _appBloc;
+  AllRoomBloc _allRoomBloc;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     _authBloc = AuthBloc();
     _appBloc = BlocProvider.of<AppBloc>(context);
+    _allRoomBloc = AllRoomBloc();
+
+    _allRoomBloc.add(GetDataRoomEvent(appBloc: _appBloc));
   }
 
   @override
   Widget build(BuildContext context) {
+    var heightStatusBar = MediaQuery.of(context).padding.top;
     return BlocListener(
-      listener: (ctx, st) {
-        if (st is LogOutDone) {
-          Navigator.of(ctx).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (ctx) => Login()),
-              (Route<dynamic> route) => true);
-        }
-        if (st is LoadingLogin) {
-          UIHelper.showLoadingCommon();
-        }
-      },
-      cubit: _authBloc,
-      child: Center(
-        child: GestureDetector(
-          onTap: () {
-            _authBloc.add(LogOutEvent(appBloc: _appBloc));
-          },
-          child: Text("logout"),
-        ),
-      ),
-    );
+        listener: (context, st) {
+          if (st is LoadingState) {
+            UIHelper.showLoadingCommon(context: context);
+          }
+
+          if (st is GetAllDataRoomState) {
+            Navigator.pop(context);
+          }
+        },
+        cubit: _allRoomBloc,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              width: AppDimensions.d100w,
+              height: AppDimensions.d14h,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Colors.green,
+                    AppColors.colorFacebook,
+                  ],
+                ),
+                color: AppColors.mainColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(AppDimensions.radius3w),
+                  bottomRight: Radius.circular(AppDimensions.radius3w),
+                ),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: heightStatusBar,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(AppDimensions.d1h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Trang chủ",
+                            style: TextStyle(
+                                color: AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs14,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(AppDimensions.d1h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: BlocListener(
+                listener: (context, state) {
+                  if (state is LogOutDone) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (ctx) => Login()),
+                        (Route<dynamic> route) => true);
+                  }
+                },
+                cubit: _authBloc,
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      _authBloc.add(LogOutEvent(appBloc: _appBloc));
+                    },
+                    child: Text("logout"),
+                  ),
+                ),
+              ),
+            )
+            // Expanded(
+            //   child: SingleChildScrollView(
+            //     child: ItemContract(
+            //       contractBloc: _contractBloc,
+            //     ),
+            //   ),
+            // ),
+          ],
+        ));
   }
 }

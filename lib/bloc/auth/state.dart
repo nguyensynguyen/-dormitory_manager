@@ -10,4 +10,4 @@ class LogOutDone extends AuthState {}
 
 class LogOutFail extends AuthState {}
 
-class GetDataRoom extends AuthState {}
+

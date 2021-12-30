@@ -52,18 +52,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     }
 
-    if (event is GetDataRoomEvent) {
-      yield LoadingLogin();
-      var data = await _loginProvider.getAllRoom(id: event.appBloc.manager.id);
-      if (data != null) {
-        event.appBloc.listAllDataRoom = data['data'].map<Room>((item) {
-          return Room.fromJson(item);
-        }).toList();
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('room', jsonEncode(data['data']));
-        yield GetDataRoom();
-      }
-    }
 
     if (event is LogOutEvent) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -71,7 +59,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await prefs.remove('user');
       } else {
         await prefs.remove('manager');
-        await prefs.remove('room');
       }
       event.appBloc.manager = null;
       event.appBloc.user = null;

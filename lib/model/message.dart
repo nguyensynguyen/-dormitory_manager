@@ -1,3 +1,6 @@
+import 'package:dormitory_manager/model/room.dart';
+import 'package:dormitory_manager/model/user.dart';
+
 class Message {
   int id;
   String title;
@@ -6,6 +9,9 @@ class Message {
   int roomId;
   int managerId;
   int userId;
+  int dateCreate;
+  Room room;
+  User user;
 
   Message(
       {this.status,
@@ -14,6 +20,9 @@ class Message {
       this.managerId,
       this.userId,
       this.content,
+      this.room,
+      this.dateCreate,
+      this.user,
       this.title});
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
@@ -24,5 +33,8 @@ class Message {
         userId: json['user_id'],
         content: json['content'],
         title: json['title'],
+        dateCreate: json['date_create'],
+        room: Room.fromJson(json['Room']),
+        user: User.fromJson(json['User']),
       );
 }

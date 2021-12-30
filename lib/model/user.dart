@@ -1,3 +1,5 @@
+import 'package:dormitory_manager/model/room.dart';
+
 class User {
   int id;
   String userName;
@@ -11,6 +13,7 @@ class User {
   int managerId;
   int roomId;
   String password;
+  Map room;
 
   User(
       {this.id,
@@ -24,6 +27,7 @@ class User {
       this.idCard,
       this.managerId,
       this.registrationDate,
+      this.room,
       this.roomId});
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -38,5 +42,6 @@ class User {
       registrationDate: json['registration_date'],
       managerId: json['manager_id'],
       roomId: json['room_id'],
+      room: json['Room'],
       idCard: json['id_card']);
 }

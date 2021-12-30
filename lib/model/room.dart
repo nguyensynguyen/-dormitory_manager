@@ -14,6 +14,7 @@ class Room {
   List<User> user;
   List<RoomEquipment> roomEquipment;
   List<Service> service;
+  int dateCreateBill;
 
   Room(
       {this.id,
@@ -24,7 +25,7 @@ class Room {
       this.totalCurrentPeople,
       this.roomEquipment,
       this.service,
-      this.user});
+      this.user,this.dateCreateBill});
 
   factory Room.fromJson(Map<String, dynamic> json) => Room(
         id: json['id'],
@@ -32,6 +33,7 @@ class Room {
         maxPeople: json['max_people'],
         totalCurrentPeople: json['total_current_people'],
         managerId: json['manager_id'],
+        dateCreateBill: json['date_create_bill'],
         roomAmount:( json['room_amount'] as num)?. toDouble(),
         user: (json['Users'] is List)
             ? json['Users'].map<User>((item) {

@@ -10,7 +10,4 @@ class LogOutEvent extends AuthEvent{
   AppBloc appBloc;
   LogOutEvent({this.appBloc});
 }
-class GetDataRoomEvent extends AuthEvent{
-  AppBloc appBloc;
-  GetDataRoomEvent({this.appBloc});
-}
+
