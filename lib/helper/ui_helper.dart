@@ -88,20 +88,20 @@ class UIHelper {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Container(
+                  color: Colors.transparent,
+                ),
                 Expanded(
                   child: Container(
-                    color: Colors.transparent,
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.colorWhite,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(AppDimensions.radius2w),
-                      topLeft: Radius.circular(AppDimensions.radius2w),
+                    decoration: BoxDecoration(
+                      color: AppColors.colorWhite,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(AppDimensions.radius2w),
+                        topLeft: Radius.circular(AppDimensions.radius2w),
+                      ),
                     ),
+                    child: widget ?? Container(),
                   ),
-                  child: widget ?? Container(),
                 ),
               ],
             ),
@@ -169,8 +169,7 @@ class UIHelper {
     );
   }
 
-  static showDateTime(
-      {Function ok, Function cancel, BuildContext context}) {
+  static showDateTime({Function ok, Function cancel, BuildContext context}) {
     return showAnimatedDialog(
         context: context,
         builder: (BuildContext context) {
@@ -203,7 +202,9 @@ class UIHelper {
                         "Chọn ngày hạn",
                         style: TextStyle(color: Colors.red),
                       ),
-                      CupertinoDatePicker(onDateTimeChanged: (time){},),
+                      CupertinoDatePicker(
+                        onDateTimeChanged: (time) {},
+                      ),
                       Padding(
                         padding: EdgeInsets.all(AppDimensions.d2w),
                         child: Row(

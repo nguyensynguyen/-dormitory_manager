@@ -15,4 +15,6 @@ class ApiUrl {
   static String deleteContract = 'manager/delete_user';
   static String deleteMessage = 'manager/delete_message';
   static String extendContract = 'manager/update_user';
+  static String createRoom = 'manager/create_room';
+  static String createService = 'manager/create_service';
 }

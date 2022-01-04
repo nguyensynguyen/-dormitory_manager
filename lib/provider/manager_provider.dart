@@ -78,6 +78,34 @@ class ManagerProvider {
     }
   }
 
+  Future<dynamic> createRoom({dynamic data}) async {
+    try {
+      var res =
+          await dio.post("${ApiUrl.baseUrl + ApiUrl.createRoom}", data: data);
+      if (res.data['success']) {
+        return res.data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<dynamic> createService({dynamic data}) async {
+    try {
+      var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.createService}",
+          data: data);
+      if (res.data['success']) {
+        return res.data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<dynamic> createBillDetail({dynamic data}) async {
     try {
       var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.createBillDetail}",

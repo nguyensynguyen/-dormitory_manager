@@ -12,6 +12,7 @@ class BillBloc extends Bloc<BillEvent, BillState> {
   List<RoomBill> listRoomBill = [];
   ManagerProvider _managerProvider = ManagerProvider();
   RoomBill bill;
+
   @override
   Stream<BillState> mapEventToState(BillEvent event) async* {
     if (event is GetAllBill) {
@@ -38,7 +39,7 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       yield Loading();
       var res = await _managerProvider.createBill(data: bill);
       if (res != null && res['data'].isNotEmpty) {
-        double price =  event.appBloc.totalPrice;
+        double price = event.appBloc.totalPrice;
         event.appBloc.totalPrice = 0.0;
         var billDetail = [];
         event.appBloc.listService.map((e) async {
@@ -66,8 +67,11 @@ class BillBloc extends Bloc<BillEvent, BillState> {
 
         var resd = await _managerProvider.createBillDetail(data: billDetail);
         if (resd != null) {
-          event.appBloc.room.dateCreateBill = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-          await _managerProvider.updateRoom(data: {"date_create_bill":event.appBloc.room.dateCreateBill},id: event.appBloc.room.id);
+          event.appBloc.room.dateCreateBill =
+              DateTime.now().millisecondsSinceEpoch ~/ 1000;
+          await _managerProvider.updateRoom(
+              data: {"date_create_bill": event.appBloc.room.dateCreateBill},
+              id: event.appBloc.room.id);
 
           // if(event.appBloc.index >=  event.appBloc.listAllDataRoom.length){
           //   event.appBloc.room = null;
@@ -79,8 +83,8 @@ class BillBloc extends Bloc<BillEvent, BillState> {
           // }
           listRoomBill.add(
             RoomBill(
-              totalPrice:
-                  event.appBloc.room.roomAmount + price,
+              id: res['data']['id'],
+              totalPrice: event.appBloc.room.roomAmount + price,
               totalService: price,
               dateCreate: DateTime.now().millisecondsSinceEpoch ~/ 1000,
               roomId: event.appBloc.room.id,
@@ -98,14 +102,14 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       }
     }
 
-    if (event is UpdateBill){
+    if (event is UpdateBill) {
       yield LoadingUpdateBillState();
-       var data = await _managerProvider.updateBill(data: {"status":event.status},id: event.id);
-       if(data){
-         bill.status = event.status;
-         yield UpdateBillState();
-       }
-
+      var data = await _managerProvider
+          .updateBill(data: {"status": event.status}, id: event.id);
+      if (data) {
+        bill.status = event.status;
+        yield UpdateBillState();
+      }
     }
 
     if (event is UpdateUIEvent) {

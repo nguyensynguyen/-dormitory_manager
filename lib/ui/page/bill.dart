@@ -3,6 +3,7 @@ import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
 import 'package:dormitory_manager/bloc/bill/bloc.dart';
 import 'package:dormitory_manager/bloc/bill/event.dart';
 import 'package:dormitory_manager/bloc/bill/state.dart';
+import 'package:dormitory_manager/helper/input_format.dart';
 import 'package:dormitory_manager/helper/string_helper.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/model/service.dart';
@@ -26,6 +27,8 @@ class Bill extends StatefulWidget {
 class BillState extends State<Bill> {
   BillBloc _billBloc;
   AppBloc _appBloc;
+  final List<TextInputFormatter> _formatter = [NumberFormat()];
+  final List<TextInputFormatter> _formatter1 = [NumberFormat(isInt: true)];
 
   @override
   void initState() {
@@ -103,7 +106,8 @@ class BillState extends State<Bill> {
                           "Tất cả",
                           style: TextStyle(
                               color: AppColors.colorWhite,
-                              fontSize: AppFontSizes.fs12,fontWeight: FontWeight.bold),
+                              fontSize: AppFontSizes.fs12,
+                              fontWeight: FontWeight.bold),
                         ),
                         Text(
                           "Đã thanh toán",
@@ -484,6 +488,7 @@ class BillState extends State<Bill> {
                                 ),
                                 Container(
                                   child: CupertinoTextField(
+                                    inputFormatters: _formatter,
                                     controller: appBloc
                                         .listService[i].startNumberTextEdit,
                                     onChanged: (text) {
@@ -522,6 +527,7 @@ class BillState extends State<Bill> {
                                 ),
                                 Container(
                                   child: CupertinoTextField(
+                                    inputFormatters: _formatter,
                                     controller: appBloc
                                         .listService[i].endNumberTextEdit,
                                     onChanged: (text) {
@@ -820,11 +826,13 @@ class BillState extends State<Bill> {
     }
     return UIHelper.showDialogLogin(
       context: context,
-      widget: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: widget.map<Widget>((e) {
-          return e;
-        }).toList(),
+      widget: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: widget.map<Widget>((e) {
+            return e;
+          }).toList(),
+        ),
       ),
     );
   }

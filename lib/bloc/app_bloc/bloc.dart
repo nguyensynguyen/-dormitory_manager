@@ -21,7 +21,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   Manager manager;
   bool isUser = false;
   dynamic profile;
-  int managerId;
   List<Room> listAllDataRoom;
   Room room;
   RoomBill roomBill;
