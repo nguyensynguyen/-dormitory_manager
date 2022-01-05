@@ -1,5 +1,6 @@
 import 'package:dormitory_manager/bloc/all_room/state.dart';
 import 'package:dormitory_manager/model/room.dart';
+import 'package:dormitory_manager/model/room_eqiupment.dart';
 import 'package:dormitory_manager/model/service.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
   ManagerProvider _managerProvider = ManagerProvider();
   List<Room> listRoom = [];
   List<Service> listService = [];
+  List<RoomEquipment> listEquipment = [];
   TextEditingController textRoomName = TextEditingController();
   TextEditingController textPrice = TextEditingController();
   TextEditingController textMaxP = TextEditingController();
@@ -20,6 +22,12 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
   TextEditingController textElectron = TextEditingController();
   TextEditingController textUnitWater = TextEditingController();
   TextEditingController textUnitElectron = TextEditingController();
+  TextEditingController textInternet = TextEditingController();
+  TextEditingController textVs = TextEditingController();
+  TextEditingController textGx = TextEditingController();
+  TextEditingController textEquipment = TextEditingController();
+
+  List<bool> checkDv = [false, false, false];
   int roomId;
   Room room;
 
@@ -97,13 +105,48 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
             totalCurrentPeople: room.totalCurrentPeople,
             roomAmount: room.roomAmount,
             service: listService,
+            roomEquipment: [],
             managerId: event.appBloc.manager.id));
+        reset();
         yield CreateServiceDone();
+      }
+    }
+
+    if(event is CreateEquipmentEvent){
+
+      yield LoadingCreateEquipmentState();
+      Map data = {
+        "room_equipment_name":textEquipment.text,
+        "room_id":room.id,
+        "status":"ok"
+      };
+      var res = await _managerProvider.createEquipment(data: data);
+      if(res != null){
+        room = null;
+        textEquipment.text = "";
+        yield CreateEquipmentDoneState();
       }
     }
 
     if (event is UpdateUIRoomEvent) {
       yield UpdateUIRoomState();
     }
+  }
+
+  reset() {
+    listService = [];
+    textRoomName.text = "";
+    textPrice.text = "";
+    textMaxP.text = "";
+    textCurP.text = "";
+    textWater.text = "";
+    textElectron.text = "";
+    textUnitWater.text = "";
+    textUnitElectron.text = "";
+    textInternet.text = "";
+    textVs.text = "";
+    textGx.text = "";
+    checkDv = [false, false, false];
+    room = null;
   }
 }

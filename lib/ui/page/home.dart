@@ -16,6 +16,7 @@ import 'package:dormitory_manager/ui/page/contract.dart';
 import 'package:dormitory_manager/ui/page/notification.dart';
 import 'package:dormitory_manager/ui/page/report.dart';
 import 'package:dormitory_manager/ui/widget/close_dialog.dart';
+import 'package:dormitory_manager/ui/widget/equipment_item.dart';
 import 'package:dormitory_manager/ui/widget/item_room.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -164,15 +165,55 @@ class _buildHome extends State<BuildHome> {
                     padding: EdgeInsets.all(AppDimensions.d1h),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Dormitory",
-                          style: TextStyle(
-                              color: AppColors.colorWhite,
-                              fontSize: AppFontSizes.fs14,
-                              fontWeight: FontWeight.bold),
+                        Expanded(
+                          child: Text(
+                            "Dormitory",
+                            style: TextStyle(
+                                color: AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs14,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
+                        BlocListener(
+                          listener: (context, state) {
+                            if (state is LogOutDone) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(builder: (ctx) => Login()),
+                                  (Route<dynamic> route) => true);
+                            }
+                          },
+                          cubit: _authBloc,
+                          child: Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                _authBloc.add(LogOutEvent(appBloc: _appBloc));
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                height: AppDimensions.d10h,
+                                decoration: BoxDecoration(
+                                  color: AppColors.colorOrange,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(AppDimensions.radius1_0w),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(AppDimensions.d1h),
+                                  child: Text(
+                                    "Đăng xuất",
+                                    style: TextStyle(
+                                        color: AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs12,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -187,26 +228,6 @@ class _buildHome extends State<BuildHome> {
               ],
             ),
           ),
-          // Expanded(
-          //   child: BlocListener(
-          //     listener: (context, state) {
-          //       if (state is LogOutDone) {
-          //         Navigator.of(context).pushAndRemoveUntil(
-          //             MaterialPageRoute(builder: (ctx) => Login()),
-          //             (Route<dynamic> route) => true);
-          //       }
-          //     },
-          //     cubit: _authBloc,
-          //     child: Center(
-          //       child: GestureDetector(
-          //         onTap: () {
-          //           _authBloc.add(LogOutEvent(appBloc: _appBloc));
-          //         },
-          //         child: Text("logout"),
-          //       ),
-          //     ),
-          //   ),
-          // ),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
@@ -231,30 +252,32 @@ class _buildHome extends State<BuildHome> {
                       children: [
                         Expanded(
                           child: GestureDetector(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    'asset/image/report1.png',
-                                    width: AppDimensions.d10w,
-                                  ),
-                                  Text(
-                                    "Quanr lý phòng",
-                                    style: TextStyle(
-                                      color: AppColors.colorBlack_54,
-                                      fontSize: AppFontSizes.fs10,
+                            child: Card(
+                              color: AppColors.colorFacebook,
+                              child: Padding(
+                                padding: EdgeInsets.all(AppDimensions.d1h),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'asset/image/livingroom.png',
+                                      width: AppDimensions.d10w,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: AppDimensions.d0_5h,
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: AppDimensions.d1h,
+                                    ),
+                                    Text(
+                                      "Quản lý phòng",
+                                      style: TextStyle(
+                                        color: AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs10,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: AppDimensions.d0_5h,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: AppColors.colorGrey_400),
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppDimensions.radius2w))),
                             ),
                             onTap: () {
                               _showDialogRoom();
@@ -266,66 +289,120 @@ class _buildHome extends State<BuildHome> {
                         ),
                         Expanded(
                           child: GestureDetector(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    'asset/image/report1.png',
-                                    width: AppDimensions.d10w,
-                                  ),
-                                  Text(
-                                    "Quản lý dịch vụ",
-                                    style: TextStyle(
-                                      color: AppColors.colorBlack_54,
-                                      fontSize: AppFontSizes.fs10,
+                            child: Card(
+                              color: AppColors.colorFacebook,
+                              child: Padding(
+                                padding: EdgeInsets.all(AppDimensions.d1h),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'asset/image/service.png',
+                                      width: AppDimensions.d10w,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: AppDimensions.d0_5h,
-                                  ),
-                                ],
+                                    SizedBox(
+                                      height: AppDimensions.d1h,
+                                    ),
+                                    Text(
+                                      "Quản lý dịch vụ",
+                                      style: TextStyle(
+                                        color: AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs10,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: AppDimensions.d0_5h,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: AppColors.colorGrey_400),
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppDimensions.radius2w))),
                             ),
                             onTap: () {},
+                          ),
+                        ),
+                        SizedBox(
+                          width: AppDimensions.d1h,
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            child: Card(
+                              color: AppColors.colorFacebook,
+                              child: Padding(
+                                padding: EdgeInsets.all(AppDimensions.d1h),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'asset/image/agreement.png',
+                                      width: AppDimensions.d10w,
+                                    ),
+                                    SizedBox(
+                                      height: AppDimensions.d1h,
+                                    ),
+                                    Text(
+                                      "Thêm hợp đồng",
+                                      style: TextStyle(
+                                        color: AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs10,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: AppDimensions.d0_5h,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            child: Card(
+                              color: AppColors.colorFacebook,
+                              child: Padding(
+                                padding: EdgeInsets.all(AppDimensions.d1h),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      'asset/image/repair.png',
+                                      width: AppDimensions.d10w,
+                                    ),
+                                    SizedBox(
+                                      height: AppDimensions.d1h,
+                                    ),
+                                    Text(
+                                      " Thiết bị phòng",
+                                      style: TextStyle(
+                                        color: AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs10,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: AppDimensions.d0_5h,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              _showDialogEquipment();
+                            },
                           ),
                         ),
                         SizedBox(
                           width: AppDimensions.d2w,
                         ),
                         Expanded(
-                          child: GestureDetector(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    'asset/image/report1.png',
-                                    width: AppDimensions.d10w,
-                                  ),
-                                  Text(
-                                    "Thêm hợp đồng",
-                                    style: TextStyle(
-                                      color: AppColors.colorBlack_54,
-                                      fontSize: AppFontSizes.fs10,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: AppDimensions.d0_5h,
-                                  ),
-                                ],
-                              ),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: AppColors.colorGrey_400),
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(AppDimensions.radius2w))),
-                            ),
-                            onTap: () {},
-                          ),
+                          child: Container(),
+                        ),
+                        SizedBox(
+                          width: AppDimensions.d2w,
+                        ),
+                        Expanded(
+                          child: Container(),
                         ),
                       ],
                     )
@@ -421,151 +498,155 @@ class _buildHome extends State<BuildHome> {
         child: BlocBuilder(
           cubit: allRoomBloc,
           builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Thêm phòng",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    CloseDialog(
-                      color: AppColors.colorBlack,
-                      onClose: () {
-                        Navigator.pop(context);
-                        // allRoomBloc.add(UpdateUIRoomEvent());
-                      },
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: AppDimensions.d1h,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Tên Phòng *",
-                      style: TextStyle(
-                        color: AppColors.colorBlack_87,
-                        fontSize: AppFontSizes.fs10,
+            return Padding(
+              padding: EdgeInsets.all(AppDimensions.d1h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Thêm phòng",
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                    ),
-                    Container(
-                      child: CupertinoTextField(
-                        controller: allRoomBloc.textRoomName,
-                        placeholderStyle: TextStyle(color: Colors.black),
+                      CloseDialog(
+                        color: AppColors.colorBlack,
+                        onClose: () {
+                          Navigator.pop(context);
+                          // allRoomBloc.add(UpdateUIRoomEvent());
+                        },
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Tên Phòng *",
+                        style: TextStyle(
+                          color: AppColors.colorBlack_87,
+                          fontSize: AppFontSizes.fs10,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: AppDimensions.d1h,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Giá tiền *",
-                      style: TextStyle(
-                        color: AppColors.colorBlack_87,
-                        fontSize: AppFontSizes.fs10,
+                      Container(
+                        child: CupertinoTextField(
+                          controller: allRoomBloc.textRoomName,
+                          placeholderStyle: TextStyle(color: Colors.black),
+                        ),
                       ),
-                    ),
-                    Container(
-                      child: CupertinoTextField(
-                        inputFormatters: _formatter,
-                        controller: allRoomBloc.textPrice,
-                        placeholderStyle: TextStyle(color: Colors.black),
+                    ],
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Giá tiền *",
+                        style: TextStyle(
+                          color: AppColors.colorBlack_87,
+                          fontSize: AppFontSizes.fs10,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: AppDimensions.d1h,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Số người/phòng *",
-                            style: TextStyle(
-                              color: AppColors.colorBlack_87,
-                              fontSize: AppFontSizes.fs10,
+                      Container(
+                        child: CupertinoTextField(
+                          inputFormatters: _formatter,
+                          controller: allRoomBloc.textPrice,
+                          placeholderStyle: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Số người/phòng *",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10,
+                              ),
                             ),
-                          ),
-                          Container(
-                            child: CupertinoTextField(
-                              controller: allRoomBloc.textMaxP,
-                              inputFormatters: _formatter1,
-                              placeholderStyle: TextStyle(color: Colors.black),
+                            Container(
+                              child: CupertinoTextField(
+                                controller: allRoomBloc.textMaxP,
+                                inputFormatters: _formatter1,
+                                placeholderStyle:
+                                    TextStyle(color: Colors.black),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: AppDimensions.d1h,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Số người hiện tại *",
-                            style: TextStyle(
-                              color: AppColors.colorBlack_87,
-                              fontSize: AppFontSizes.fs10,
-                            ),
-                          ),
-                          Container(
-                            child: CupertinoTextField(
-                              controller: allRoomBloc.textCurP,
-                              inputFormatters: _formatter1,
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        width: AppDimensions.d1h,
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: AppDimensions.d1h,
-                ),
-                _buildButton(
-                    allRoomBloc: allRoomBloc,
-                    ontap: () {
-                      if (allRoomBloc.textRoomName.text == "") {
-                        Fluttertoast.showToast(
-                            msg: "Nhập tên phòng",
-                            toastLength: Toast.LENGTH_SHORT);
-                        return;
-                      } else if (allRoomBloc.textPrice.text == "") {
-                        Fluttertoast.showToast(
-                            msg: "Nhập giá phòng",
-                            toastLength: Toast.LENGTH_SHORT);
-                        return;
-                      } else if (allRoomBloc.textMaxP.text == "") {
-                        Fluttertoast.showToast(
-                            msg: "Nhập số người tối đa trong phòng",
-                            toastLength: Toast.LENGTH_SHORT);
-                        return;
-                      } else if (allRoomBloc.textCurP.text == "") {
-                        Fluttertoast.showToast(
-                            msg: "Nhập số người hiện tại trong phòng",
-                            toastLength: Toast.LENGTH_SHORT);
-                        return;
-                      } else {
-                        allRoomBloc.add(CreateRoomEvent(appBloc: _appBloc));
-                      }
-                    })
-              ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Số người hiện tại *",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10,
+                              ),
+                            ),
+                            Container(
+                              child: CupertinoTextField(
+                                controller: allRoomBloc.textCurP,
+                                inputFormatters: _formatter1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  _buildButton(
+                      allRoomBloc: allRoomBloc,
+                      ontap: () {
+                        if (allRoomBloc.textRoomName.text == "") {
+                          Fluttertoast.showToast(
+                              msg: "Nhập tên phòng",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        } else if (allRoomBloc.textPrice.text == "") {
+                          Fluttertoast.showToast(
+                              msg: "Nhập giá phòng",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        } else if (allRoomBloc.textMaxP.text == "") {
+                          Fluttertoast.showToast(
+                              msg: "Nhập số người tối đa trong phòng",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        } else if (allRoomBloc.textCurP.text == "") {
+                          Fluttertoast.showToast(
+                              msg: "Nhập số người hiện tại trong phòng",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        } else {
+                          allRoomBloc.add(CreateRoomEvent(appBloc: _appBloc));
+                        }
+                      })
+                ],
+              ),
             );
           },
         ),
@@ -591,180 +672,298 @@ class _buildHome extends State<BuildHome> {
         child: BlocBuilder(
           cubit: allRoomBloc,
           builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  "Dịch vụ",
-                  textAlign: TextAlign.start,
-                ),
-                SizedBox(
-                  height: AppDimensions.d1h,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Điện",
-                            style: TextStyle(
-                              color: AppColors.colorBlack_87,
-                              fontSize: AppFontSizes.fs10,
+            return Padding(
+              padding: EdgeInsets.all(AppDimensions.d1h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Dịch vụ *",
+                    textAlign: TextAlign.start,
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Điện *",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10,
+                              ),
                             ),
-                          ),
-                          Container(
-                            child: CupertinoTextField(
-                              controller: allRoomBloc.textElectron,
-                              inputFormatters: _formatter1,
-                              placeholder: "Nhập số cũ",
-                              placeholderStyle: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: AppFontSizes.fs10),
+                            Container(
+                              child: CupertinoTextField(
+                                controller: allRoomBloc.textElectron,
+                                inputFormatters: _formatter1,
+                                placeholder: "Nhập số cũ",
+                                placeholderStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: AppFontSizes.fs10),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: AppDimensions.d1h,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Đơn giá ",
-                            style: TextStyle(
-                              color: AppColors.colorBlack_87,
-                              fontSize: AppFontSizes.fs10,
-                            ),
-                          ),
-                          Container(
-                            child: CupertinoTextField(
-                              controller: allRoomBloc.textUnitElectron,
-                              inputFormatters: _formatter,
-                            ),
-                          ),
-                        ],
+                      SizedBox(
+                        width: AppDimensions.d1h,
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: AppDimensions.d1h,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Nước ",
-                            style: TextStyle(
-                              color: AppColors.colorBlack_87,
-                              fontSize: AppFontSizes.fs10,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Đơn giá *",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10,
+                              ),
                             ),
-                          ),
-                          Container(
-                            child: CupertinoTextField(
-                              controller: allRoomBloc.textWater,
-                              inputFormatters: _formatter1,
-                              placeholder: "Nhập số cũ",
-                              placeholderStyle: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: AppFontSizes.fs10),
+                            Container(
+                              child: CupertinoTextField(
+                                controller: allRoomBloc.textUnitElectron,
+                                inputFormatters: _formatter,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: AppDimensions.d1h,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Đơn giá",
-                            style: TextStyle(
-                              color: AppColors.colorBlack_87,
-                              fontSize: AppFontSizes.fs10,
+                    ],
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Nước *",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10,
+                              ),
                             ),
-                          ),
-                          Container(
-                            child: CupertinoTextField(
-                              controller: allRoomBloc.textUnitWater,
-                              inputFormatters: _formatter,
+                            Container(
+                              child: CupertinoTextField(
+                                controller: allRoomBloc.textWater,
+                                inputFormatters: _formatter1,
+                                placeholder: "Nhập số cũ",
+                                placeholderStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: AppFontSizes.fs10),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                _buildButton(
-                    allRoomBloc: allRoomBloc,
-                    ontap: () {
-                      if (allRoomBloc.textElectron.text == "") {
-                        Fluttertoast.showToast(
-                            msg: "Nhập số điện",
-                            toastLength: Toast.LENGTH_SHORT);
-                        return;
-                      } else if (allRoomBloc.textWater.text == "") {
-                        Fluttertoast.showToast(
-                            msg: "Nhập số nước",
-                            toastLength: Toast.LENGTH_SHORT);
-                        return;
-                      } else if (allRoomBloc.textUnitWater.text == "") {
-                        Fluttertoast.showToast(
-                            msg: "Nhập đon giá nước",
-                            toastLength: Toast.LENGTH_SHORT);
-                        return;
-                      } else if (allRoomBloc.textUnitElectron.text == "") {
-                        Fluttertoast.showToast(
-                            msg: "Nhập đơn giá điện",
-                            toastLength: Toast.LENGTH_SHORT);
-                        return;
-                      } else {
-                        allRoomBloc.listService.add(
-                          Service(
-                            serviceName: "điện",
-                            numberStart:
-                                int.tryParse(allRoomBloc.textElectron.text),
-                            unit: "kw/h",
-                            roomId: allRoomBloc.roomId,
-                            unitPrice: double.tryParse(
-                                allRoomBloc.textUnitElectron.text),
-                            totalService: 0.0,
-                            isCheck: false,
-                            startNumberTextEdit: TextEditingController(),
-                            endNumberTextEdit: TextEditingController(),
-                          ),
-                        );
-                        allRoomBloc.listService.add(
-                          Service(
-                            serviceName: "nước",
-                            numberStart:
-                                int.tryParse(allRoomBloc.textWater.text),
-                            unit: "đ/m3",
-                            roomId: allRoomBloc.roomId,
-                            unitPrice:
-                                double.tryParse(allRoomBloc.textUnitWater.text),
-                            totalService: 0.0,
-                            isCheck: false,
-                            startNumberTextEdit: TextEditingController(),
-                            endNumberTextEdit: TextEditingController(),
-                          ),
-                        );
-                        allRoomBloc.add(CreateServiceEvent(appBloc: _appBloc));
-                      }
-                    })
-              ],
+                      SizedBox(
+                        width: AppDimensions.d1h,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Đơn giá *",
+                              style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10,
+                              ),
+                            ),
+                            Container(
+                              child: CupertinoTextField(
+                                controller: allRoomBloc.textUnitWater,
+                                inputFormatters: _formatter,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: AppDimensions.d1h,
+                  ),
+                  Text("Dịch vụ khác "),
+                  SizedBox(
+                    width: AppDimensions.d1h,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Internet",
+                        style: TextStyle(
+                          color: AppColors.colorBlack_87,
+                          fontSize: AppFontSizes.fs10,
+                        ),
+                      ),
+                      CupertinoTextField(
+                        controller: allRoomBloc.textInternet,
+                        inputFormatters: _formatter1,
+                        placeholder: "Nhập đơn giá",
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: AppDimensions.d1h,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Vệ sinh",
+                        style: TextStyle(
+                          color: AppColors.colorBlack_87,
+                          fontSize: AppFontSizes.fs10,
+                        ),
+                      ),
+                      CupertinoTextField(
+                        controller: allRoomBloc.textVs,
+                        inputFormatters: _formatter1,
+                        placeholder: "Nhập đơn giá",
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: AppDimensions.d1h,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        " Gửi xe",
+                        style: TextStyle(
+                          color: AppColors.colorBlack_87,
+                          fontSize: AppFontSizes.fs10,
+                        ),
+                      ),
+                      CupertinoTextField(
+                        controller: allRoomBloc.textGx,
+                        inputFormatters: _formatter1,
+                        placeholder: "Nhập đơn giá",
+                      ),
+                    ],
+                  ),
+                  _buildButton(
+                      allRoomBloc: allRoomBloc,
+                      ontap: () {
+                        if (allRoomBloc.textElectron.text == "") {
+                          Fluttertoast.showToast(
+                              msg: "Nhập số điện",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        } else if (allRoomBloc.textWater.text == "") {
+                          Fluttertoast.showToast(
+                              msg: "Nhập số nước",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        } else if (allRoomBloc.textUnitWater.text == "") {
+                          Fluttertoast.showToast(
+                              msg: "Nhập đon giá nước",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        } else if (allRoomBloc.textUnitElectron.text == "") {
+                          Fluttertoast.showToast(
+                              msg: "Nhập đơn giá điện",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        } else {
+                          allRoomBloc.listService.add(
+                            Service(
+                              serviceName: "điện",
+                              numberStart:
+                                  int.tryParse(allRoomBloc.textElectron.text),
+                              unit: "kw/h",
+                              roomId: allRoomBloc.roomId,
+                              unitPrice: double.tryParse(
+                                  allRoomBloc.textUnitElectron.text),
+                              totalService: 0.0,
+                              isCheck: false,
+                              startNumberTextEdit: TextEditingController(),
+                              endNumberTextEdit: TextEditingController(),
+                            ),
+                          );
+                          allRoomBloc.listService.add(
+                            Service(
+                              serviceName: "nước",
+                              numberStart:
+                                  int.tryParse(allRoomBloc.textWater.text),
+                              unit: "đ/m3",
+                              roomId: allRoomBloc.roomId,
+                              unitPrice: double.tryParse(
+                                  allRoomBloc.textUnitWater.text),
+                              totalService: 0.0,
+                              isCheck: false,
+                              startNumberTextEdit: TextEditingController(),
+                              endNumberTextEdit: TextEditingController(),
+                            ),
+                          );
+                          if (allRoomBloc.textInternet.text != "") {
+                            allRoomBloc.listService.add(
+                              Service(
+                                serviceName: "Internet",
+                                numberStart: 0,
+                                unit: "",
+                                roomId: allRoomBloc.roomId,
+                                unitPrice: double.tryParse(
+                                    allRoomBloc.textInternet.text),
+                                totalService: 0.0,
+                                isCheck: false,
+                                startNumberTextEdit: TextEditingController(),
+                                endNumberTextEdit: TextEditingController(),
+                              ),
+                            );
+                          }
+
+                          if (allRoomBloc.textVs.text != "") {
+                            allRoomBloc.listService.add(
+                              Service(
+                                serviceName: "Vệ sinh",
+                                numberStart: 0,
+                                unit: "",
+                                roomId: allRoomBloc.roomId,
+                                unitPrice:
+                                    double.tryParse(allRoomBloc.textVs.text),
+                                totalService: 0.0,
+                                isCheck: false,
+                                startNumberTextEdit: TextEditingController(),
+                                endNumberTextEdit: TextEditingController(),
+                              ),
+                            );
+                          }
+                          if (allRoomBloc.textGx.text != "") {
+                            allRoomBloc.listService.add(
+                              Service(
+                                serviceName: "Gửi xe",
+                                numberStart: 0,
+                                unit: "",
+                                roomId: allRoomBloc.roomId,
+                                unitPrice:
+                                    double.tryParse(allRoomBloc.textGx.text),
+                                totalService: 0.0,
+                                isCheck: false,
+                                startNumberTextEdit: TextEditingController(),
+                                endNumberTextEdit: TextEditingController(),
+                              ),
+                            );
+                          }
+
+                          allRoomBloc
+                              .add(CreateServiceEvent(appBloc: _appBloc));
+                        }
+                      })
+                ],
+              ),
             );
           },
         ),
@@ -798,6 +997,264 @@ class _buildHome extends State<BuildHome> {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  _showDialogEquipment() {
+    return UIHelper.showDialogCommon(
+        context: context,
+        widget: Padding(
+          padding: EdgeInsets.all(AppDimensions.d1h),
+          child: BlocBuilder(
+              cubit: _allRoomBloc,
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _showDialogCreateEquipment(
+                                context: context, allRoomBloc: _allRoomBloc);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: AppColors.colorOrange,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(AppDimensions.radius1_0w),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(AppDimensions.d1h),
+                              child: Text(
+                                "Thêm thiết bị",
+                                style: TextStyle(
+                                  color: AppColors.colorWhite,
+                                  fontSize: AppFontSizes.fs12,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        CloseDialog(
+                          color: AppColors.colorBlack,
+                          onClose: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    ),
+                    Divider(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: ItemEquipmnet(
+                          equipment: _appBloc,
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              }),
+        ));
+  }
+
+  _showDialogCreateEquipment({BuildContext context, AllRoomBloc allRoomBloc}) {
+    return UIHelper.showDialogCommon(
+      context: context,
+      widget: BlocListener(
+        cubit: allRoomBloc,
+        listener: (context, state) {
+          if (state is LoadingCreateEquipmentState) {
+            UIHelper.showLoadingCommon(context: context);
+          }
+          if (state is CreateEquipmentDoneState) {
+            Navigator.pop(context);
+            Fluttertoast.showToast(
+                msg: "Thêm thành công",
+                toastLength: Toast.LENGTH_SHORT);
+            return;
+          }
+        },
+        child: BlocBuilder(
+          cubit: allRoomBloc,
+          builder: (context, state) {
+            return Padding(
+              padding: EdgeInsets.all(AppDimensions.d1h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Thêm thiết bị",
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SizedBox(
+                        height: AppDimensions.d1h,
+                      ),
+                      CloseDialog(
+                        color: AppColors.colorBlack,
+                        onClose: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  ),
+                  Text(
+                    "Chọn phòng *",
+                    style: TextStyle(
+                      color: AppColors.colorBlack_87,
+                      fontSize: AppFontSizes.fs10,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _showDialogListRoom(_appBloc);
+                    },
+                    child: Container(
+                      width: AppDimensions.d100w,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.colorGrey_300),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppDimensions.radius1_5w),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(AppDimensions.d1h),
+                        child: Row(
+                          children: [
+                            Text(_allRoomBloc.room?.roomName ?? ""),
+                            Expanded(
+                              child: Container(),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppColors.colorGrey_400,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Text(
+                    "Tên thiết bị *",
+                    style: TextStyle(
+                      color: AppColors.colorBlack_87,
+                      fontSize: AppFontSizes.fs10,
+                    ),
+                  ),
+                  Container(
+                    child: CupertinoTextField(
+                      controller: allRoomBloc.textEquipment,
+                      placeholder: "Nhập tên thiết bị",
+                      placeholderStyle: TextStyle(
+                          color: Colors.grey, fontSize: AppFontSizes.fs10),
+                    ),
+                  ),
+                  _buildButton(
+                      allRoomBloc: allRoomBloc,
+                      ontap: () {
+                        if (allRoomBloc.room == null) {
+                          Fluttertoast.showToast(
+                              msg: "Chọn phòng",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        } else if (allRoomBloc.textEquipment.text == "") {
+                          Fluttertoast.showToast(
+                              msg: "Nhập tên thiết bị",
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+
+                        } else {
+
+                          allRoomBloc.add(CreateEquipmentEvent(appBloc: _appBloc));
+                        }
+                      })
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  _showDialogListRoom(AppBloc appBloc) {
+    List<Widget> widget = []..insert(
+        0,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Chọn phòng",
+                  style: TextStyle(
+                      fontSize: AppFontSizes.fs14, fontWeight: FontWeight.bold),
+                ),
+              ),
+              CloseDialog(
+                color: AppColors.colorBlack_54,
+                onClose: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        ),
+      );
+    for (int i = 0; i < appBloc.listAllDataRoom.length; i++) {
+      widget.add(Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: AppDimensions.d1h,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                _allRoomBloc.room = appBloc.listAllDataRoom[i];
+                // appBloc.index = i;
+                Navigator.pop(context);
+                _allRoomBloc.add(UpdateUIRoomEvent());
+              },
+              child: Text(
+                "${appBloc.listAllDataRoom[i].roomName}",
+                style: TextStyle(fontSize: AppFontSizes.fs12),
+              ),
+            ),
+          ),
+          Divider(),
+          SizedBox(
+            height: AppDimensions.d1h,
+          ),
+        ],
+      ));
+    }
+    return UIHelper.showDialogLogin(
+      context: context,
+      widget: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: widget.map<Widget>((e) {
+            return e;
+          }).toList(),
         ),
       ),
     );

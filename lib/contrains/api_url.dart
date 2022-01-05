@@ -17,4 +17,5 @@ class ApiUrl {
   static String extendContract = 'manager/update_user';
   static String createRoom = 'manager/create_room';
   static String createService = 'manager/create_service';
+  static String createEquipment = 'manager/create_room_equipment';
 }

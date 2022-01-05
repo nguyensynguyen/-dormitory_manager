@@ -21,3 +21,8 @@ class CreateServiceEvent extends RoomEvent {
 }
 
 class UpdateUIRoomEvent extends RoomEvent {}
+
+class CreateEquipmentEvent extends RoomEvent {
+  AppBloc appBloc;
+  CreateEquipmentEvent({this.appBloc});
+}

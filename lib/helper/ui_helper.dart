@@ -7,7 +7,10 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class UIHelper {
-  static showDialogCommon({context, Widget widget, Color color}) {
+  static showDialogCommon({context, Widget widget, Color color, bool isFull}) {
+    if (isFull == null) {
+      isFull = false;
+    }
     showAnimatedDialog(
       context: context,
       builder: (BuildContext context) {
@@ -88,20 +91,20 @@ class UIHelper {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  color: Colors.transparent,
-                ),
                 Expanded(
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.colorWhite,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(AppDimensions.radius2w),
-                        topLeft: Radius.circular(AppDimensions.radius2w),
-                      ),
-                    ),
-                    child: widget ?? Container(),
+                    color: Colors.transparent,
                   ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.colorWhite,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(AppDimensions.radius2w),
+                      topLeft: Radius.circular(AppDimensions.radius2w),
+                    ),
+                  ),
+                  child: widget ?? Container(),
                 ),
               ],
             ),

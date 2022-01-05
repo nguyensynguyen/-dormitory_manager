@@ -106,6 +106,20 @@ class ManagerProvider {
     }
   }
 
+  Future<dynamic> createEquipment({dynamic data}) async {
+    try {
+      var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.createEquipment}",
+          data: data);
+      if (res.data['success']) {
+        return res.data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<dynamic> createBillDetail({dynamic data}) async {
     try {
       var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.createBillDetail}",
