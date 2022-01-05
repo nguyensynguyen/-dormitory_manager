@@ -28,7 +28,7 @@ class ItemContract extends StatelessWidget {
       widget.add(GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          print("ok");
+
         },
         child: Container(
           alignment: Alignment.topLeft,
@@ -227,9 +227,9 @@ class ItemContract extends StatelessWidget {
         minTime: DateTime.now(),
         maxTime: DateTime(2071, 6, 7),
         onChanged: (date) {}, onConfirm: (date) {
-      contractBloc.add(ExtendContractEvent(
-          id: contractBloc.user.id,
-          dateTime: date.millisecondsSinceEpoch ~/ 1000));
-    }, currentTime: DateTime.now(), locale: LocaleType.vi);
+          contractBloc.add(ExtendContractEvent(
+              id: contractBloc.user.id,
+              dateTime: date.millisecondsSinceEpoch ~/ 1000));
+        }, currentTime: DateTime.now(), locale: LocaleType.vi);
   }
 }

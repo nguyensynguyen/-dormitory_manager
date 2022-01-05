@@ -20,3 +20,7 @@ class UpdateBill extends BillEvent{
   UpdateBill({this.status,this.id});
 }
 class UpdateUIEvent extends BillEvent{}
+class TotalPriceEvent extends BillEvent{
+  AppBloc appBloc;
+  TotalPriceEvent({this.appBloc});
+}

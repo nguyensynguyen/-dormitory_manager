@@ -1,10 +1,5 @@
 import 'dart:io';
-
 import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
-import 'package:dormitory_manager/bloc/setting/bloc.dart';
-import 'package:dormitory_manager/bloc/setting/state.dart';
-import 'package:dormitory_manager/ui/page/home.dart';
-import 'package:dormitory_manager/ui/page/login.dart';
 import 'package:dormitory_manager/ui/page/splash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -16,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Bill extends StatefulWidget {
   @override
@@ -45,7 +46,8 @@ class BillState extends State<Bill> {
     return BlocBuilder(
       cubit: _billBloc,
       builder: (context, state) {
-        if (state is Loading) {
+        if (state is Loadings) {
+          _billBloc.add(TotalPriceEvent(appBloc: _appBloc));
           return UIHelper.loading();
         }
         return Column(
@@ -173,7 +175,7 @@ class BillState extends State<Bill> {
                             height: AppDimensions.d1h,
                           ),
                           Text(
-                            "14.000.000 đ",
+                            "${StringHelper.formatCurrency(_billBloc.totalPrice)} đ",
                             style: TextStyle(
                                 color: AppColors.colorWhite,
                                 fontSize: AppFontSizes.fs12,
@@ -219,6 +221,9 @@ class BillState extends State<Bill> {
                                     }
                                     if (state is CreateBillDone) {
                                       Navigator.pop(context);
+                                      Fluttertoast.showToast(
+                                          msg: "Lập hóa đơn thành công",
+                                          toastLength: Toast.LENGTH_SHORT);
                                     }
                                   },
                                   cubit: _billBloc,

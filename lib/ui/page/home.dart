@@ -1164,6 +1164,42 @@ class _buildHome extends State<BuildHome> {
                           color: Colors.grey, fontSize: AppFontSizes.fs10),
                     ),
                   ),
+                  Text(
+                    "Tình trạng",
+                    style: TextStyle(
+                      color: AppColors.colorBlack_87,
+                      fontSize: AppFontSizes.fs10,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _showStatusEqipment();
+                    },
+                    child: Container(
+                      width: AppDimensions.d100w,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.colorGrey_300),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppDimensions.radius1_5w),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(AppDimensions.d1h),
+                        child: Row(
+                          children: [
+                            Text(_allRoomBloc.status),
+                            Expanded(
+                              child: Container(),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppColors.colorGrey_400,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   _buildButton(
                       allRoomBloc: allRoomBloc,
                       ontap: () {
@@ -1255,6 +1291,78 @@ class _buildHome extends State<BuildHome> {
           children: widget.map<Widget>((e) {
             return e;
           }).toList(),
+        ),
+      ),
+    );
+  }
+
+  _showStatusEqipment() {
+    return UIHelper.showDialogLogin(
+      context: context,
+      widget: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Tình trạng thiết bị",
+                        style: TextStyle(
+                            fontSize: AppFontSizes.fs14, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    CloseDialog(
+                      color: AppColors.colorBlack_54,
+                      onClose: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ),
+              ),
+              Divider(),
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                   _allRoomBloc.status = "Hỏng";
+
+                    Navigator.pop(context);
+                    _allRoomBloc.add(UpdateUIRoomEvent());
+                  },
+                  child: Text(
+                    "Hỏng",
+                    style: TextStyle(fontSize: AppFontSizes.fs12),
+                  ),
+                ),
+              ),
+              Divider(),
+              SizedBox(
+                height: AppDimensions.d1h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    _allRoomBloc.status = "Hoạt động";
+
+                    Navigator.pop(context);
+                    _allRoomBloc.add(UpdateUIRoomEvent());
+                  },
+                  child: Text(
+                    "Hoạt động",
+                    style: TextStyle(fontSize: AppFontSizes.fs12),
+                  ),
+                ),
+              ),
+              Divider(),
+            ],
         ),
       ),
     );

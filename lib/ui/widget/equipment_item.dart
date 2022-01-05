@@ -75,9 +75,9 @@ class ItemEquipmnet extends StatelessWidget {
                     ),
                     TextSpan(
                       text:
-                      "${e.status == 'ok'?"Hoạt động":"Hỏng"}",
+                      "${e.status == 'Hoạt động'?"Hoạt động":"Hỏng"}",
                       style: TextStyle(
-                          color:e.status == 'ok'? AppColors.colorGreen:AppColors.colorRed, fontSize: AppFontSizes.fs10),
+                          color:e.status == 'Hoạt động'? AppColors.colorGreen:AppColors.colorRed, fontSize: AppFontSizes.fs10),
                     ),
                   ]),
                 ),

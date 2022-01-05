@@ -30,6 +30,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
   List<bool> checkDv = [false, false, false];
   int roomId;
   Room room;
+  String status = 'Hoạt động';
 
   @override
   Stream<RoomState> mapEventToState(RoomEvent event) async* {
@@ -118,10 +119,15 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
       Map data = {
         "room_equipment_name":textEquipment.text,
         "room_id":room.id,
-        "status":"ok"
+        "status":status
       };
       var res = await _managerProvider.createEquipment(data: data);
       if(res != null){
+        room.roomEquipment.add(RoomEquipment(
+          roomEquipmentName: textEquipment.text,
+          roomId: room.id,
+          status: status
+        ));
         room = null;
         textEquipment.text = "";
         yield CreateEquipmentDoneState();

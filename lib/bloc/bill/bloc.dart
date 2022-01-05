@@ -12,11 +12,12 @@ class BillBloc extends Bloc<BillEvent, BillState> {
   List<RoomBill> listRoomBill = [];
   ManagerProvider _managerProvider = ManagerProvider();
   RoomBill bill;
+  double totalPrice = 0;
 
   @override
   Stream<BillState> mapEventToState(BillEvent event) async* {
     if (event is GetAllBill) {
-      yield Loading();
+      yield Loadings();
       var res = await _managerProvider.getAllBill(id: event.appBloc.manager.id);
       if ((res?.roomBill?.isNotEmpty ?? false) && res != null) {
         listRoomBill = res.roomBill;
@@ -39,6 +40,7 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       yield Loading();
       var res = await _managerProvider.createBill(data: bill);
       if (res != null && res['data'].isNotEmpty) {
+        totalPrice += event.appBloc.room.roomAmount + event.appBloc.totalPrice;
         double price = event.appBloc.totalPrice;
         event.appBloc.totalPrice = 0.0;
         var billDetail = [];
@@ -114,6 +116,12 @@ class BillBloc extends Bloc<BillEvent, BillState> {
 
     if (event is UpdateUIEvent) {
       yield UpdateUIState();
+    }
+    if (event is TotalPriceEvent) {
+      for (int i = 0; i < listRoomBill.length; i++) {
+        totalPrice += listRoomBill[i].totalPrice;
+      }
+      yield TotalPriceState();
     }
   }
 }
