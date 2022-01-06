@@ -3,6 +3,7 @@ import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
 import 'package:dormitory_manager/bloc/report/bloc.dart';
 import 'package:dormitory_manager/bloc/report/event.dart';
 import 'package:dormitory_manager/converts/time_format.dart';
+import 'package:dormitory_manager/helper/string_helper.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/model/message.dart';
 import 'package:dormitory_manager/model/room_eqiupment.dart';
@@ -14,10 +15,10 @@ import 'package:flutter/material.dart';
 
 import 'close_dialog.dart';
 
-class ItemEquipmnet extends StatelessWidget {
+class ItemService extends StatelessWidget {
   AppBloc equipment;
 
-  ItemEquipmnet({this.equipment});
+  ItemService({this.equipment});
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +31,15 @@ class ItemEquipmnet extends StatelessWidget {
     bool noneDisplay = false;
     int index = 0;
     for (int i = 0; i < equipment.listAllDataRoom.length; i++) {
-      listItem
-          .addAll(equipment.listAllDataRoom[i].roomEquipment.map<Widget>((e) {
+      listItem.addAll(equipment.listAllDataRoom[i].service.map<Widget>((e) {
         if (equipment.listAllDataRoom[i].id == checkDisplayRoom) {
           noneDisplay = true;
         } else {
           checkDisplayRoom = equipment.listAllDataRoom[i].id;
           noneDisplay = false;
-          index =0;
-
+          index = 0;
         }
-        index ++;
+        index++;
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,36 +55,41 @@ class ItemEquipmnet extends StatelessWidget {
                   ),
             Row(
               children: [
-                Icon(Icons.view_list,size: AppFontSizes.fs9,),
+                Icon(
+                  Icons.view_list,
+                  size: AppFontSizes.fs9,
+                ),
                 Expanded(
                   child: Text(
-                    "\t${e.roomEquipmentName}",
+                    "\t${e.serviceName}",
                     style: TextStyle(
-                        color: AppColors.colorBlack_54, fontSize: AppFontSizes.fs10),
+                        color: AppColors.colorBlack_54,
+                        fontSize: AppFontSizes.fs10),
                   ),
                 ),
                 RichText(
                   text: TextSpan(children: <TextSpan>[
                     TextSpan(
-                      text: "Tình trạng: ",
+                      text: "đơn giá: ",
                       style: TextStyle(
                         color: AppColors.colorBlack_54,
                         fontSize: AppFontSizes.fs10,
                       ),
                     ),
                     TextSpan(
-                      text:
-                      "${e.status == 'Hoạt động'?"Hoạt động":"Hỏng"}",
+                      text: "${StringHelper.formatCurrency(e.unitPrice)}đ",
                       style: TextStyle(
-                          color:e.status == 'Hoạt động'? AppColors.colorGreen:AppColors.colorRed, fontSize: AppFontSizes.fs10),
+                          color: AppColors.colorGreen,
+                          fontSize: AppFontSizes.fs10,
+                          fontWeight: FontWeight.bold),
                     ),
                   ]),
                 ),
-
-
               ],
             ),
-            index >= equipment.listAllDataRoom[i].roomEquipment.length ? Divider():Container()
+            index >= equipment.listAllDataRoom[i].roomEquipment.length
+                ? Divider()
+                : Container()
           ],
         );
       }));
@@ -98,5 +102,4 @@ class ItemEquipmnet extends StatelessWidget {
       }).toList(),
     );
   }
-
 }

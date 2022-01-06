@@ -1,6 +1,7 @@
 import 'package:dormitory_manager/bloc/contract/state.dart';
 import 'package:dormitory_manager/bloc/report/state.dart';
 import 'package:dormitory_manager/model/message.dart';
+import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/user.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,9 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
   ContractBloc() : super(null);
   ManagerProvider _managerProvider = ManagerProvider();
   List<User> listContract = [];
-  User user;
+  User user = User();
+  Room room;
+
 
   @override
   Stream<ContractState> mapEventToState(ContractEvent event) async* {
@@ -34,6 +37,11 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
         yield GetDone();
       }
     }
+
+    if (event is UpdateUIContractEvent) {
+     yield UpdateUIState();
+      }
+
 
     if (event is DeleteContractEvent) {
       yield Loading();

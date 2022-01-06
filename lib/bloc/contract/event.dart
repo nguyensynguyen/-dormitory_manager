@@ -24,3 +24,5 @@ class DeleteContractEvent extends ContractEvent {
 
   DeleteContractEvent({this.index});
 }
+
+class UpdateUIContractEvent extends ContractEvent{}

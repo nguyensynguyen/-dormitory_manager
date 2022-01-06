@@ -9,6 +9,7 @@ import 'package:dormitory_manager/ui/page/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 import 'home.dart';
@@ -42,12 +43,12 @@ class SplashState extends State<Splash> {
           if(state is AuthSuccess){
             Navigator.of(ctx).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (ctx) => HomePage()),
-                    (Route<dynamic> route) => true);
+                    (Route<dynamic> route) => false);
           }
           if(state is AuthFail){
             Navigator.of(ctx).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (ctx) => Login()),
-                    (Route<dynamic> route) => true);
+                    (Route<dynamic> route) => false);
           }
         },
         child: Container(

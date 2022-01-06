@@ -18,6 +18,8 @@ import 'package:dormitory_manager/ui/page/report.dart';
 import 'package:dormitory_manager/ui/widget/close_dialog.dart';
 import 'package:dormitory_manager/ui/widget/equipment_item.dart';
 import 'package:dormitory_manager/ui/widget/item_room.dart';
+import 'package:dormitory_manager/ui/widget/item_service.dart';
+import 'package:dormitory_manager/ui/widget/show_dialog_create_contract.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -316,48 +318,11 @@ class _buildHome extends State<BuildHome> {
                                 ),
                               ),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              _showDialogService();
+                            },
                           ),
                         ),
-                        SizedBox(
-                          width: AppDimensions.d1h,
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            child: Card(
-                              color: AppColors.colorFacebook,
-                              child: Padding(
-                                padding: EdgeInsets.all(AppDimensions.d1h),
-                                child: Column(
-                                  children: [
-                                    Image.asset(
-                                      'asset/image/agreement.png',
-                                      width: AppDimensions.d10w,
-                                    ),
-                                    SizedBox(
-                                      height: AppDimensions.d1h,
-                                    ),
-                                    Text(
-                                      "Thêm hợp đồng",
-                                      style: TextStyle(
-                                        color: AppColors.colorWhite,
-                                        fontSize: AppFontSizes.fs10,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: AppDimensions.d0_5h,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
                         Expanded(
                           child: GestureDetector(
                             child: Card(
@@ -392,20 +357,9 @@ class _buildHome extends State<BuildHome> {
                             },
                           ),
                         ),
-                        SizedBox(
-                          width: AppDimensions.d2w,
-                        ),
-                        Expanded(
-                          child: Container(),
-                        ),
-                        SizedBox(
-                          width: AppDimensions.d2w,
-                        ),
-                        Expanded(
-                          child: Container(),
-                        ),
                       ],
-                    )
+                    ),
+
                   ],
                 ),
               ),
@@ -1077,8 +1031,7 @@ class _buildHome extends State<BuildHome> {
           if (state is CreateEquipmentDoneState) {
             Navigator.pop(context);
             Fluttertoast.showToast(
-                msg: "Thêm thành công",
-                toastLength: Toast.LENGTH_SHORT);
+                msg: "Thêm thành công", toastLength: Toast.LENGTH_SHORT);
             return;
           }
         },
@@ -1213,10 +1166,9 @@ class _buildHome extends State<BuildHome> {
                               msg: "Nhập tên thiết bị",
                               toastLength: Toast.LENGTH_SHORT);
                           return;
-
                         } else {
-
-                          allRoomBloc.add(CreateEquipmentEvent(appBloc: _appBloc));
+                          allRoomBloc
+                              .add(CreateEquipmentEvent(appBloc: _appBloc));
                         }
                       })
                 ],
@@ -1302,69 +1254,134 @@ class _buildHome extends State<BuildHome> {
       widget: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Tình trạng thiết bị",
-                        style: TextStyle(
-                            fontSize: AppFontSizes.fs14, fontWeight: FontWeight.bold),
-                      ),
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Tình trạng thiết bị",
+                      style: TextStyle(
+                          fontSize: AppFontSizes.fs14,
+                          fontWeight: FontWeight.bold),
                     ),
-                    CloseDialog(
-                      color: AppColors.colorBlack_54,
-                      onClose: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                ),
-              ),
-              Divider(),
-
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                   _allRoomBloc.status = "Hỏng";
-
-                    Navigator.pop(context);
-                    _allRoomBloc.add(UpdateUIRoomEvent());
-                  },
-                  child: Text(
-                    "Hỏng",
-                    style: TextStyle(fontSize: AppFontSizes.fs12),
                   ),
-                ),
+                  CloseDialog(
+                    color: AppColors.colorBlack_54,
+                    onClose: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
               ),
-              Divider(),
-              SizedBox(
-                height: AppDimensions.d1h,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    _allRoomBloc.status = "Hoạt động";
+            ),
+            Divider(),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  _allRoomBloc.status = "Hỏng";
 
-                    Navigator.pop(context);
-                    _allRoomBloc.add(UpdateUIRoomEvent());
-                  },
-                  child: Text(
-                    "Hoạt động",
-                    style: TextStyle(fontSize: AppFontSizes.fs12),
-                  ),
+                  Navigator.pop(context);
+                  _allRoomBloc.add(UpdateUIRoomEvent());
+                },
+                child: Text(
+                  "Hỏng",
+                  style: TextStyle(fontSize: AppFontSizes.fs12),
                 ),
               ),
-              Divider(),
-            ],
+            ),
+            Divider(),
+            SizedBox(
+              height: AppDimensions.d1h,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  _allRoomBloc.status = "Hoạt động";
+
+                  Navigator.pop(context);
+                  _allRoomBloc.add(UpdateUIRoomEvent());
+                },
+                child: Text(
+                  "Hoạt động",
+                  style: TextStyle(fontSize: AppFontSizes.fs12),
+                ),
+              ),
+            ),
+            Divider(),
+          ],
         ),
       ),
     );
   }
+
+  _showDialogService() {
+    return UIHelper.showDialogCommon(
+        context: context,
+        widget: Padding(
+          padding: EdgeInsets.all(AppDimensions.d1h),
+          child: BlocBuilder(
+              cubit: _allRoomBloc,
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // _showDialogCreateEquipment(
+                            //     context: context, allRoomBloc: _allRoomBloc);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: AppColors.colorWhite,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(AppDimensions.radius1_0w),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(AppDimensions.d1h),
+                              child: Text(
+                                "Danh sách dịch vụ từng phòng",
+                                style: TextStyle(
+                                    color: AppColors.colorFacebook,
+                                    fontSize: AppFontSizes.fs12,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        CloseDialog(
+                          color: AppColors.colorBlack,
+                          onClose: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    ),
+                    Divider(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: ItemService(
+                          equipment: _appBloc,
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              }),
+        ));
+  }
+
+
 }

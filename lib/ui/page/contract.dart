@@ -6,7 +6,9 @@ import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/resources/colors.dart';
 import 'package:dormitory_manager/resources/dimensions.dart';
 import 'package:dormitory_manager/resources/fontsizes.dart';
+import 'package:dormitory_manager/ui/widget/close_dialog.dart';
 import 'package:dormitory_manager/ui/widget/item_contract.dart';
+import 'package:dormitory_manager/ui/widget/show_dialog_create_contract.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,10 +91,30 @@ class _contract extends State<Contract> {
                                   fontWeight: FontWeight.bold),
                             ),
                             GestureDetector(
-                                child: Icon(
-                              Icons.filter_list,
-                              color: AppColors.colorWhite,
-                            ))
+                              onTap: () {
+                                _showDialogCreateContract();
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: AppColors.colorOrange,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(AppDimensions.radius1_0w),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(AppDimensions.d0_5h),
+                                  child: Text(
+                                    "Thêm hợp đồng",
+                                    style: TextStyle(
+                                        color: AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs12,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -142,4 +164,70 @@ class _contract extends State<Contract> {
       ),
     );
   }
+
+  _showDialogCreateContract() {
+    return UIHelper.showDialogCommon(
+      context: context,
+      widget: Padding(
+        padding: EdgeInsets.all(AppDimensions.d1h),
+        child: BlocBuilder(
+            cubit: _contractBloc,
+            builder: (context, state) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // _showDialogCreateEquipment(
+                          //     context: context, allRoomBloc: _allRoomBloc);
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: AppColors.colorWhite,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(AppDimensions.radius1_0w),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(AppDimensions.d1h),
+                            child: Text(
+                              "Thêm hợp đồng",
+                              style: TextStyle(
+                                  color: AppColors.colorFacebook,
+                                  fontSize: AppFontSizes.fs14,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      CloseDialog(
+                        color: AppColors.colorBlack,
+                        onClose: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  ),
+                  Divider(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: CreateContract(
+                        contractBloc: _contractBloc,
+                        appBloc: _appBloc,
+                      ),
+                    ),
+                  )
+                ],
+              );
+            }),
+      ),
+    );
+  }
+
 }
