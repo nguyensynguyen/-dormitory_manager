@@ -11,3 +11,12 @@ class UpdateMessage extends ReportEvent{
   String status;
   UpdateMessage({this.id,this.status});
 }
+
+class CreateMessage extends ReportEvent{
+  AppBloc appBloc;
+  CreateMessage({this.appBloc});
+}
+
+class UpdateUIReportEvent extends ReportEvent{
+
+}

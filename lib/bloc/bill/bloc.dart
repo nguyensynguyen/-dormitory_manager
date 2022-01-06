@@ -18,7 +18,13 @@ class BillBloc extends Bloc<BillEvent, BillState> {
   Stream<BillState> mapEventToState(BillEvent event) async* {
     if (event is GetAllBill) {
       yield Loadings();
-      var res = await _managerProvider.getAllBill(id: event.appBloc.manager.id);
+      var res;
+      if(event.appBloc.isUser){
+        res = await _managerProvider.getAllBill(id: event.appBloc.user.managerId);
+      }else{
+         res = await _managerProvider.getAllBill(id: event.appBloc.manager.id);
+
+      }
       if ((res?.roomBill?.isNotEmpty ?? false) && res != null) {
         listRoomBill = res.roomBill;
         yield LoadDataBillDone();

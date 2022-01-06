@@ -134,6 +134,20 @@ class ManagerProvider {
     }
   }
 
+  Future<dynamic> createUser({dynamic data}) async {
+    try {
+      var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.createUser}",
+          data: data);
+      if (res.data['success']) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<dynamic> updateService({dynamic data, int id}) async {
     try {
       var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.updateService}/$id",
@@ -189,7 +203,19 @@ class ManagerProvider {
       return null;
     }
   }
-
+  Future<dynamic> createReport({dynamic data}) async {
+    try {
+      var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.createReport}",
+          data: data);
+      if (res.data['success']) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
   Future<dynamic> extendContract({dynamic data, int id}) async {
     try {
       var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.extendContract}/$id",

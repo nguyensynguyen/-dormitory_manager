@@ -53,6 +53,44 @@ class _contract extends State<Contract> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              _appBloc.isUser? Container(
+                width: AppDimensions.d100w,
+                height: AppDimensions.d14h,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Colors.green,
+                      AppColors.colorFacebook,
+                    ],
+                  ),
+                  color: AppColors.mainColor,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(AppDimensions.radius3w),
+                    bottomRight: Radius.circular(AppDimensions.radius3w),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: heightStatusBar,
+                    ),
+                      Padding(
+                        padding:  EdgeInsets.all(AppDimensions.d1h),
+                        child: Text(
+                          "Hợp Đồng",
+                          style: TextStyle(
+                              color: AppColors.colorWhite,
+                              fontSize: AppFontSizes.fs14,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+
+                  ],
+                ),
+              ):
               Container(
                 width: AppDimensions.d100w,
                 height: AppDimensions.d14h,
@@ -155,6 +193,7 @@ class _contract extends State<Contract> {
                 child: SingleChildScrollView(
                   child: ItemContract(
                     contractBloc: _contractBloc,
+                    appBloc: _appBloc,
                   ),
                 ),
               ),
