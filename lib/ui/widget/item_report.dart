@@ -1,3 +1,4 @@
+import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
 import 'package:dormitory_manager/bloc/report/bloc.dart';
 import 'package:dormitory_manager/bloc/report/event.dart';
 import 'package:dormitory_manager/converts/time_format.dart';
@@ -13,8 +14,8 @@ import 'close_dialog.dart';
 
 class ItemReport extends StatelessWidget {
   ReportBloc reportBloc;
-
-  ItemReport({this.reportBloc});
+AppBloc appBloc;
+  ItemReport({this.reportBloc,this.appBloc});
 
   @override
   Widget build(BuildContext context) {
@@ -24,83 +25,164 @@ class ItemReport extends StatelessWidget {
   _buildItem(BuildContext context, ReportBloc reportBloc) {
     List<Widget> listItem = [];
     for (int i = 0; i < reportBloc.listMessage.length; i++) {
-      listItem.add(GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () =>
-            _showDialog(context: context, message: reportBloc.listMessage[i]),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppDimensions.d1h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'asset/image/report1.png',
-                    width: AppDimensions.d10w,
-                  ),
-                  SizedBox(
-                    width: AppDimensions.d1h,
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${reportBloc.listMessage[i].title}",
-                          style: TextStyle(
-                            color: AppColors.colorBlack_87,
-                            fontSize: AppFontSizes.fs12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          "${reportBloc.listMessage[i].room.roomName}",
-                          style: TextStyle(
+      if(appBloc.isUser){
+      if(appBloc.user.id == reportBloc.listMessage[i].userId){
+        listItem.add(GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppDimensions.d1h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'asset/image/report1.png',
+                      width: AppDimensions.d10w,
+                    ),
+                    SizedBox(
+                      width: AppDimensions.d1h,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${reportBloc.listMessage[i].title}",
+                            style: TextStyle(
                               color: AppColors.colorBlack_87,
-                              fontSize: AppFontSizes.fs10),
+                              fontSize: AppFontSizes.fs12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            "${reportBloc.listMessage[i].room.roomName}",
+                            style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      reportBloc.listMessage[i].status == "fixing"?
+                      "Đang sửa":"Đã sửa",
+                      style: TextStyle(
+                        color:reportBloc.listMessage[i].status == "fixing"? AppColors.colorOrange:AppColors.colorGreen,
+                        fontSize: AppFontSizes.fs10,
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Người gửi : ${reportBloc.listMessage[i].user.userName}",
+                        style: TextStyle(
+                          color: AppColors.colorBlack_87,
+                          fontSize: AppFontSizes.fs10,
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    reportBloc.listMessage[i].status == "fixing"?
-                    "Đang sửa":"Đã sửa",
-                    style: TextStyle(
-                      color:reportBloc.listMessage[i].status == "fixing"? AppColors.colorOrange:AppColors.colorGreen,
-                      fontSize: AppFontSizes.fs10,
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "Người gửi : ${reportBloc.listMessage[i].user.userName}",
+                    Text(
+                      "Ngày tạo: ${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(reportBloc.listMessage[i].dateCreate * 1000))}",
                       style: TextStyle(
                         color: AppColors.colorBlack_87,
                         fontSize: AppFontSizes.fs10,
                       ),
-                    ),
-                  ),
-                  Text(
-                    "Ngày tạo: ${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(reportBloc.listMessage[i].dateCreate * 1000))}",
-                    style: TextStyle(
-                      color: AppColors.colorBlack_87,
-                      fontSize: AppFontSizes.fs10,
-                    ),
-                  )
-                ],
-              ),
-              Divider(),
-            ],
+                    )
+                  ],
+                ),
+                Divider(),
+              ],
+            ),
           ),
-        ),
-      ));
+        ));
+      }
+      }
+      else{
+        listItem.add(GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () =>
+              _showDialog(context: context, message: reportBloc.listMessage[i]),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppDimensions.d1h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      'asset/image/report1.png',
+                      width: AppDimensions.d10w,
+                    ),
+                    SizedBox(
+                      width: AppDimensions.d1h,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${reportBloc.listMessage[i].title}",
+                            style: TextStyle(
+                              color: AppColors.colorBlack_87,
+                              fontSize: AppFontSizes.fs12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            "${reportBloc.listMessage[i].room.roomName}",
+                            style: TextStyle(
+                                color: AppColors.colorBlack_87,
+                                fontSize: AppFontSizes.fs10),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      reportBloc.listMessage[i].status == "fixing"?
+                      "Đang sửa":"Đã sửa",
+                      style: TextStyle(
+                        color:reportBloc.listMessage[i].status == "fixing"? AppColors.colorOrange:AppColors.colorGreen,
+                        fontSize: AppFontSizes.fs10,
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Người gửi : ${reportBloc.listMessage[i].user.userName}",
+                        style: TextStyle(
+                          color: AppColors.colorBlack_87,
+                          fontSize: AppFontSizes.fs10,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "Ngày tạo: ${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(reportBloc.listMessage[i].dateCreate * 1000))}",
+                      style: TextStyle(
+                        color: AppColors.colorBlack_87,
+                        fontSize: AppFontSizes.fs10,
+                      ),
+                    )
+                  ],
+                ),
+                Divider(),
+              ],
+            ),
+          ),
+        ));
+      }
     }
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

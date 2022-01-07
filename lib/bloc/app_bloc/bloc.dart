@@ -28,7 +28,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   List<Service> listService;
   double totalPrice = 0.0;
   int index = 0;
-
+String roomName ="";
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {}

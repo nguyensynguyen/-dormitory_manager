@@ -1,6 +1,4 @@
 import 'package:dormitory_manager/bloc/contract/state.dart';
-import 'package:dormitory_manager/bloc/report/state.dart';
-import 'package:dormitory_manager/model/message.dart';
 import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/user.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
@@ -21,8 +19,13 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
   Stream<ContractState> mapEventToState(ContractEvent event) async* {
     if (event is GetAllContractEvent) {
       yield Loading();
-      var res =
-          await _managerProvider.getAllContract(id: event.appBloc.manager.id);
+      var res;
+      if(event.appBloc.isUser){
+       res = await _managerProvider.getAllContract(id: event.appBloc.user.managerId);
+
+      }else{
+       res= await _managerProvider.getAllContract(id: event.appBloc.manager.id);
+      }
       if (res != null) {
         listContract = res.user;
         yield GetDone();
@@ -57,6 +60,14 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
         }
       } else {
         yield DeleteErrors();
+      }
+    }
+
+    if(event is CreateContractEvent){
+      yield LoadingCreateContractState();
+      var res = await _managerProvider.createUser();
+      if(res != null){
+        yield CreateContractDoneState();
       }
     }
   }

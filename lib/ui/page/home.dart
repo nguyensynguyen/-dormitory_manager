@@ -117,9 +117,10 @@ class _buildHome extends State<BuildHome> {
 
     _authBloc = AuthBloc();
     _appBloc = BlocProvider.of<AppBloc>(context);
-    _allRoomBloc = AllRoomBloc();
+      _allRoomBloc = AllRoomBloc();
+      _allRoomBloc.add(GetDataRoomEvent(appBloc: _appBloc));
 
-    _allRoomBloc.add(GetDataRoomEvent(appBloc: _appBloc));
+
   }
 
   @override
@@ -230,146 +231,151 @@ class _buildHome extends State<BuildHome> {
               ],
             ),
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(AppDimensions.d1h),
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Khởi tạo dữ liệu",
-                        style: TextStyle(
-                          color: AppColors.colorBlack_87,
-                          fontWeight: FontWeight.bold,
-                          fontSize: AppFontSizes.fs12,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: AppDimensions.d0_5h,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            child: Card(
-                              color: AppColors.colorFacebook,
-                              child: Padding(
-                                padding: EdgeInsets.all(AppDimensions.d1h),
-                                child: Column(
-                                  children: [
-                                    Image.asset(
-                                      'asset/image/livingroom.png',
-                                      width: AppDimensions.d10w,
-                                    ),
-                                    SizedBox(
-                                      height: AppDimensions.d1h,
-                                    ),
-                                    Text(
-                                      "Quản lý phòng",
-                                      style: TextStyle(
-                                        color: AppColors.colorWhite,
-                                        fontSize: AppFontSizes.fs10,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: AppDimensions.d0_5h,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              _showDialogRoom();
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: AppDimensions.d2w,
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            child: Card(
-                              color: AppColors.colorFacebook,
-                              child: Padding(
-                                padding: EdgeInsets.all(AppDimensions.d1h),
-                                child: Column(
-                                  children: [
-                                    Image.asset(
-                                      'asset/image/service.png',
-                                      width: AppDimensions.d10w,
-                                    ),
-                                    SizedBox(
-                                      height: AppDimensions.d1h,
-                                    ),
-                                    Text(
-                                      "Quản lý dịch vụ",
-                                      style: TextStyle(
-                                        color: AppColors.colorWhite,
-                                        fontSize: AppFontSizes.fs10,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: AppDimensions.d0_5h,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              _showDialogService();
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            child: Card(
-                              color: AppColors.colorFacebook,
-                              child: Padding(
-                                padding: EdgeInsets.all(AppDimensions.d1h),
-                                child: Column(
-                                  children: [
-                                    Image.asset(
-                                      'asset/image/repair.png',
-                                      width: AppDimensions.d10w,
-                                    ),
-                                    SizedBox(
-                                      height: AppDimensions.d1h,
-                                    ),
-                                    Text(
-                                      " Thiết bị phòng",
-                                      style: TextStyle(
-                                        color: AppColors.colorWhite,
-                                        fontSize: AppFontSizes.fs10,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: AppDimensions.d0_5h,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              _showDialogEquipment();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  ],
-                ),
-              ),
-            ),
-          ),
+       _appBloc.isUser?_buildUser():_buildManager()
         ],
       ),
     );
   }
+_buildManager(){
+    return    Expanded(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(AppDimensions.d1h),
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Khởi tạo dữ liệu",
+                  style: TextStyle(
+                    color: AppColors.colorBlack_87,
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppFontSizes.fs12,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: AppDimensions.d0_5h,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      child: Card(
+                        color: AppColors.colorFacebook,
+                        child: Padding(
+                          padding: EdgeInsets.all(AppDimensions.d1h),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'asset/image/livingroom.png',
+                                width: AppDimensions.d10w,
+                              ),
+                              SizedBox(
+                                height: AppDimensions.d1h,
+                              ),
+                              Text(
+                                "Quản lý phòng",
+                                style: TextStyle(
+                                  color: AppColors.colorWhite,
+                                  fontSize: AppFontSizes.fs10,
+                                ),
+                              ),
+                              SizedBox(
+                                height: AppDimensions.d0_5h,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        _showDialogRoom();
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: AppDimensions.d2w,
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Card(
+                        color: AppColors.colorFacebook,
+                        child: Padding(
+                          padding: EdgeInsets.all(AppDimensions.d1h),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'asset/image/service.png',
+                                width: AppDimensions.d10w,
+                              ),
+                              SizedBox(
+                                height: AppDimensions.d1h,
+                              ),
+                              Text(
+                                "Quản lý dịch vụ",
+                                style: TextStyle(
+                                  color: AppColors.colorWhite,
+                                  fontSize: AppFontSizes.fs10,
+                                ),
+                              ),
+                              SizedBox(
+                                height: AppDimensions.d0_5h,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        _showDialogService();
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Card(
+                        color: AppColors.colorFacebook,
+                        child: Padding(
+                          padding: EdgeInsets.all(AppDimensions.d1h),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'asset/image/repair.png',
+                                width: AppDimensions.d10w,
+                              ),
+                              SizedBox(
+                                height: AppDimensions.d1h,
+                              ),
+                              Text(
+                                " Thiết bị phòng",
+                                style: TextStyle(
+                                  color: AppColors.colorWhite,
+                                  fontSize: AppFontSizes.fs10,
+                                ),
+                              ),
+                              SizedBox(
+                                height: AppDimensions.d0_5h,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        _showDialogEquipment();
+                      },
+                    ),
+                  ),
+                ],
+              ),
 
+            ],
+          ),
+        ),
+      ),
+    );
+}
+_buildUser(){
+    return Container();
+}
   _showDialogRoom() {
     return UIHelper.showDialogCommon(
         context: context,

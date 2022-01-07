@@ -36,8 +36,12 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
   Stream<RoomState> mapEventToState(RoomEvent event) async* {
     if (event is GetDataRoomEvent) {
       yield LoadingState();
-      var data =
-          await _managerProvider.getAllRoom(id: event.appBloc.manager.id);
+      var data;
+      if(event.appBloc.isUser){
+        data = await _managerProvider.getAllRoom(id: event.appBloc.user.managerId);
+      }else{
+        data = await _managerProvider.getAllRoom(id: event.appBloc.manager.id);
+      }
       if (data != null) {
         listRoom = data['data'].map<Room>((item) {
           return Room.fromJson(item);
@@ -79,7 +83,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
             maxPeople: res['data']['max_people'],
             totalCurrentPeople: res['data']['total_current_people'],
             roomAmount: data['room_amount'],
-            managerId: event.appBloc.manager.id);
+            managerId: event.appBloc.profile.id);
         yield CreateRoomDone();
       }
     }
@@ -107,7 +111,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
             roomAmount: room.roomAmount,
             service: listService,
             roomEquipment: [],
-            managerId: event.appBloc.manager.id));
+            managerId: event.appBloc.profile.id));
         reset();
         yield CreateServiceDone();
       }

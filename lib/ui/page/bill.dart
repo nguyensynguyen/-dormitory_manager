@@ -135,6 +135,7 @@ class BillState extends State<Bill> {
               child: SingleChildScrollView(
                 child: ItemBill(
                   billBloc: _billBloc,
+                  appBloc: _appBloc,
                 ),
               ),
             ),
