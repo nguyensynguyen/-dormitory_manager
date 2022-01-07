@@ -1,5 +1,6 @@
 import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
 import 'package:dormitory_manager/bloc/contract/bloc.dart';
+import 'package:dormitory_manager/bloc/contract/state.dart';
 import 'package:dormitory_manager/converts/time_format.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/resources/colors.dart';
@@ -8,7 +9,9 @@ import 'package:dormitory_manager/resources/fontsizes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dormitory_manager/bloc/contract/event.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'close_dialog.dart';
 
 class CreateContract extends StatelessWidget {
@@ -19,89 +22,112 @@ class CreateContract extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _intput(
-            hintText: "Nhập tên", title: "Tên", textEditingController: null),
-        _intput(
-            hintText: "Nhập email",
-            title: "Email",
-            textEditingController: null),
-        _intput(
-            hintText: "nhập chứng minh thư",
-            title: "Số chứng minh thư",
-            textEditingController: null),
-        _intput(
-            hintText: "nhập địa chỉ",
-            title: "Địa chỉ",
-            textEditingController: null),
-        _intput(
-            hintText: "nhập số điện thoại",
-            title: "Số điện thoại",
-            textEditingController: null),
-        _intput(
-            hintText: "nhập mật khẩu",
-            title: "Mật khẩu",
-            textEditingController: null),
-        _noneInput(
-            title: "Chọn phòng",
-            onTap: () {
-              _showDialogListRoom(appBloc: appBloc, context: context);
-            }),
-        SizedBox(
-          height: AppDimensions.d1h,
-        ),
-        _noneInputDate(
-            title: "Ngày sinh",
-            onTap: () async {
-              DateTime time = await _showDateTime(context);
-              if (time != null) {
-                contractBloc.user1.birthDay =
-                    time.millisecondsSinceEpoch ~/ 1000;
-              }
-              contractBloc.add(UpdateUIContractEvent());
-            },
-            text: contractBloc.user1.birthDay == null
-                ? ""
-                : "${DateTimeFormat.formatDate(
+    return BlocListener(
+      cubit: contractBloc,
+      listener: (context,state){
+        if(state is LoadingCreateContractState){
+          UIHelper.showLoadingCommon(context: context);
+        }
+        if(state is CreateContractDoneState){
+        }
+
+        if(state is CreateContractErrorsState){
+          Navigator.pop(context);
+          Fluttertoast.showToast(msg: contractBloc.messageErrors,toastLength: Toast.LENGTH_LONG);
+        }
+
+      },
+      child: BlocBuilder(
+        cubit: contractBloc,
+        builder: (context,state){
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _intput(
+                  hintText: "Nhập tên", title: "Tên", textEditingController: contractBloc.name),
+              _intput(
+                  hintText: "Nhập email",
+                  title: "Email",
+                  textEditingController: contractBloc.mail),
+              _intput(
+                  hintText: "nhập chứng minh thư",
+                  title: "Số chứng minh thư",
+                  textEditingController: contractBloc.idCard),
+              _intput(
+                  hintText: "nhập địa chỉ",
+                  title: "Địa chỉ",
+                  textEditingController: contractBloc.address),
+              _intput(
+                  hintText: "nhập số điện thoại",
+                  title: "Số điện thoại",
+                  textEditingController: contractBloc.phone),
+              _intput(
+                  hintText: "nhập mật khẩu",
+                  title: "Mật khẩu",
+                  textEditingController: null),
+              _noneInput(
+                  title: "Chọn phòng",
+                  onTap: () {
+                    _showDialogListRoom(appBloc: appBloc, context: context);
+                  }),
+              SizedBox(
+                height: AppDimensions.d1h,
+              ),
+              _noneInputDate(
+                  title: "Ngày sinh",
+                  onTap: () async {
+                    DateTime time = await _showDateTime(context);
+                    if (time != null) {
+                      contractBloc.user1.birthDay =
+                          time.millisecondsSinceEpoch ~/ 1000;
+                    }
+                    contractBloc.add(UpdateUIContractEvent());
+                  },
+                  text: contractBloc.user1.birthDay == null
+                      ? ""
+                      : "${DateTimeFormat.formatDate(
                     DateTime.fromMillisecondsSinceEpoch(
                         contractBloc.user1.birthDay * 1000),
                   )}"),
-        SizedBox(
-          height: AppDimensions.d1h,
-        ),
-        _noneInputDate(
-            title: "Ngày đến",
-            onTap: () async {
-              DateTime time = await _showDateTime(context);
-              if (time != null) {
-                contractBloc.user1.registrationDate =
-                    time.millisecondsSinceEpoch ~/ 1000;
-              }
-              contractBloc.add(UpdateUIContractEvent());
-            },
-            text: contractBloc.user1.registrationDate == null
-                ? ""
-                : "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.user1.registrationDate * 1000))}"),
-        SizedBox(
-          height: AppDimensions.d1h,
-        ),
-        _noneInputDate(
-            title: "Ngày hết hạn",
-            onTap: () async {
-              DateTime time = await _showDateTime(context);
-              if (time != null) {
-                contractBloc.user1.expirationDate =
-                    time.millisecondsSinceEpoch ~/ 1000;
-              }
-              contractBloc.add(UpdateUIContractEvent());
-            },
-            text: contractBloc.user1.expirationDate == null
-                ? ""
-                : "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.user1.expirationDate * 1000))}"),
-        _buildButton(ontap: () {})
-      ],
+              SizedBox(
+                height: AppDimensions.d1h,
+              ),
+              _noneInputDate(
+                  title: "Ngày đến",
+                  onTap: () async {
+                    DateTime time = await _showDateTime(context);
+                    if (time != null) {
+                      contractBloc.user1.registrationDate =
+                          time.millisecondsSinceEpoch ~/ 1000;
+                    }
+                    contractBloc.add(UpdateUIContractEvent());
+                  },
+                  text: contractBloc.user1.registrationDate == null
+                      ? ""
+                      : "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.user1.registrationDate * 1000))}"),
+              SizedBox(
+                height: AppDimensions.d1h,
+              ),
+              _noneInputDate(
+                  title: "Ngày hết hạn",
+                  onTap: () async {
+                    DateTime time = await _showDateTime(context);
+                    if (time != null) {
+                      contractBloc.user1.expirationDate =
+                          time.millisecondsSinceEpoch ~/ 1000;
+                    }
+                    contractBloc.add(UpdateUIContractEvent());
+                  },
+                  text: contractBloc.user1.expirationDate == null
+                      ? ""
+                      : "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.user1.expirationDate * 1000))}"),
+              _buildButton(ontap: () {
+                contractBloc.add(CreateContractEvent());
+              })
+            ],
+          );
+        },
+      ),
     );
   }
 

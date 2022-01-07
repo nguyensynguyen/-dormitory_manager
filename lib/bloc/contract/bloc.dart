@@ -1,7 +1,9 @@
+
 import 'package:dormitory_manager/bloc/contract/state.dart';
 import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/user.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'event.dart';
@@ -13,7 +15,12 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
   User user;
   User user1 = User();
   Room room;
-
+  TextEditingController name = TextEditingController();
+  TextEditingController mail = TextEditingController();
+  TextEditingController idCard = TextEditingController();
+  TextEditingController address = TextEditingController();
+  TextEditingController phone = TextEditingController();
+String messageErrors = "";
 
   @override
   Stream<ContractState> mapEventToState(ContractEvent event) async* {
@@ -65,6 +72,18 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
 
     if(event is CreateContractEvent){
       yield LoadingCreateContractState();
+      for(int i = 0; i< listContract.length ; i ++){
+        if(listContract[i].email == mail.text?? ""){
+          messageErrors = "Email đã được đăng ký trước đó";
+          yield CreateContractErrorsState();
+          return;
+        }
+        else if(listContract[i].phone ==int.tryParse(phone.text)){
+          messageErrors = "Số điện thoại đã được đăng ký trước đó";
+          yield CreateContractErrorsState();
+          return;
+        }
+      }
       var res = await _managerProvider.createUser();
       if(res != null){
         yield CreateContractDoneState();
