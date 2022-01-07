@@ -57,16 +57,16 @@ class CreateContract extends StatelessWidget {
             onTap: () async {
               DateTime time = await _showDateTime(context);
               if (time != null) {
-                contractBloc.user.birthDay =
+                contractBloc.user1.birthDay =
                     time.millisecondsSinceEpoch ~/ 1000;
               }
               contractBloc.add(UpdateUIContractEvent());
             },
-            text: contractBloc.user.birthDay == null
+            text: contractBloc.user1.birthDay == null
                 ? ""
                 : "${DateTimeFormat.formatDate(
                     DateTime.fromMillisecondsSinceEpoch(
-                        contractBloc.user.birthDay * 1000),
+                        contractBloc.user1.birthDay * 1000),
                   )}"),
         SizedBox(
           height: AppDimensions.d1h,
@@ -76,14 +76,14 @@ class CreateContract extends StatelessWidget {
             onTap: () async {
               DateTime time = await _showDateTime(context);
               if (time != null) {
-                contractBloc.user.registrationDate =
+                contractBloc.user1.registrationDate =
                     time.millisecondsSinceEpoch ~/ 1000;
               }
               contractBloc.add(UpdateUIContractEvent());
             },
-            text: contractBloc.user.registrationDate == null
+            text: contractBloc.user1.registrationDate == null
                 ? ""
-                : "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.user.registrationDate * 1000))}"),
+                : "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.user1.registrationDate * 1000))}"),
         SizedBox(
           height: AppDimensions.d1h,
         ),
@@ -92,14 +92,14 @@ class CreateContract extends StatelessWidget {
             onTap: () async {
               DateTime time = await _showDateTime(context);
               if (time != null) {
-                contractBloc.user.expirationDate =
+                contractBloc.user1.expirationDate =
                     time.millisecondsSinceEpoch ~/ 1000;
               }
               contractBloc.add(UpdateUIContractEvent());
             },
-            text: contractBloc.user.expirationDate == null
+            text: contractBloc.user1.expirationDate == null
                 ? ""
-                : "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.user.expirationDate * 1000))}"),
+                : "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.user1.expirationDate * 1000))}"),
         _buildButton(ontap: () {})
       ],
     );

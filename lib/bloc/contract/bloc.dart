@@ -12,7 +12,8 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
   ContractBloc() : super(null);
   ManagerProvider _managerProvider = ManagerProvider();
   List<User> listContract = [];
-  User user = User();
+  User user;
+  User user1 = User();
   Room room;
 
 
