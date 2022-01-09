@@ -1,4 +1,5 @@
 import 'package:dormitory_manager/bloc/all_room/bloc.dart';
+import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
 import 'package:dormitory_manager/bloc/report/bloc.dart';
 import 'package:dormitory_manager/bloc/report/event.dart';
 import 'package:dormitory_manager/converts/time_format.dart';
@@ -12,26 +13,27 @@ import 'package:dormitory_manager/resources/fontsizes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'close_dialog.dart';
 
 class ItemRoom extends StatelessWidget {
   AllRoomBloc allRoomBloc;
-
-  ItemRoom({this.allRoomBloc});
+  AppBloc appBloc;
+  ItemRoom({this.allRoomBloc,this.appBloc});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: AppDimensions.d100w,
       height: AppDimensions.d100h,
-      child: _buildItem(context, allRoomBloc),
+      child: _buildItem(context,appBloc),
     );
   }
 
-  _buildItem(BuildContext context, AllRoomBloc allRoomBloc) {
+  _buildItem(BuildContext context, AppBloc allRoomBloc) {
     List<Widget> listItem = [];
-    for (int i = 0; i < allRoomBloc.listRoom.length; i++) {
+    for (int i = 0; i < allRoomBloc.listAllDataRoom.length; i++) {
       listItem.add(GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {},
@@ -70,25 +72,25 @@ class ItemRoom extends StatelessWidget {
                                       Container(
                                         color: AppColors.colorGrey_400,
                                         child: Text(
-                                          allRoomBloc.listRoom[i]
-                                                      .totalCurrentPeople <=
+                                          allRoomBloc.listAllDataRoom[i]
+                                                      .user.length <=
                                                   0
-                                              ? "${allRoomBloc.listRoom[i].roomName}:Trống"
-                                              : allRoomBloc.listRoom[i]
-                                                          .totalCurrentPeople >=
+                                              ? "${allRoomBloc.listAllDataRoom[i].roomName}:Trống"
+                                              : allRoomBloc.listAllDataRoom[i]
+                                                          .user.length >=
                                                       allRoomBloc
-                                                          .listRoom[i].maxPeople
-                                                  ? "${allRoomBloc.listRoom[i].roomName}: Full"
-                                                  : "${allRoomBloc.listRoom[i].roomName}: Đang ở",
+                                                          .listAllDataRoom[i].maxPeople
+                                                  ? "${allRoomBloc.listAllDataRoom[i].roomName}: Full"
+                                                  : "${allRoomBloc.listAllDataRoom[i].roomName}: Đang ở",
                                           style: TextStyle(
-                                              color: allRoomBloc.listRoom[i]
-                                                          .totalCurrentPeople <=
+                                              color: allRoomBloc.listAllDataRoom[i]
+                                                          .user.length <=
                                                       0
-                                                  ? AppColors.colorRed
-                                                  : allRoomBloc.listRoom[i]
-                                                              .totalCurrentPeople >=
+                                                  ? AppColors.colorBlack
+                                                  : allRoomBloc.listAllDataRoom[i]
+                                                              .user.length >=
                                                           allRoomBloc
-                                                              .listRoom[i]
+                                                              .listAllDataRoom[i]
                                                               .maxPeople
                                                       ? AppColors.colorRed
                                                       : AppColors.colorFacebook,
@@ -108,7 +110,7 @@ class ItemRoom extends StatelessWidget {
                                 style: TextStyle(fontSize: AppFontSizes.fs8),
                               ),
                               Text(
-                                "${StringHelper.formatCurrency(allRoomBloc.listRoom[i].roomAmount)}đ",
+                                "${StringHelper.formatCurrency(allRoomBloc.listAllDataRoom[i].roomAmount)}đ",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppFontSizes.fs10,
@@ -123,7 +125,7 @@ class ItemRoom extends StatelessWidget {
                                 style: TextStyle(fontSize: AppFontSizes.fs8),
                               ),
                               Text(
-                                "${allRoomBloc.listRoom[i].maxPeople}",
+                                "${allRoomBloc.listAllDataRoom[i].maxPeople}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppFontSizes.fs10,
@@ -136,7 +138,7 @@ class ItemRoom extends StatelessWidget {
                               Text("Số người hiện tại: ",
                                   style: TextStyle(fontSize: AppFontSizes.fs8)),
                               Text(
-                                "${allRoomBloc.listRoom[i].totalCurrentPeople}",
+                                "${allRoomBloc.listAllDataRoom[i].user?.length ?? 0}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppFontSizes.fs10,

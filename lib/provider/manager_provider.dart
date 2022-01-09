@@ -139,7 +139,7 @@ class ManagerProvider {
       var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.createUser}",
           data: data);
       if (res.data['success']) {
-        return true;
+        return res.data;
       } else {
         return null;
       }
@@ -248,6 +248,21 @@ class ManagerProvider {
     try {
       var res =
           await dio.delete("${ApiUrl.baseUrl + ApiUrl.deleteMessage}/$id");
+      if (res.data['success']) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+
+  Future<dynamic> createManager({dynamic data}) async {
+    try {
+      var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.createManager}",
+          data: data);
       if (res.data['success']) {
         return true;
       } else {

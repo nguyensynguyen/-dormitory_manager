@@ -11,3 +11,5 @@ class LogOutEvent extends AuthEvent{
   LogOutEvent({this.appBloc});
 }
 
+class CreateManager extends AuthEvent{
+}

@@ -37,7 +37,8 @@ dependencies:
   fluttertoast: any
   shared_preferences: any
   flutter_datetime_picker: any
-
+  url_launcher: any
+  flutter_mailer: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

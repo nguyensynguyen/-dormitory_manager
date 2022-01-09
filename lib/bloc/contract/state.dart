@@ -13,3 +13,5 @@ class LoadingCreateContractState extends ContractState {}
 class CreateContractDoneState extends ContractState {}
 
 class CreateContractErrorsState extends ContractState {}
+
+class UpdateDoneContractState extends ContractState {}

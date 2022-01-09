@@ -139,6 +139,7 @@ class BillState extends State<Bill> {
                 ),
               ),
             ),
+            _appBloc.isUser?Container():
             Container(
               width: AppDimensions.d100w,
               height: AppDimensions.d10h,

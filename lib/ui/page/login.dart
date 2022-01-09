@@ -3,6 +3,7 @@ import 'package:dormitory_manager/bloc/app_bloc/event.dart';
 import 'package:dormitory_manager/bloc/auth/bloc.dart';
 import 'package:dormitory_manager/bloc/auth/event.dart';
 import 'package:dormitory_manager/bloc/auth/state.dart';
+import 'package:dormitory_manager/helper/input_format.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/provider/login_provider.dart';
 import 'package:dormitory_manager/resources/colors.dart';
@@ -12,6 +13,7 @@ import 'package:dormitory_manager/ui/page/home.dart';
 import 'package:dormitory_manager/ui/widget/close_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,6 +29,7 @@ class LoginState extends State<Login> {
   String typeAccount = "Quản lý";
   AuthBloc _authBloc;
   AppBloc _appBloc;
+  final List<TextInputFormatter> _formatter1 = [NumberFormat(isInt: true)];
 
   @override
   void initState() {
@@ -46,11 +49,11 @@ class LoginState extends State<Login> {
           if (state is LoginDone) {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => HomePage()),
-                    (Route<dynamic> route) => false);
+                (Route<dynamic> route) => false);
           }
 
           if (state is LoginFail) {
-            print("login fail");
+           Fluttertoast.showToast(msg: _authBloc.errorsMessage,toastLength: Toast.LENGTH_LONG);
             Navigator.pop(context);
           }
         },
@@ -176,6 +179,37 @@ class LoginState extends State<Login> {
                                   ),
                                 ),
                               ),
+                              SizedBox(
+                                height: AppDimensions.d1h,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _showDialogCreateManager();
+//                                  _authBloc.add(LoginEvent(appBloc: _appBloc));
+                                },
+                                behavior: HitTestBehavior.opaque,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: AppDimensions.d70w,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [],
+                                    color: AppColors.colorFacebook,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(AppDimensions.radius1_5w),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(AppDimensions.d2h),
+                                    child: Text(
+                                      "Đăng ký",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.colorWhite,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -260,5 +294,172 @@ class LoginState extends State<Login> {
             ),
           ],
         ));
+  }
+
+  _showDialogCreateManager() {
+    return UIHelper.showDialogCommon(
+      context: context,
+      widget: Padding(
+        padding: EdgeInsets.all(AppDimensions.d1h),
+        child: BlocListener(
+          cubit: _authBloc,
+          listener: (context, state) {
+            if (state is CreateDone) {
+              Navigator.pop(context);
+              Fluttertoast.showToast(msg: "Đăng ký thành công",toastLength: Toast.LENGTH_LONG);
+            }
+            if (state is CreateErrors) {
+              Navigator.pop(context);
+              Fluttertoast.showToast(msg: _authBloc.errorsMessage,toastLength: Toast.LENGTH_LONG);
+            }
+            if (state is LoadingCreate) {
+              UIHelper.showLoadingCommon(context: context);
+            }
+          },
+          child: BlocBuilder(
+              cubit: _authBloc,
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // _showDialogCreateEquipment(
+                            //     context: context, allRoomBloc: _allRoomBloc);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: AppColors.colorWhite,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(AppDimensions.radius1_0w),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(AppDimensions.d1h),
+                              child: Text(
+                                "Đăng ký tài khoản cho người quản lí",
+                                style: TextStyle(
+                                    color: AppColors.colorFacebook,
+                                    fontSize: AppFontSizes.fs16,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        CloseDialog(
+                          color: AppColors.colorBlack,
+                          onClose: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    ),
+                    Divider(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            _intput(
+                                title: "Họ tên",
+                                hintText: "Nhập họ tên",
+                                textEditingController: _authBloc.nameManager),
+                            _intput(
+                                title: "Email",
+                                hintText: "Nhập email",
+                                textEditingController: _authBloc.emailManager),
+                            _intput(
+                                title: "Số điện thoại",
+                                hintText: "Nhập số điện thoại",
+                                textEditingController: _authBloc.phoneManager,
+                                formatter1: _formatter1),
+                            _intput(
+                                title: "Địa chỉ",
+                                hintText: "Nhập địa chỉ",
+                                textEditingController:
+                                    _authBloc.addressManager),
+                            _intput(
+                                title: "Mật khẩu",
+                                hintText: "Nhập mật khẩu",
+                                textEditingController:
+                                    _authBloc.passwordManager),
+                            _buildButton(ontap: (){
+                              _authBloc.add(CreateManager());
+                            })
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              }),
+        ),
+      ),
+    );
+  }
+  _buildButton({Function ontap}) {
+    return Padding(
+      padding: EdgeInsets.all(AppDimensions.d1h),
+      child: GestureDetector(
+        onTap: ontap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          alignment: Alignment.center,
+          width: AppDimensions.d100w,
+          decoration: BoxDecoration(
+            boxShadow: [],
+            color: AppColors.colorOrange,
+            borderRadius: BorderRadius.all(
+              Radius.circular(AppDimensions.radius1_0w),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(AppDimensions.d2h),
+            child: Text(
+              "Xác nhận",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColors.colorWhite,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  _intput(
+      {String title,
+      String hintText,
+      TextEditingController textEditingController,
+      List<TextInputFormatter> formatter1}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "${title} *",
+          style: TextStyle(
+              color: AppColors.colorBlack_87,
+              fontSize: AppFontSizes.fs12,
+              fontWeight: FontWeight.bold),
+        ),
+        Container(
+          child: CupertinoTextField(
+            inputFormatters: formatter1 == null ? [] : formatter1,
+            controller: textEditingController,
+            placeholder: hintText,
+            placeholderStyle:
+                TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
+          ),
+        ),
+        SizedBox(
+          height: AppDimensions.d1h,
+        ),
+      ],
+    );
   }
 }

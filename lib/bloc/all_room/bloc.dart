@@ -5,7 +5,6 @@ import 'package:dormitory_manager/model/service.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'event.dart';
 
 class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
@@ -17,7 +16,6 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
   TextEditingController textRoomName = TextEditingController();
   TextEditingController textPrice = TextEditingController();
   TextEditingController textMaxP = TextEditingController();
-  TextEditingController textCurP = TextEditingController();
   TextEditingController textWater = TextEditingController();
   TextEditingController textElectron = TextEditingController();
   TextEditingController textUnitWater = TextEditingController();
@@ -39,6 +37,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
       var data;
       if(event.appBloc.isUser){
         data = await _managerProvider.getAllRoom(id: event.appBloc.user.managerId);
+
       }else{
         data = await _managerProvider.getAllRoom(id: event.appBloc.manager.id);
       }
@@ -49,6 +48,13 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
         event.appBloc.listAllDataRoom = data['data'].map<Room>((item) {
           return Room.fromJson(item);
         }).toList();
+        if(event.appBloc.isUser){
+          event.appBloc.listAllDataRoom.forEach((element) {
+            if(event.appBloc.user.roomId == element.id){
+              event.appBloc.room1 = Room(id: element.id,roomName: element.roomName);
+            }
+          });
+        }
 
         yield GetAllDataRoomState();
       }
@@ -61,7 +67,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
         "room_name": textRoomName.text,
         "room_amount": double.tryParse(textPrice.text),
         "max_people": int.tryParse(textMaxP.text),
-        "total_current_people": int.tryParse(textCurP.text),
+        "total_current_people":0,
         "manager_id": event.appBloc.manager.id,
         "date_create_bill": date_create_bill.millisecondsSinceEpoch ~/ 1000
       };
@@ -73,7 +79,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
           roomName: res['data']['room_name'],
           dateCreateBill: res['data']['date_create_bill'],
           maxPeople: res['data']['max_people'],
-          totalCurrentPeople: res['data']['total_current_people'],
+          totalCurrentPeople:0,
           roomAmount: data['room_amount'],
         ));
         room = Room(
@@ -83,7 +89,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
             maxPeople: res['data']['max_people'],
             totalCurrentPeople: res['data']['total_current_people'],
             roomAmount: data['room_amount'],
-            managerId: event.appBloc.profile.id);
+            managerId: event.appBloc.manager.id);
         yield CreateRoomDone();
       }
     }
@@ -107,11 +113,12 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
             roomName: room.roomName,
             dateCreateBill: room.dateCreateBill,
             maxPeople: room.maxPeople,
-            totalCurrentPeople: room.totalCurrentPeople,
+            totalCurrentPeople: 0,
             roomAmount: room.roomAmount,
             service: listService,
             roomEquipment: [],
-            managerId: event.appBloc.profile.id));
+            user: [],
+            managerId: event.appBloc.manager.id));
         reset();
         yield CreateServiceDone();
       }
@@ -148,7 +155,6 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
     textRoomName.text = "";
     textPrice.text = "";
     textMaxP.text = "";
-    textCurP.text = "";
     textWater.text = "";
     textElectron.text = "";
     textUnitWater.text = "";

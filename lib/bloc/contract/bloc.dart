@@ -1,10 +1,11 @@
-
 import 'package:dormitory_manager/bloc/contract/state.dart';
 import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/user.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_mailer/flutter_mailer.dart';
 
 import 'event.dart';
 
@@ -15,26 +16,46 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
   User user;
   User user1 = User();
   Room room;
+  DateTime time;
   TextEditingController name = TextEditingController();
   TextEditingController mail = TextEditingController();
   TextEditingController idCard = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController phone = TextEditingController();
-String messageErrors = "";
+  String messageErrors = "";
 
   @override
   Stream<ContractState> mapEventToState(ContractEvent event) async* {
     if (event is GetAllContractEvent) {
       yield Loading();
       var res;
-      if(event.appBloc.isUser){
-       res = await _managerProvider.getAllContract(id: event.appBloc.user.managerId);
-
-      }else{
-       res= await _managerProvider.getAllContract(id: event.appBloc.manager.id);
+      if (event.appBloc.isUser) {
+        res = await _managerProvider.getAllContract(
+            id: event.appBloc.user.managerId);
+      } else {
+        res =
+            await _managerProvider.getAllContract(id: event.appBloc.manager.id);
       }
       if (res != null) {
         listContract = res.user;
+//        Future.delayed(Duration(seconds: 2));
+        if( event.appBloc.listAllDataRoom.length >0){
+          event.appBloc.listAllDataRoom.forEach((room) {
+            listContract.forEach((user) {
+              if(user.roomId == room.id){
+                user.room = {"room_name":room.roomName};
+              }
+            });
+          });
+        }else{
+          listContract.forEach((user) {
+            if(user.roomId == room.id){
+              user.room = {"room_name":""};
+            }
+          });
+        }
+
+
         yield GetDone();
       }
     }
@@ -50,9 +71,8 @@ String messageErrors = "";
     }
 
     if (event is UpdateUIContractEvent) {
-     yield UpdateUIState();
-      }
-
+      yield UpdateUIState();
+    }
 
     if (event is DeleteContractEvent) {
       yield Loading();
@@ -70,23 +90,135 @@ String messageErrors = "";
       }
     }
 
-    if(event is CreateContractEvent){
+    if (event is CreateContractEvent) {
       yield LoadingCreateContractState();
-      for(int i = 0; i< listContract.length ; i ++){
-        if(listContract[i].email == mail.text?? ""){
+      for (int i = 0; i < listContract.length; i++) {
+        if (listContract[i].email == mail.text ?? "") {
           messageErrors = "Email đã được đăng ký trước đó";
           yield CreateContractErrorsState();
           return;
-        }
-        else if(listContract[i].phone ==int.tryParse(phone.text)){
+        } else if (listContract[i].phone == int.tryParse(phone.text)) {
           messageErrors = "Số điện thoại đã được đăng ký trước đó";
           yield CreateContractErrorsState();
           return;
         }
       }
-      var res = await _managerProvider.createUser();
-      if(res != null){
+      if (name.text == "") {
+        messageErrors = "Nhập tên";
+        yield CreateContractErrorsState();
+        return;
+      }
+      if (mail.text == "") {
+        messageErrors = "Nhập email";
+        yield CreateContractErrorsState();
+        return;
+      }
+      if (idCard.text == null) {
+        messageErrors = "Nhập số căn cước";
+        yield CreateContractErrorsState();
+        return;
+      }
+      if (address.text == "") {
+        messageErrors = "Nhập địa chỉ";
+        yield CreateContractErrorsState();
+        return;
+      }
+      if (phone.text == "") {
+        messageErrors = "Nhập số điện thoại";
+        yield CreateContractErrorsState();
+        return;
+      }
+      if (room == null) {
+        messageErrors = "Chọn phòng";
+        yield CreateContractErrorsState();
+        return;
+      }
+      if (user1.birthDay == null) {
+        messageErrors = "Nhập ngày sinh";
+        yield CreateContractErrorsState();
+        return;
+      }
+      if (user1.registrationDate == null) {
+        messageErrors = "Nhập ngày đến";
+        yield CreateContractErrorsState();
+        return;
+      }
+      if (user1.expirationDate == null) {
+        messageErrors = "Nhập ngày hết hạn";
+        yield CreateContractErrorsState();
+        return;
+      }
+
+      if(user1.registrationDate >user1.expirationDate ){
+        messageErrors = "Ngày hết hạn phải lớn hơn ngày đến";
+        yield CreateContractErrorsState();
+        return;
+      }
+
+      Map data = {
+        "user_name": name.text,
+        "email": mail.text,
+        "address": address.text,
+        "phone": int.tryParse(phone.text),
+        "password": "1",
+        "birth_day": user1.birthDay,
+        "expiration_date": user1.expirationDate,
+        "registration_date": user1.registrationDate,
+        "manager_id": event.appBloc.manager.id,
+        "room_id": room.id,
+        "id_card": int.tryParse(idCard.text)
+      };
+
+      var res = await _managerProvider.createUser(data: data);
+      if (res != null) {
+
+        event.appBloc.room.user.add(User(
+            id: res['data']['id'],
+            userName: name.text,
+            email: mail.text,
+            address: address.text,
+            phone: int.tryParse(phone.text),
+            birthDay: user1.birthDay,
+            registrationDate: user1.registrationDate,
+            password: "1",
+            managerId: event.appBloc.manager.id,
+            expirationDate: user1.expirationDate,
+            room: {"room_name": room.roomName},
+            roomId: room.id));
+
+        listContract.add(User(
+            id: res['data']['id'],
+            userName: name.text,
+            email: mail.text,
+            address: address.text,
+            phone: int.tryParse(phone.text),
+            birthDay: user1.birthDay,
+            registrationDate: user1.registrationDate,
+            password: "1",
+            managerId: event.appBloc.manager.id,
+            expirationDate: user1.expirationDate,
+            room: {"room_name": room.roomName},
+            roomId: room.id));
+
+        const GMAIL_SCHEMA = 'com.google.android.gm';
+        final bool gmailinstalled =  await FlutterMailer.isAppInstalled(GMAIL_SCHEMA);
+
+        if(gmailinstalled) {
+          final MailOptions mailOptions = MailOptions(
+            body: "Bạn đăng ký hợp đồng ký túc xá thành công. hãy đăng nhập vào App với: <br> email: ${mail.text} <br> password: 1",
+            subject: "Đăng ký hợp đồng thành công",
+            recipients: ['${mail.text}'],
+            isHTML: true,
+            attachments: [ 'path/to/image.png', ],
+            appSchema: GMAIL_SCHEMA,
+          );
+          await FlutterMailer.send(mailOptions);
+        }
+
         yield CreateContractDoneState();
+      } else {
+        messageErrors = "Tạo thất bại";
+        yield CreateContractErrorsState();
       }
     }
   }

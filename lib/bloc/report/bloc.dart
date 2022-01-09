@@ -21,6 +21,7 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
       yield LoadingReportState();
       var res;
       if(event.appBloc.isUser){
+
         res =  await _managerProvider.getAllMessage(id: event.appBloc.user.managerId);
       }else{
         res =  await _managerProvider.getAllMessage(id: event.appBloc.manager.id);
@@ -49,7 +50,7 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
         "content":content.text,
         "status":"fixing",
         "date_create":DateTime.now().millisecondsSinceEpoch ~/ 1000,
-        "room_id":event.appBloc.room.id,
+        "room_id":event.appBloc.room1.id,
         "manager_id":event.appBloc.user.managerId,
         "user_id":event.appBloc.user.id,
       };
@@ -61,7 +62,7 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
           content: content.text,
           status: "fixing",
           dateCreate: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-          room: Room(roomName: event.appBloc.room.roomName),
+          room: Room(roomName: event.appBloc.room1.roomName),
           user: User(userName: event.appBloc.user.userName),
           userId: event.appBloc.user.id
         ));

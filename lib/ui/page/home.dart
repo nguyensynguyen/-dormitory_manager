@@ -1,3 +1,4 @@
+
 import 'package:dormitory_manager/bloc/all_room/bloc.dart';
 import 'package:dormitory_manager/bloc/all_room/event.dart';
 import 'package:dormitory_manager/bloc/all_room/state.dart';
@@ -27,7 +28,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'bill.dart';
 import 'login.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_mailer/flutter_mailer.dart';
 class HomePage extends StatefulWidget {
   @override
   HomePageState createState() => HomePageState();
@@ -45,7 +47,6 @@ class HomePageState extends State<HomePage> {
     BuildHome(),
     Bill(),
     Contract(),
-    Notifications(),
     Container(
       child: Report(),
     ),
@@ -77,10 +78,10 @@ class HomePageState extends State<HomePage> {
               icon: Icon(Icons.perm_identity),
               title: Text("Hợp đồng"),
               backgroundColor: Colors.blue),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_active),
-              title: Text("Thông báo"),
-              backgroundColor: Colors.blue),
+//          BottomNavigationBarItem(
+//              icon: Icon(Icons.notifications_active),
+//              title: Text("Thông báo"),
+//              backgroundColor: Colors.blue),
           BottomNavigationBarItem(
               icon: Icon(Icons.error),
               title: Text("Sự cố"),
@@ -119,8 +120,6 @@ class _buildHome extends State<BuildHome> {
     _appBloc = BlocProvider.of<AppBloc>(context);
       _allRoomBloc = AllRoomBloc();
       _allRoomBloc.add(GetDataRoomEvent(appBloc: _appBloc));
-
-
   }
 
   @override
@@ -364,6 +363,43 @@ _buildManager(){
                       },
                     ),
                   ),
+
+                  Expanded(
+                    child: GestureDetector(
+                      child: Card(
+                        color: AppColors.colorFacebook,
+                        child: Padding(
+                          padding: EdgeInsets.all(AppDimensions.d1h),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'asset/image/repair.png',
+                                width: AppDimensions.d10w,
+                              ),
+                              SizedBox(
+                                height: AppDimensions.d1h,
+                              ),
+                              Text(
+                                "Send mail",
+                                style: TextStyle(
+                                  color: AppColors.colorWhite,
+                                  fontSize: AppFontSizes.fs10,
+                                ),
+                              ),
+                              SizedBox(
+                                height: AppDimensions.d0_5h,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      onTap: () async{
+
+
+//                         await launch('mailto:"smith@example.com"');
+                      },
+                    ),
+                  ),
                 ],
               ),
 
@@ -373,6 +409,26 @@ _buildManager(){
       ),
     );
 }
+
+  final MailOptions mailOptions = MailOptions(
+    body: 'a long body for the email <br> with a subset of HTML',
+    subject: 'the Email Subject',
+    recipients: ['example@example.com'],
+    isHTML: true,
+    bccRecipients: ['other@example.com'],
+    ccRecipients: ['third@example.com'],
+    attachments: [ 'path/to/image.png', ],
+  );
+   Uri emailLaunchUri = Uri(
+    scheme: 'mailto',
+    path: 'smith@example.com smith1@example.com',
+
+  );
+  String encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
 _buildUser(){
     return Container();
 }
@@ -390,6 +446,7 @@ _buildUser(){
                       children: [
                         GestureDetector(
                           onTap: () {
+
                             _showDialogCreateRoom(
                                 context: context, allRoomBloc: _allRoomBloc);
                           },
@@ -430,6 +487,7 @@ _buildUser(){
                       child: SingleChildScrollView(
                         child: ItemRoom(
                           allRoomBloc: _allRoomBloc,
+                          appBloc: _appBloc,
                         ),
                       ),
                     )
@@ -553,26 +611,7 @@ _buildUser(){
                       SizedBox(
                         width: AppDimensions.d1h,
                       ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Số người hiện tại *",
-                              style: TextStyle(
-                                color: AppColors.colorBlack_87,
-                                fontSize: AppFontSizes.fs10,
-                              ),
-                            ),
-                            Container(
-                              child: CupertinoTextField(
-                                controller: allRoomBloc.textCurP,
-                                inputFormatters: _formatter1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+
                     ],
                   ),
                   SizedBox(
@@ -596,12 +635,7 @@ _buildUser(){
                               msg: "Nhập số người tối đa trong phòng",
                               toastLength: Toast.LENGTH_SHORT);
                           return;
-                        } else if (allRoomBloc.textCurP.text == "") {
-                          Fluttertoast.showToast(
-                              msg: "Nhập số người hiện tại trong phòng",
-                              toastLength: Toast.LENGTH_SHORT);
-                          return;
-                        } else {
+                        }  else {
                           allRoomBloc.add(CreateRoomEvent(appBloc: _appBloc));
                         }
                       })

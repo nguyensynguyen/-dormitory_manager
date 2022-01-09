@@ -10,6 +10,7 @@ import 'package:dormitory_manager/resources/fontsizes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'close_dialog.dart';
 
@@ -139,7 +140,7 @@ class ItemContract extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "${appBloc.room?.roomName??""}",
+                          "${appBloc.room1?.roomName ?? ""}",
                           style: TextStyle(
                               fontSize: AppFontSizes.fs10,
                               color: AppColors.colorFacebook,
@@ -172,7 +173,6 @@ class ItemContract extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     SizedBox(
                       height: AppDimensions.d0_5h,
                     ),
@@ -198,7 +198,6 @@ class ItemContract extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     SizedBox(
                       height: AppDimensions.d0_5h,
                     ),
@@ -249,7 +248,6 @@ class ItemContract extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     SizedBox(
                       height: AppDimensions.d0_5h,
                     ),
@@ -331,7 +329,7 @@ class ItemContract extends StatelessWidget {
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "${contractBloc.listContract[i].room['room_name']}",
+                            "${contractBloc.listContract[i]?.room['room_name']}",
                             style: TextStyle(
                                 color: AppColors.colorBlack_38,
                                 fontSize: AppFontSizes.fs10),
@@ -449,6 +447,7 @@ class ItemContract extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+
                   _showDateTime(context);
                 },
                 child: Text("Gia hạn hợp đồng"),
@@ -483,14 +482,60 @@ class ItemContract extends StatelessWidget {
   }
 
   _showDateTime(BuildContext context, {int index}) {
-    return DatePicker.showDatePicker(context,
-        showTitleActions: true,
-        minTime: DateTime.now(),
-        maxTime: DateTime(2071, 6, 7),
-        onChanged: (date) {}, onConfirm: (date) {
-      contractBloc.add(ExtendContractEvent(
-          id: contractBloc.user.id,
-          dateTime: date.millisecondsSinceEpoch ~/ 1000));
-    }, currentTime: DateTime.now(), locale: LocaleType.vi);
+    DateTime time =DateTime.now();
+    return UIHelper.showDialogLogin(
+      context: context,
+      widget: Padding(
+        padding: EdgeInsets.all(AppDimensions.d1h),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "Hủy",
+                  style: TextStyle(
+                      color: AppColors.colorFacebook,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  if(time.millisecondsSinceEpoch <= DateTime.now().millisecondsSinceEpoch){
+                   Fluttertoast.showToast(msg: "Ngày hết hạn không thể nhỏ hơn ngày hiện tại",toastLength: Toast.LENGTH_LONG) ;
+                   return;
+                  }
+                  contractBloc.add(ExtendContractEvent(
+                      id: contractBloc.user.id,
+                      dateTime: time.millisecondsSinceEpoch ~/ 1000));
+                  Navigator.pop(context);
+
+                },
+                child: Text(
+                  "Xác nhận",
+                  style: TextStyle(
+                      color: AppColors.colorFacebook,
+                      fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
+          Container(
+            height: AppDimensions.d30h,
+            child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                initialDateTime: DateTime.now(),
+                onDateTimeChanged: (dateTime) {
+                  time = dateTime;
+                }),
+          )
+        ]),
+      ),
+    );
   }
+
+
 }

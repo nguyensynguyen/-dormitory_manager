@@ -23,12 +23,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   dynamic profile;
   List<Room> listAllDataRoom;
   Room room;
+  Room room1;
   RoomBill roomBill;
   List<RoomBillDetail> roomBillDetail = [];
   List<Service> listService;
   double totalPrice = 0.0;
   int index = 0;
-String roomName ="";
+  String roomName ="";
+  int roomId;
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {}

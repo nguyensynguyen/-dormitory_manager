@@ -140,6 +140,7 @@ class UIHelper {
     );
   }
 
+
   static loading() {
     return Container(
       alignment: Alignment.center,

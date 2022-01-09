@@ -92,7 +92,7 @@ class ReportState extends State<Report> {
                                   fontSize: AppFontSizes.fs14,
                                   fontWeight: FontWeight.bold),
                             ),
-                            GestureDetector(
+                            _appBloc.isUser? GestureDetector(
                               onTap: () => _showDialogReport(),
                               child: Container(
                                 alignment: Alignment.center,
@@ -113,7 +113,8 @@ class ReportState extends State<Report> {
                                   textAlign: TextAlign.center,
                                 ),
                               ),
-                            )
+                            ):Container()
+
                           ],
                         ),
                       ),
@@ -220,7 +221,7 @@ class ReportState extends State<Report> {
                       padding: EdgeInsets.all(AppDimensions.d0_5h),
                       child: Row(
                         children: [
-                          Text("${_appBloc.room?.roomName ?? ""}"),
+                          Text("${_appBloc.room1?.roomName ?? ""}"),
                           Expanded(
                             child: Container(),
                           ),

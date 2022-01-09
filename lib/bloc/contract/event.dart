@@ -27,4 +27,7 @@ class DeleteContractEvent extends ContractEvent {
 
 class UpdateUIContractEvent extends ContractEvent {}
 
-class CreateContractEvent extends ContractEvent {}
+class CreateContractEvent extends ContractEvent {
+  AppBloc appBloc;
+  CreateContractEvent({this.appBloc});
+}

@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
                       //   primaryColor: AppColors.mainColor,
                       // ),
                       home: Splash(),
+
                     ));
               },
             );
