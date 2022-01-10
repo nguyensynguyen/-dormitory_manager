@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dormitory_manager/bloc/all_room/state.dart';
 import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/room_eqiupment.dart';
@@ -11,6 +13,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
   AllRoomBloc() : super(null);
   ManagerProvider _managerProvider = ManagerProvider();
   List<Room> listRoom = [];
+  List<Room> tempListRoom = [];
   List<Service> listService = [];
   List<RoomEquipment> listEquipment = [];
   TextEditingController textRoomName = TextEditingController();
@@ -45,7 +48,13 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
         listRoom = data['data'].map<Room>((item) {
           return Room.fromJson(item);
         }).toList();
+        listRoom.forEach((element) {
+          tempListRoom.add(element);
+        });
         event.appBloc.listAllDataRoom = data['data'].map<Room>((item) {
+          return Room.fromJson(item);
+        }).toList();
+        event.appBloc.listAllDataRoomDisplay = data['data'].map<Room>((item) {
           return Room.fromJson(item);
         }).toList();
         if(event.appBloc.isUser){
@@ -82,6 +91,15 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
           totalCurrentPeople:0,
           roomAmount: data['room_amount'],
         ));
+
+        tempListRoom.add(Room(
+          id: res['data']['id'],
+          roomName: res['data']['room_name'],
+          dateCreateBill: res['data']['date_create_bill'],
+          maxPeople: res['data']['max_people'],
+          totalCurrentPeople:0,
+          roomAmount: data['room_amount'],
+        ));
         room = Room(
             id: res['data']['id'],
             roomName: res['data']['room_name'],
@@ -108,6 +126,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
       }).toList();
       var res = await _managerProvider.createService(data: data);
       if (res != null) {
+
         event.appBloc.listAllDataRoom.add(Room(
             id: room.id,
             roomName: room.roomName,
@@ -119,6 +138,19 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
             roomEquipment: [],
             user: [],
             managerId: event.appBloc.manager.id));
+
+        event.appBloc.listAllDataRoomDisplay.add(Room(
+            id: room.id,
+            roomName: room.roomName,
+            dateCreateBill: room.dateCreateBill,
+            maxPeople: room.maxPeople,
+            totalCurrentPeople: 0,
+            roomAmount: room.roomAmount,
+            service: listService,
+            roomEquipment: [],
+            user: [],
+            managerId: event.appBloc.manager.id));
+
         reset();
         yield CreateServiceDone();
       }
@@ -148,6 +180,55 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
     if (event is UpdateUIRoomEvent) {
       yield UpdateUIRoomState();
     }
+
+    if(event is RoomLiveEvent){
+      event.appBloc.listAllDataRoomDisplay.clear();
+      tempListRoom.forEach((room) {
+        if(room.user == null){
+          room.user =[];
+        }
+        if(room.user.length >0 && room.user.length < room.maxPeople){
+          event.appBloc.listAllDataRoomDisplay.add(room);
+        }
+      });
+      yield UpdateUIRoomState();
+    }
+
+    if(event is RoomFullEvent){
+
+      event.appBloc.listAllDataRoomDisplay.clear();
+      tempListRoom.forEach((room) {
+        if(room.user == null){
+          room.user =[];
+        }
+        if(room.user.length >0 && room.user.length >= room.maxPeople){
+          event.appBloc.listAllDataRoomDisplay.add(room);
+        }
+      });
+      yield UpdateUIRoomState();
+    }
+
+    if(event is RoomEmptyEvent){
+
+      event.appBloc.listAllDataRoomDisplay.clear();
+      tempListRoom.forEach((room) {
+        if(room.user == null){
+          room.user =[];
+        }
+        if(room.user.length <=0 ){
+          event.appBloc.listAllDataRoomDisplay.add(room);
+        }
+      });
+      yield UpdateUIRoomState();
+    }
+    if(event is RoomAllEvent){
+      event.appBloc.listAllDataRoomDisplay.clear();
+      tempListRoom.forEach((room) {
+          event.appBloc.listAllDataRoomDisplay.add(room);
+      });
+      yield UpdateUIRoomState();
+    }
+
   }
 
   reset() {

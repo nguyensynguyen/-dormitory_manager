@@ -15,3 +15,4 @@ class CreateContractDoneState extends ContractState {}
 class CreateContractErrorsState extends ContractState {}
 
 class UpdateDoneContractState extends ContractState {}
+class Done extends ContractState {}

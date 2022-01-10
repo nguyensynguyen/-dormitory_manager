@@ -21,35 +21,39 @@ class CreateContract extends StatelessWidget {
   AppBloc appBloc;
   final List<TextInputFormatter> _formatter = [NumberFormat()];
   final List<TextInputFormatter> _formatter1 = [NumberFormat(isInt: true)];
+
   CreateContract({this.contractBloc, this.appBloc});
 
   @override
   Widget build(BuildContext context) {
     return BlocListener(
       cubit: contractBloc,
-      listener: (context,state){
-        if(state is LoadingCreateContractState){
+      listener: (context, state) {
+        if (state is LoadingCreateContractState) {
           UIHelper.showLoadingCommon(context: context);
         }
-        if(state is CreateContractDoneState){
+        if (state is CreateContractDoneState) {
           Navigator.pop(context);
-          Fluttertoast.showToast(msg: "Tạo thành công",toastLength: Toast.LENGTH_LONG);
+          Fluttertoast.showToast(
+              msg: "Tạo thành công", toastLength: Toast.LENGTH_LONG);
         }
 
-        if(state is CreateContractErrorsState){
+        if (state is CreateContractErrorsState) {
           Navigator.pop(context);
-          Fluttertoast.showToast(msg: contractBloc.messageErrors,toastLength: Toast.LENGTH_LONG);
+          Fluttertoast.showToast(
+              msg: contractBloc.messageErrors, toastLength: Toast.LENGTH_LONG);
         }
-
       },
       child: BlocBuilder(
         cubit: contractBloc,
-        builder: (context,state){
+        builder: (context, state) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _intput(
-                  hintText: "Nhập tên", title: "Tên", textEditingController: contractBloc.name),
+                  hintText: "Nhập tên",
+                  title: "Tên",
+                  textEditingController: contractBloc.name),
               _intput(
                   hintText: "Nhập email",
                   title: "Email",
@@ -79,35 +83,33 @@ class CreateContract extends StatelessWidget {
               _noneInputDate(
                   title: "Ngày sinh *",
                   onTap: () {
-                 _showDateTime(context,onTap: () {
-                   if(contractBloc.time != null){
-                     contractBloc.user1.birthDay =
-                         contractBloc.time.millisecondsSinceEpoch ~/ 1000;
-                     contractBloc.time =null;
-                     Navigator.pop(context);
-                     contractBloc.add(UpdateUIContractEvent());
-                   }
-
-                 });
-
+                    _showDateTime(context, onTap: () {
+                      if (contractBloc.time != null) {
+                        contractBloc.user1.birthDay =
+                            contractBloc.time.millisecondsSinceEpoch ~/ 1000;
+                        contractBloc.time = null;
+                        Navigator.pop(context);
+                        contractBloc.add(UpdateUIContractEvent());
+                      }
+                    });
                   },
                   text: contractBloc.user1.birthDay == null
                       ? ""
                       : "${DateTimeFormat.formatDate(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        contractBloc.user1.birthDay * 1000),
-                  )}"),
+                          DateTime.fromMillisecondsSinceEpoch(
+                              contractBloc.user1.birthDay * 1000),
+                        )}"),
               SizedBox(
                 height: AppDimensions.d1h,
               ),
               _noneInputDate(
                   title: "Ngày đến",
                   onTap: () async {
-                    _showDateTime(context,onTap: () {
-                      if(contractBloc.time != null){
+                    _showDateTime(context, onTap: () {
+                      if (contractBloc.time != null) {
                         contractBloc.user1.registrationDate =
                             contractBloc.time.millisecondsSinceEpoch ~/ 1000;
-                        contractBloc.time =null;
+                        contractBloc.time = null;
                         Navigator.pop(context);
                         contractBloc.add(UpdateUIContractEvent());
                       }
@@ -122,11 +124,11 @@ class CreateContract extends StatelessWidget {
               _noneInputDate(
                   title: "Ngày hết hạn",
                   onTap: () async {
-                    _showDateTime(context,onTap: () {
-                      if(contractBloc.time != null){
+                    _showDateTime(context, onTap: () {
+                      if (contractBloc.time != null) {
                         contractBloc.user1.expirationDate =
                             contractBloc.time.millisecondsSinceEpoch ~/ 1000;
-                        contractBloc.time =null;
+                        contractBloc.time = null;
                         Navigator.pop(context);
                         contractBloc.add(UpdateUIContractEvent());
                       }
@@ -148,7 +150,8 @@ class CreateContract extends StatelessWidget {
   _intput(
       {String title,
       String hintText,
-      TextEditingController textEditingController,List<TextInputFormatter> formatter1}) {
+      TextEditingController textEditingController,
+      List<TextInputFormatter> formatter1}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -161,7 +164,7 @@ class CreateContract extends StatelessWidget {
         ),
         Container(
           child: CupertinoTextField(
-            inputFormatters:formatter1 ==null?[]:formatter1,
+            inputFormatters: formatter1 == null ? [] : formatter1,
             controller: textEditingController,
             placeholder: hintText,
             placeholderStyle:
@@ -213,7 +216,12 @@ class CreateContract extends StatelessWidget {
               behavior: HitTestBehavior.opaque,
               onTap: () {
                 contractBloc.room = appBloc.listAllDataRoom[i];
-                appBloc.room = appBloc.listAllDataRoom[i];
+                appBloc.roomContract = appBloc.listAllDataRoom[i];
+                appBloc.listAllDataRoomDisplay.forEach((element) {
+                  if (element.id == appBloc.roomContract.id) {
+                    appBloc.roomDisplay = element;
+                  }
+                });
                 // appBloc.index = i;
                 Navigator.pop(context);
                 contractBloc.add(UpdateUIContractEvent());
@@ -251,11 +259,9 @@ class CreateContract extends StatelessWidget {
         Text(
           "${title} *",
           style: TextStyle(
-            color: AppColors.colorBlack_87,
-            fontSize: AppFontSizes.fs10,
-              fontWeight: FontWeight.bold
-
-          ),
+              color: AppColors.colorBlack_87,
+              fontSize: AppFontSizes.fs10,
+              fontWeight: FontWeight.bold),
         ),
         GestureDetector(
           onTap: onTap,
@@ -295,10 +301,9 @@ class CreateContract extends StatelessWidget {
         Text(
           "${title}",
           style: TextStyle(
-            color: AppColors.colorBlack_87,
-            fontSize: AppFontSizes.fs10,
-            fontWeight: FontWeight.bold
-          ),
+              color: AppColors.colorBlack_87,
+              fontSize: AppFontSizes.fs10,
+              fontWeight: FontWeight.bold),
         ),
         GestureDetector(
           onTap: onTap,
@@ -362,7 +367,7 @@ class CreateContract extends StatelessWidget {
     );
   }
 
-  DateTime _showDateTime(BuildContext context, {int index,Function onTap}) {
+  DateTime _showDateTime(BuildContext context, {int index, Function onTap}) {
     return UIHelper.showDialogLogin(
       context: context,
       widget: Padding(
@@ -372,7 +377,7 @@ class CreateContract extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
                 child: Text(
@@ -399,7 +404,7 @@ class CreateContract extends StatelessWidget {
                 mode: CupertinoDatePickerMode.date,
                 initialDateTime: DateTime.now(),
                 onDateTimeChanged: (dateTime) {
-                 contractBloc.time = dateTime;
+                  contractBloc.time = dateTime;
                 }),
           )
         ]),

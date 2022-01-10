@@ -91,6 +91,7 @@ class BillState extends State<Bill> {
                                 fontWeight: FontWeight.bold),
                           ),
                           GestureDetector(
+                            onTap: (){_showDateTime(context);},
                               child: Icon(
                             Icons.filter_list,
                             color: AppColors.colorWhite,
@@ -104,27 +105,42 @@ class BillState extends State<Bill> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Tất cả",
-                          style: TextStyle(
-                              color: AppColors.colorWhite,
-                              fontSize: AppFontSizes.fs12,
-                              fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: (){
+                            _billBloc.add(AllPaidEvent());
+                          },
+                          child: Text(
+                            "Tất cả",
+                            style: TextStyle(
+                                color: _billBloc.statusPaid == 1 ?AppColors.colorOrange:AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs12,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        Text(
-                          "Đã thanh toán",
-                          style: TextStyle(
-                              color: AppColors.colorWhite,
-                              fontSize: AppFontSizes.fs12,
-                              fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: (){
+                            _billBloc.add(PaidEvent());
+                          },
+                          child: Text(
+                            "Đã thanh toán",
+                            style: TextStyle(
+                                color:_billBloc.statusPaid == 2 ?AppColors.colorOrange:AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs12,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                        Text(
-                          "Chưa thanh toán",
-                          style: TextStyle(
-                              color: AppColors.colorWhite,
-                              fontSize: AppFontSizes.fs12,
-                              fontWeight: FontWeight.bold),
-                        ),
+                       GestureDetector(
+                         onTap: (){
+                           _billBloc.add(UnpaidEvent());
+                         },
+                         child:  Text(
+                           "Chưa thanh toán",
+                           style: TextStyle(
+                               color: _billBloc.statusPaid == 3 ?AppColors.colorOrange:AppColors.colorWhite,
+                               fontSize: AppFontSizes.fs12,
+                               fontWeight: FontWeight.bold),
+                         ),
+                       )
                       ],
                     ),
                   ),
@@ -843,4 +859,54 @@ class BillState extends State<Bill> {
       ),
     );
   }
+  DateTime _showDateTime(BuildContext context) {
+    return UIHelper.showDialogLogin(
+      context: context,
+      widget: Padding(
+        padding: EdgeInsets.all(AppDimensions.d1h),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "Hủy",
+                  style: TextStyle(
+                      color: AppColors.colorFacebook,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  _billBloc.add(FilterDateEvent());
+                  Navigator.pop(context);
+                  _billBloc.add(UpdateUIEvent());
+                },
+                child: Text(
+                  "Xác nhận",
+                  style: TextStyle(
+                      color: AppColors.colorFacebook,
+                      fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
+          Container(
+            height: AppDimensions.d30h,
+            child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                initialDateTime: DateTime.now(),
+
+                onDateTimeChanged: (dateTime) {
+                  _billBloc.time = dateTime;
+                }),
+          )
+        ]),
+      ),
+    );
+  }
+
 }

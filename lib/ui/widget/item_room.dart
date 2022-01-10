@@ -33,7 +33,7 @@ class ItemRoom extends StatelessWidget {
 
   _buildItem(BuildContext context, AppBloc allRoomBloc) {
     List<Widget> listItem = [];
-    for (int i = 0; i < allRoomBloc.listAllDataRoom.length; i++) {
+    for (int i = 0; i < allRoomBloc.listAllDataRoomDisplay.length; i++) {
       listItem.add(GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {},
@@ -72,25 +72,25 @@ class ItemRoom extends StatelessWidget {
                                       Container(
                                         color: AppColors.colorGrey_400,
                                         child: Text(
-                                          allRoomBloc.listAllDataRoom[i]
+                                          allRoomBloc.listAllDataRoomDisplay[i]
                                                       .user.length <=
                                                   0
-                                              ? "${allRoomBloc.listAllDataRoom[i].roomName}:Trống"
-                                              : allRoomBloc.listAllDataRoom[i]
+                                              ? "${allRoomBloc.listAllDataRoomDisplay[i].roomName}:Trống"
+                                              : allRoomBloc.listAllDataRoomDisplay[i]
                                                           .user.length >=
                                                       allRoomBloc
-                                                          .listAllDataRoom[i].maxPeople
-                                                  ? "${allRoomBloc.listAllDataRoom[i].roomName}: Full"
-                                                  : "${allRoomBloc.listAllDataRoom[i].roomName}: Đang ở",
+                                                          .listAllDataRoomDisplay[i].maxPeople
+                                                  ? "${allRoomBloc.listAllDataRoomDisplay[i].roomName}: Full"
+                                                  : "${allRoomBloc.listAllDataRoomDisplay[i].roomName}: Đang ở",
                                           style: TextStyle(
-                                              color: allRoomBloc.listAllDataRoom[i]
+                                              color: allRoomBloc.listAllDataRoomDisplay[i]
                                                           .user.length <=
                                                       0
                                                   ? AppColors.colorBlack
-                                                  : allRoomBloc.listAllDataRoom[i]
+                                                  : allRoomBloc.listAllDataRoomDisplay[i]
                                                               .user.length >=
                                                           allRoomBloc
-                                                              .listAllDataRoom[i]
+                                                              .listAllDataRoomDisplay[i]
                                                               .maxPeople
                                                       ? AppColors.colorRed
                                                       : AppColors.colorFacebook,
@@ -110,7 +110,7 @@ class ItemRoom extends StatelessWidget {
                                 style: TextStyle(fontSize: AppFontSizes.fs8),
                               ),
                               Text(
-                                "${StringHelper.formatCurrency(allRoomBloc.listAllDataRoom[i].roomAmount)}đ",
+                                "${StringHelper.formatCurrency(allRoomBloc.listAllDataRoomDisplay[i].roomAmount)}đ",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppFontSizes.fs10,
@@ -125,7 +125,7 @@ class ItemRoom extends StatelessWidget {
                                 style: TextStyle(fontSize: AppFontSizes.fs8),
                               ),
                               Text(
-                                "${allRoomBloc.listAllDataRoom[i].maxPeople}",
+                                "${allRoomBloc.listAllDataRoomDisplay[i].maxPeople}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppFontSizes.fs10,
@@ -138,7 +138,7 @@ class ItemRoom extends StatelessWidget {
                               Text("Số người hiện tại: ",
                                   style: TextStyle(fontSize: AppFontSizes.fs8)),
                               Text(
-                                "${allRoomBloc.listAllDataRoom[i].user?.length ?? 0}",
+                                "${allRoomBloc.listAllDataRoomDisplay[i].user?.length ?? 0}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: AppFontSizes.fs10,

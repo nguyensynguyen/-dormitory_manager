@@ -26,7 +26,7 @@ class ItemBill extends StatelessWidget {
     for (int i = 0; i < billBloc.listRoomBill.length; i++) {
       if(appBloc.isUser){
         if(appBloc.user.roomId == billBloc.listRoomBill[i].room.id){
-          appBloc.room =  billBloc.listRoomBill[i].room;
+          appBloc.roomContract =  billBloc.listRoomBill[i].room;
           listItem.add(GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {

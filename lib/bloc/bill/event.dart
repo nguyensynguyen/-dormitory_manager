@@ -24,3 +24,18 @@ class TotalPriceEvent extends BillEvent{
   AppBloc appBloc;
   TotalPriceEvent({this.appBloc});
 }
+
+class UnpaidEvent extends BillEvent{
+
+}
+
+class PaidEvent extends BillEvent{
+
+}
+
+class AllPaidEvent extends BillEvent{
+
+}
+class FilterDateEvent extends BillEvent{
+
+}

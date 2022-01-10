@@ -53,142 +53,166 @@ class _contract extends State<Contract> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _appBloc.isUser? Container(
-                width: AppDimensions.d100w,
-                height: AppDimensions.d14h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Colors.green,
-                      AppColors.colorFacebook,
-                    ],
-                  ),
-                  color: AppColors.mainColor,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(AppDimensions.radius3w),
-                    bottomRight: Radius.circular(AppDimensions.radius3w),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: heightStatusBar,
-                    ),
-                      Padding(
-                        padding:  EdgeInsets.all(AppDimensions.d1h),
-                        child: Text(
-                          "Hợp Đồng",
-                          style: TextStyle(
-                              color: AppColors.colorWhite,
-                              fontSize: AppFontSizes.fs14,
-                              fontWeight: FontWeight.bold),
+              _appBloc.isUser
+                  ? Container(
+                      width: AppDimensions.d100w,
+                      height: AppDimensions.d14h,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            Colors.green,
+                            AppColors.colorFacebook,
+                          ],
+                        ),
+                        color: AppColors.mainColor,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(AppDimensions.radius3w),
+                          bottomRight: Radius.circular(AppDimensions.radius3w),
                         ),
                       ),
-
-                  ],
-                ),
-              ):
-              Container(
-                width: AppDimensions.d100w,
-                height: AppDimensions.d14h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomLeft,
-                    colors: [
-                      Colors.green,
-                      AppColors.colorFacebook,
-                    ],
-                  ),
-                  color: AppColors.mainColor,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(AppDimensions.radius3w),
-                    bottomRight: Radius.circular(AppDimensions.radius3w),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: heightStatusBar,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(AppDimensions.d1h),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: heightStatusBar,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(AppDimensions.d1h),
+                            child: Text(
                               "Hợp Đồng",
                               style: TextStyle(
                                   color: AppColors.colorWhite,
                                   fontSize: AppFontSizes.fs14,
                                   fontWeight: FontWeight.bold),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                _showDialogCreateContract();
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: AppColors.colorOrange,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(AppDimensions.radius1_0w),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(AppDimensions.d0_5h),
-                                  child: Text(
-                                    "Thêm hợp đồng",
-                                    style: TextStyle(
-                                        color: AppColors.colorWhite,
-                                        fontSize: AppFontSizes.fs12,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            )
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      width: AppDimensions.d100w,
+                      height: AppDimensions.d14h,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomLeft,
+                          colors: [
+                            Colors.green,
+                            AppColors.colorFacebook,
                           ],
                         ),
+                        color: AppColors.mainColor,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(AppDimensions.radius3w),
+                          bottomRight: Radius.circular(AppDimensions.radius3w),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(AppDimensions.d1h),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
                         children: [
-                          Text(
-                            "Tất cả",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs12,
-                                fontWeight: FontWeight.bold),
+                          SizedBox(
+                            height: heightStatusBar,
                           ),
-                          Text(
-                            "Còn hạn hợp đồng",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs12,
-                                fontWeight: FontWeight.bold),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(AppDimensions.d1h),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Hợp Đồng",
+                                    style: TextStyle(
+                                        color: AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _showDialogCreateContract();
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.colorOrange,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              AppDimensions.radius1_0w),
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding:
+                                            EdgeInsets.all(AppDimensions.d0_5h),
+                                        child: Text(
+                                          "Thêm hợp đồng",
+                                          style: TextStyle(
+                                              color: AppColors.colorWhite,
+                                              fontSize: AppFontSizes.fs12,
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                          Text(
-                            "Hết hạn hợp đồng",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs12,
-                                fontWeight: FontWeight.bold),
+                          Padding(
+                            padding: EdgeInsets.all(AppDimensions.d1h),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  child: Text(
+                                    "Tất cả",
+                                    style: TextStyle(
+                                        color: _contractBloc.statusTab == 1
+                                            ? AppColors.colorOrange
+                                            : AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  onTap: () {
+                                    _contractBloc.add(AllContractEvent());
+                                  },
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _contractBloc.add(DueEvent());
+                                  },
+                                  child: Text(
+                                    "Còn hạn hợp đồng",
+                                    style: TextStyle(
+                                        color: _contractBloc.statusTab == 2
+                                            ? AppColors.colorOrange
+                                            : AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _contractBloc.add(ExpiredEvent());
+                                  },
+                                  child: Text(
+                                    "Hết hạn hợp đồng",
+                                    style: TextStyle(
+                                        color: _contractBloc.statusTab == 3
+                                            ? AppColors.colorOrange
+                                            : AppColors.colorWhite,
+                                        fontSize: AppFontSizes.fs12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: ItemContract(
@@ -268,5 +292,4 @@ class _contract extends State<Contract> {
       ),
     );
   }
-
 }

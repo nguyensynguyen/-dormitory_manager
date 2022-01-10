@@ -1,4 +1,3 @@
-
 import 'package:dormitory_manager/bloc/all_room/bloc.dart';
 import 'package:dormitory_manager/bloc/all_room/event.dart';
 import 'package:dormitory_manager/bloc/all_room/state.dart';
@@ -30,6 +29,7 @@ import 'bill.dart';
 import 'login.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_mailer/flutter_mailer.dart';
+
 class HomePage extends StatefulWidget {
   @override
   HomePageState createState() => HomePageState();
@@ -118,8 +118,8 @@ class _buildHome extends State<BuildHome> {
 
     _authBloc = AuthBloc();
     _appBloc = BlocProvider.of<AppBloc>(context);
-      _allRoomBloc = AllRoomBloc();
-      _allRoomBloc.add(GetDataRoomEvent(appBloc: _appBloc));
+    _allRoomBloc = AllRoomBloc();
+    _allRoomBloc.add(GetDataRoomEvent(appBloc: _appBloc));
   }
 
   @override
@@ -230,13 +230,14 @@ class _buildHome extends State<BuildHome> {
               ],
             ),
           ),
-       _appBloc.isUser?_buildUser():_buildManager()
+          _appBloc.isUser ? _buildUser() : _buildManager()
         ],
       ),
     );
   }
-_buildManager(){
-    return    Expanded(
+
+  _buildManager() {
+    return Expanded(
       child: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(AppDimensions.d1h),
@@ -363,75 +364,19 @@ _buildManager(){
                       },
                     ),
                   ),
-
-                  Expanded(
-                    child: GestureDetector(
-                      child: Card(
-                        color: AppColors.colorFacebook,
-                        child: Padding(
-                          padding: EdgeInsets.all(AppDimensions.d1h),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                'asset/image/repair.png',
-                                width: AppDimensions.d10w,
-                              ),
-                              SizedBox(
-                                height: AppDimensions.d1h,
-                              ),
-                              Text(
-                                "Send mail",
-                                style: TextStyle(
-                                  color: AppColors.colorWhite,
-                                  fontSize: AppFontSizes.fs10,
-                                ),
-                              ),
-                              SizedBox(
-                                height: AppDimensions.d0_5h,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      onTap: () async{
-
-
-//                         await launch('mailto:"smith@example.com"');
-                      },
-                    ),
-                  ),
                 ],
               ),
-
             ],
           ),
         ),
       ),
     );
-}
-
-  final MailOptions mailOptions = MailOptions(
-    body: 'a long body for the email <br> with a subset of HTML',
-    subject: 'the Email Subject',
-    recipients: ['example@example.com'],
-    isHTML: true,
-    bccRecipients: ['other@example.com'],
-    ccRecipients: ['third@example.com'],
-    attachments: [ 'path/to/image.png', ],
-  );
-   Uri emailLaunchUri = Uri(
-    scheme: 'mailto',
-    path: 'smith@example.com smith1@example.com',
-
-  );
-  String encodeQueryParameters(Map<String, String> params) {
-    return params.entries
-        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-        .join('&');
   }
-_buildUser(){
+
+  _buildUser() {
     return Container();
-}
+  }
+
   _showDialogRoom() {
     return UIHelper.showDialogCommon(
         context: context,
@@ -446,7 +391,6 @@ _buildUser(){
                       children: [
                         GestureDetector(
                           onTap: () {
-
                             _showDialogCreateRoom(
                                 context: context, allRoomBloc: _allRoomBloc);
                           },
@@ -462,6 +406,34 @@ _buildUser(){
                               padding: EdgeInsets.all(AppDimensions.d1h),
                               child: Text(
                                 "Thêm phòng",
+                                style: TextStyle(
+                                  color: AppColors.colorWhite,
+                                  fontSize: AppFontSizes.fs12,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: AppDimensions.d1w,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _showDialog(context);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: AppColors.colorFacebook,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(AppDimensions.radius1_0w),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(AppDimensions.d1h),
+                              child: Text(
+                                "Lọc danh sách phòng",
                                 style: TextStyle(
                                   color: AppColors.colorWhite,
                                   fontSize: AppFontSizes.fs12,
@@ -495,6 +467,73 @@ _buildUser(){
                 );
               }),
         ));
+  }
+
+  _showDialog(BuildContext context) {
+    return UIHelper.showDialogLogin(
+      context: context,
+      widget: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Lọc danh sách phòng",
+                      style: TextStyle(
+                          fontSize: AppFontSizes.fs14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  CloseDialog(
+                    color: AppColors.colorBlack_54,
+                    onClose: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  _allRoomBloc.add(RoomAllEvent(appBloc: _appBloc));
+                },
+                child: Text("Tất cả phòng"),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  _allRoomBloc.add(RoomEmptyEvent(appBloc: _appBloc));
+                },
+                child: Text("phòng đang trống"),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  _allRoomBloc.add(RoomLiveEvent(appBloc: _appBloc));
+                },
+                child: Text("Phòng đang ở"),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  _allRoomBloc.add(RoomFullEvent(appBloc: _appBloc));
+                },
+                child: Text("Phòng full"),
+              ),
+              Divider(),
+            ],
+          ),
+        ),
+      ]),
+    );
   }
 
   _showDialogCreateRoom({BuildContext context, AllRoomBloc allRoomBloc}) {
@@ -611,7 +650,6 @@ _buildUser(){
                       SizedBox(
                         width: AppDimensions.d1h,
                       ),
-
                     ],
                   ),
                   SizedBox(
@@ -635,7 +673,7 @@ _buildUser(){
                               msg: "Nhập số người tối đa trong phòng",
                               toastLength: Toast.LENGTH_SHORT);
                           return;
-                        }  else {
+                        } else {
                           allRoomBloc.add(CreateRoomEvent(appBloc: _appBloc));
                         }
                       })
@@ -1422,6 +1460,4 @@ _buildUser(){
               }),
         ));
   }
-
-
 }

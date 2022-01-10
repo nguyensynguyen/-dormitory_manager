@@ -13,20 +13,28 @@ class BillBloc extends Bloc<BillEvent, BillState> {
   ManagerProvider _managerProvider = ManagerProvider();
   RoomBill bill;
   double totalPrice = 0;
+  List<RoomBill> tempListBill = [];
+  List<RoomBill> tempAllBill = [];
+  int statusPaid = 1;
+  DateTime time = DateTime.now();
 
   @override
   Stream<BillState> mapEventToState(BillEvent event) async* {
     if (event is GetAllBill) {
       yield Loadings();
       var res;
-      if(event.appBloc.isUser){
-        res = await _managerProvider.getAllBill(id: event.appBloc.user.managerId);
-      }else{
-         res = await _managerProvider.getAllBill(id: event.appBloc.manager.id);
-
+      if (event.appBloc.isUser) {
+        res =
+            await _managerProvider.getAllBill(id: event.appBloc.user.managerId);
+      } else {
+        res = await _managerProvider.getAllBill(id: event.appBloc.manager.id);
       }
       if ((res?.roomBill?.isNotEmpty ?? false) && res != null) {
         listRoomBill = res.roomBill;
+        for (int k = 0; k < listRoomBill.length; k++) {
+          tempListBill.add(listRoomBill[k]);
+          tempAllBill.add(listRoomBill[k]);
+        }
         yield LoadDataBillDone();
       } else {
         yield LoadDataBillFail();
@@ -102,6 +110,32 @@ class BillBloc extends Bloc<BillEvent, BillState> {
                   roomAmount: event.appBloc.room.roomAmount),
             ),
           );
+          tempListBill.add(
+            RoomBill(
+              id: res['data']['id'],
+              totalPrice: event.appBloc.room.roomAmount + price,
+              totalService: price,
+              dateCreate: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+              roomId: event.appBloc.room.id,
+              status: "unpaid",
+              room: Room(
+                  roomName: event.appBloc.room.roomName,
+                  roomAmount: event.appBloc.room.roomAmount),
+            ),
+          );
+          tempAllBill.add(
+            RoomBill(
+              id: res['data']['id'],
+              totalPrice: event.appBloc.room.roomAmount + price,
+              totalService: price,
+              dateCreate: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+              roomId: event.appBloc.room.id,
+              status: "unpaid",
+              room: Room(
+                  roomName: event.appBloc.room.roomName,
+                  roomAmount: event.appBloc.room.roomAmount),
+            ),
+          );
           event.appBloc.room = null;
           yield CreateBillDone();
         }
@@ -116,6 +150,26 @@ class BillBloc extends Bloc<BillEvent, BillState> {
           .updateBill(data: {"status": event.status}, id: event.id);
       if (data) {
         bill.status = event.status;
+        tempListBill.forEach((element) {
+          if (element.id == event.id) {
+            element.status = event.status;
+          }
+        });
+        tempAllBill.forEach((element) {
+          if (element.id == event.id) {
+            element.status = event.status;
+          }
+        });
+        if (statusPaid == 1) {
+          yield* mapEventToState(AllPaidEvent());
+        } else {
+          if (event.status == "paid") {
+            yield* mapEventToState(UnpaidEvent());
+          } else {
+            yield* mapEventToState(PaidEvent());
+          }
+        }
+
         yield UpdateBillState();
       }
     }
@@ -123,11 +177,73 @@ class BillBloc extends Bloc<BillEvent, BillState> {
     if (event is UpdateUIEvent) {
       yield UpdateUIState();
     }
+
     if (event is TotalPriceEvent) {
+      totalPrice = 0;
       for (int i = 0; i < listRoomBill.length; i++) {
         totalPrice += listRoomBill[i].totalPrice;
       }
       yield TotalPriceState();
+    }
+
+    if (event is PaidEvent) {
+      statusPaid = 2;
+      yield Loadings();
+      listRoomBill.clear();
+      for (int i = 0; i < tempListBill.length; i++) {
+        if (tempListBill[i].status == "paid") {
+          listRoomBill.add(tempListBill[i]);
+        }
+      }
+      yield* mapEventToState(TotalPriceEvent());
+      yield LoadDataBillDone();
+    }
+
+    if (event is UnpaidEvent) {
+      statusPaid = 3;
+      yield Loadings();
+      listRoomBill.clear();
+      for (int i = 0; i < tempListBill.length; i++) {
+        if (tempListBill[i].status != "paid") {
+          listRoomBill.add(tempListBill[i]);
+        }
+      }
+      yield* mapEventToState(TotalPriceEvent());
+      yield LoadDataBillDone();
+    }
+
+    if (event is AllPaidEvent) {
+      statusPaid = 1;
+      yield Loadings();
+      listRoomBill.clear();
+      for (int i = 0; i < tempListBill.length; i++) {
+        listRoomBill.add(tempListBill[i]);
+      }
+      yield* mapEventToState(TotalPriceEvent());
+      yield LoadDataBillDone();
+    }
+
+    if (event is FilterDateEvent) {
+      statusPaid = 1;
+      yield Loadings();
+      listRoomBill.clear();
+      tempListBill.clear();
+      for (int i = 0; i < tempAllBill.length; i++) {
+        if (DateTime.fromMillisecondsSinceEpoch(
+                    tempAllBill[i].dateCreate * 1000)
+                .year ==
+            time.year) {
+          if (DateTime.fromMillisecondsSinceEpoch(
+                      tempAllBill[i].dateCreate * 1000)
+                  .month ==
+              time.month) {
+            listRoomBill.add(tempAllBill[i]);
+            tempListBill.add(tempAllBill[i]);
+          }
+        }
+      }
+      yield* mapEventToState(TotalPriceEvent());
+      yield LoadDataBillDone();
     }
   }
 }

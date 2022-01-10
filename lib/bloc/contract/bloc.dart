@@ -23,6 +23,9 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
   TextEditingController address = TextEditingController();
   TextEditingController phone = TextEditingController();
   String messageErrors = "";
+  List<User> tempContract = [];
+  List<User> tempAllContract = [];
+  int statusTab = 1;
 
   @override
   Stream<ContractState> mapEventToState(ContractEvent event) async* {
@@ -38,23 +41,25 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
       }
       if (res != null) {
         listContract = res.user;
-//        Future.delayed(Duration(seconds: 2));
-        if( event.appBloc.listAllDataRoom.length >0){
+        listContract.forEach((element) {
+          tempAllContract.add(element);
+          tempContract.add(element);
+        });
+        if (event.appBloc.listAllDataRoom != null) {
           event.appBloc.listAllDataRoom.forEach((room) {
             listContract.forEach((user) {
-              if(user.roomId == room.id){
-                user.room = {"room_name":room.roomName};
+              if (user.roomId == room.id) {
+                user.room = {"room_name": room.roomName};
               }
             });
           });
-        }else{
+        } else {
           listContract.forEach((user) {
-            if(user.roomId == room.id){
-              user.room = {"room_name":""};
+            if (user.roomId == room.id) {
+              user.room = {"room_name": ""};
             }
           });
         }
-
 
         yield GetDone();
       }
@@ -66,6 +71,17 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
           id: event.id, data: {"expiration_date": event.dateTime});
       if (res != null) {
         user.expirationDate = event.dateTime;
+        tempContract.forEach((element) {
+          if (element.id == event.id) {
+            element.expirationDate = event.dateTime;
+          }
+        });
+
+        if (statusTab == 1) {
+          yield* mapEventToState(AllContractEvent());
+        } else {
+          yield* mapEventToState(DueEvent());
+        }
         yield GetDone();
       }
     }
@@ -149,7 +165,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
         return;
       }
 
-      if(user1.registrationDate >user1.expirationDate ){
+      if (user1.registrationDate > user1.expirationDate) {
         messageErrors = "Ngày hết hạn phải lớn hơn ngày đến";
         yield CreateContractErrorsState();
         return;
@@ -171,8 +187,24 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
 
       var res = await _managerProvider.createUser(data: data);
       if (res != null) {
-
-        event.appBloc.room.user.add(User(
+        event.appBloc.roomContract.user.add(User(
+            id: res['data']['id'],
+            userName: name.text,
+            email: mail.text,
+            address: address.text,
+            phone: int.tryParse(phone.text),
+            birthDay: user1.birthDay,
+            registrationDate: user1.registrationDate,
+            password: "1",
+            managerId: event.appBloc.manager.id,
+            expirationDate: user1.expirationDate,
+            room: {"room_name": room.roomName},
+            roomId: room.id));
+        if (event.appBloc.roomDisplay.user.length <
+            event.appBloc.roomDisplay.maxPeople) {
+          // yield* mapEventToState()
+        }
+        event.appBloc.roomDisplay.user.add(User(
             id: res['data']['id'],
             userName: name.text,
             email: mail.text,
@@ -200,16 +232,34 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
             room: {"room_name": room.roomName},
             roomId: room.id));
 
-        const GMAIL_SCHEMA = 'com.google.android.gm';
-        final bool gmailinstalled =  await FlutterMailer.isAppInstalled(GMAIL_SCHEMA);
+        tempContract.add(User(
+            id: res['data']['id'],
+            userName: name.text,
+            email: mail.text,
+            address: address.text,
+            phone: int.tryParse(phone.text),
+            birthDay: user1.birthDay,
+            registrationDate: user1.registrationDate,
+            password: "1",
+            managerId: event.appBloc.manager.id,
+            expirationDate: user1.expirationDate,
+            room: {"room_name": room.roomName},
+            roomId: room.id));
 
-        if(gmailinstalled) {
+        const GMAIL_SCHEMA = 'com.google.android.gm';
+        final bool gmailinstalled =
+            await FlutterMailer.isAppInstalled(GMAIL_SCHEMA);
+
+        if (gmailinstalled) {
           final MailOptions mailOptions = MailOptions(
-            body: "Bạn đăng ký hợp đồng ký túc xá thành công. hãy đăng nhập vào App với: <br> email: ${mail.text} <br> password: 1",
+            body:
+                "Bạn đăng ký hợp đồng ký túc xá thành công. hãy đăng nhập vào App với: <br> email: ${mail.text} <br> password: 1",
             subject: "Đăng ký hợp đồng thành công",
             recipients: ['${mail.text}'],
             isHTML: true,
-            attachments: [ 'path/to/image.png', ],
+            attachments: [
+              'path/to/image.png',
+            ],
             appSchema: GMAIL_SCHEMA,
           );
           await FlutterMailer.send(mailOptions);
@@ -221,5 +271,41 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
         yield CreateContractErrorsState();
       }
     }
+
+    if (event is ExpiredEvent) {
+      statusTab = 3;
+      // yield Loading();
+      listContract.clear();
+      for (int i = 0; i < tempContract.length; i++) {
+        if (tempContract[i].registrationDate - tempContract[i].expirationDate >=
+            0) {
+          listContract.add(tempContract[i]);
+        }
+      }
+      yield Done();
+    }
+
+    if (event is DueEvent) {
+      statusTab = 2;
+      // yield Loading();
+      listContract.clear();
+      for (int i = 0; i < tempContract.length; i++) {
+        if (tempContract[i].registrationDate - tempContract[i].expirationDate <=
+            0) {
+          listContract.add(tempContract[i]);
+        }
+      }
+      yield Done();
+    }
+
+    if (event is AllContractEvent) {
+      statusTab = 1;
+      // yield Loading();
+      listContract.clear();
+      for (int i = 0; i < tempContract.length; i++) {
+        listContract.add(tempContract[i]);
+      }
+    }
+    yield Done();
   }
 }

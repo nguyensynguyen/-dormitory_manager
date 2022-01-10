@@ -31,3 +31,7 @@ class CreateContractEvent extends ContractEvent {
   AppBloc appBloc;
   CreateContractEvent({this.appBloc});
 }
+class ExpiredEvent extends ContractEvent {}
+class DueEvent extends ContractEvent {}
+class AllContractEvent extends ContractEvent {}
+

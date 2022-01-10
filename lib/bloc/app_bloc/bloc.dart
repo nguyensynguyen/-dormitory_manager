@@ -22,6 +22,9 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   bool isUser = false;
   dynamic profile;
   List<Room> listAllDataRoom;
+  List<Room> listAllDataRoomDisplay;
+  Room roomContract;
+  Room roomDisplay;
   Room room;
   Room room1;
   RoomBill roomBill;
@@ -29,7 +32,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   List<Service> listService;
   double totalPrice = 0.0;
   int index = 0;
-  String roomName ="";
+  String roomName = "";
   int roomId;
 
   @override

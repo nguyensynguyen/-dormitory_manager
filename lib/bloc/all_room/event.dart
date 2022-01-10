@@ -24,5 +24,31 @@ class UpdateUIRoomEvent extends RoomEvent {}
 
 class CreateEquipmentEvent extends RoomEvent {
   AppBloc appBloc;
+
   CreateEquipmentEvent({this.appBloc});
 }
+
+class RoomLiveEvent extends RoomEvent {
+  AppBloc appBloc;
+
+  RoomLiveEvent({this.appBloc});
+}
+
+class RoomFullEvent extends RoomEvent {
+  AppBloc appBloc;
+
+  RoomFullEvent({this.appBloc});
+}
+
+class RoomEmptyEvent extends RoomEvent {
+  AppBloc appBloc;
+
+  RoomEmptyEvent({this.appBloc});
+}
+class RoomAllEvent extends RoomEvent {
+  AppBloc appBloc;
+
+  RoomAllEvent({this.appBloc});
+}
+
+
