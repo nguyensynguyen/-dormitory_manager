@@ -124,23 +124,38 @@ class ReportState extends State<Report> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Chưa sửa",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs12),
+                          GestureDetector(
+                            child: Text(
+                              "Tất cả",
+                              style: TextStyle(
+                                  color: _reportBloc.statusTab ==1?AppColors.colorOrange: AppColors.colorWhite,
+                                  fontSize: AppFontSizes.fs12),
+                            ),
+                            onTap: (){
+                              _reportBloc.add(AllReportEvent());
+                            },
                           ),
-                          Text(
-                            "Đang sửa",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs12),
+                          GestureDetector(
+                            onTap: (){
+                              _reportBloc.add(FixingReportEvent());
+                            },
+                            child: Text(
+                              "Đang sửa",
+                              style: TextStyle(
+                                  color: _reportBloc.statusTab ==2?AppColors.colorOrange: AppColors.colorWhite,
+                                  fontSize: AppFontSizes.fs12),
+                            ),
                           ),
-                          Text(
-                            "Đã sửa",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs12),
+                          GestureDetector(
+                            child: Text(
+                              "Đã sửa",
+                              style: TextStyle(
+                                  color: _reportBloc.statusTab ==3?AppColors.colorOrange: AppColors.colorWhite,
+                                  fontSize: AppFontSizes.fs12),
+                            ),
+                            onTap: (){
+                              _reportBloc.add(FixedReportEvent());
+                            },
                           ),
                         ],
                       ),

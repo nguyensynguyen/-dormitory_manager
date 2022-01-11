@@ -50,6 +50,8 @@ class ManagerProvider {
     }
   }
 
+
+
   Future<AllContractResponse> getAllContract({int id}) async {
     try {
       var res =
@@ -165,6 +167,20 @@ class ManagerProvider {
   Future<dynamic> updateRoom({dynamic data, int id}) async {
     try {
       var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.updateRoom}/$id",
+          data: data);
+      if (res.data['success']) {
+        return true;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<dynamic> updateEquipment({dynamic data, int id}) async {
+    try {
+      var res = await dio.post("${ApiUrl.baseUrl + ApiUrl.updateEquipment}/$id",
           data: data);
       if (res.data['success']) {
         return true;

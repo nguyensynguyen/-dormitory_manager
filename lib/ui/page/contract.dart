@@ -129,6 +129,55 @@ class _contract extends State<Contract> {
                                         fontSize: AppFontSizes.fs14,
                                         fontWeight: FontWeight.bold),
                                   ),
+                                  SizedBox(
+                                    width: AppDimensions.d0_5h,
+                                  ),
+                                  _appBloc.isUser?Expanded(child: Container()):Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: AppColors.colorWhite,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  AppDimensions.radius1_0w))),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(0.0),
+                                        child: Center(
+                                          child: TextField(
+                                            decoration: InputDecoration.collapsed(
+                                              hintText: "Tìm theo phòng",
+                                              border: InputBorder.none,
+                                            ),
+                                            controller: _contractBloc.search,
+                                            style: TextStyle(fontSize: AppFontSizes.fs9),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: AppDimensions.d0_5h,
+                                  ),
+                                  _appBloc.isUser?Container(): GestureDetector(
+                                    onTap: () {
+                                      if (_contractBloc.search.text != "") {
+                                        _contractBloc.add(SearchContractEvent());
+                                      }
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: AppColors.colorWhite,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  AppDimensions.radius1_0w))),
+                                      child: Icon(
+                                        Icons.search,
+                                        color: AppColors.colorRed,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: AppDimensions.d0_5h,
+                                  ),
                                   GestureDetector(
                                     onTap: () {
                                       _showDialogCreateContract();

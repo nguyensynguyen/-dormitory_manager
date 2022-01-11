@@ -21,4 +21,5 @@ class ApiUrl {
   static String createUser = 'manager/create_user';
   static String createReport = 'manager/create_message';
   static String createManager = 'manager/create_manager';
+  static String updateEquipment = 'manager/update_equipment';
 }

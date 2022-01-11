@@ -12,7 +12,9 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
   ReportBloc() : super(null);
   ManagerProvider _managerProvider = ManagerProvider();
   List<Message> listMessage = [];
+  List<Message> tempListMessage = [];
   Message message;
+  int statusTab = 1;
   TextEditingController title = TextEditingController();
   TextEditingController content = TextEditingController();
   @override
@@ -30,6 +32,9 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
 
       if (res != null) {
         listMessage = res.mess;
+        listMessage.forEach((element) {
+          tempListMessage.add(element);
+        });
       }
       yield LoadDoneReportState();
     }
@@ -40,6 +45,22 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
           .updateContract(id: event.id, data: {"status": event.status});
       if (res != null) {
         message.status = event.status;
+        tempListMessage.forEach((element) {
+          if(message.id == element.id){
+            element.status = event.status;
+          }
+
+        });
+        if(statusTab == 1){
+          yield* mapEventToState(AllReportEvent());
+        }else{
+          if(event.status == "fixing"){
+            yield* mapEventToState(FixedReportEvent());
+          }else{
+            yield* mapEventToState(FixingReportEvent());
+
+          }
+        }
         yield LoadDoneReportState();
       }
     }
@@ -66,11 +87,53 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
           user: User(userName: event.appBloc.user.userName),
           userId: event.appBloc.user.id
         ));
+
+        tempListMessage.add(Message(
+            title: title.text,
+            content: content.text,
+            status: "fixing",
+            dateCreate: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+            room: Room(roomName: event.appBloc.room1.roomName),
+            user: User(userName: event.appBloc.user.userName),
+            userId: event.appBloc.user.id
+        ));
         title.text = "";
         content.text = "";
         yield CreateDoneState();
       }
 
+    }
+
+
+    if(event is FixingReportEvent){
+      statusTab = 2;
+      listMessage.clear();
+      tempListMessage.forEach((element) {
+        if(element.status == "fixing"){
+          listMessage.add(element);
+        }
+      });
+      yield UpdateState();
+    }
+
+    if(event is FixedReportEvent){
+      statusTab = 3;
+      listMessage.clear();
+      tempListMessage.forEach((element) {
+        if(element.status != "fixing"){
+          listMessage.add(element);
+        }
+      });
+      yield UpdateState();
+    }
+
+    if(event is AllReportEvent){
+      statusTab = 1;
+      listMessage.clear();
+      tempListMessage.forEach((element) {
+          listMessage.add(element);
+      });
+      yield UpdateState();
     }
 //
 //    if(event is UpdateUIReportEvent){

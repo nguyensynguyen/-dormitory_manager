@@ -20,3 +20,13 @@ class CreateMessage extends ReportEvent{
 class UpdateUIReportEvent extends ReportEvent{
 
 }
+
+class AllReportEvent extends ReportEvent{
+
+}
+class FixingReportEvent extends ReportEvent{
+
+}
+class FixedReportEvent extends ReportEvent{
+
+}

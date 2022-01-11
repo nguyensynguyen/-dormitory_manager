@@ -16,3 +16,5 @@ class LoadingCreateRoomState extends RoomState {}
 
 class LoadingCreateEquipmentState extends RoomState {}
 class CreateEquipmentDoneState extends RoomState {}
+class UpdateServicesState extends RoomState {}
+class UpdateServicesDoneState extends RoomState {}

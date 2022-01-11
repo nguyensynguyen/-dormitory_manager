@@ -90,12 +90,63 @@ class BillState extends State<Bill> {
                                 fontSize: AppFontSizes.fs14,
                                 fontWeight: FontWeight.bold),
                           ),
-                          GestureDetector(
-                            onTap: (){_showDateTime(context);},
+                          SizedBox(
+                            width: AppDimensions.d1h,
+                          ),
+                          _appBloc.isUser?Expanded(child: Container()):Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: AppColors.colorWhite,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          AppDimensions.radius1_0w))),
+                              child: Padding(
+                                padding: EdgeInsets.all(0.0),
+                                child: Center(
+                                  child: TextField(
+                                    decoration: InputDecoration.collapsed(
+                                      hintText: "Tìm theo phòng",
+                                      border: InputBorder.none,
+                                    ),
+                                    controller: _billBloc.searchBill,
+                                    style: TextStyle(fontSize: AppFontSizes.fs9),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: AppDimensions.d1h,
+                          ),
+                        _appBloc.isUser?Container(): GestureDetector(
+                            onTap: () {
+                              if (_billBloc.searchBill.text != "") {
+                                _billBloc.add(SearchDateEvent());
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: AppColors.colorWhite,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          AppDimensions.radius1_0w))),
                               child: Icon(
-                            Icons.filter_list,
-                            color: AppColors.colorWhite,
-                          ))
+                                Icons.search,
+                                color: AppColors.colorRed,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: AppDimensions.d1h,
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                _showDateTime(context);
+                              },
+                              child: Icon(
+                                Icons.filter_list,
+                                color: AppColors.colorWhite,
+                              )),
                         ],
                       ),
                     ),
@@ -106,41 +157,47 @@ class BillState extends State<Bill> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             _billBloc.add(AllPaidEvent());
                           },
                           child: Text(
                             "Tất cả",
                             style: TextStyle(
-                                color: _billBloc.statusPaid == 1 ?AppColors.colorOrange:AppColors.colorWhite,
+                                color: _billBloc.statusPaid == 1
+                                    ? AppColors.colorOrange
+                                    : AppColors.colorWhite,
                                 fontSize: AppFontSizes.fs12,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             _billBloc.add(PaidEvent());
                           },
                           child: Text(
                             "Đã thanh toán",
                             style: TextStyle(
-                                color:_billBloc.statusPaid == 2 ?AppColors.colorOrange:AppColors.colorWhite,
+                                color: _billBloc.statusPaid == 2
+                                    ? AppColors.colorOrange
+                                    : AppColors.colorWhite,
                                 fontSize: AppFontSizes.fs12,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                       GestureDetector(
-                         onTap: (){
-                           _billBloc.add(UnpaidEvent());
-                         },
-                         child:  Text(
-                           "Chưa thanh toán",
-                           style: TextStyle(
-                               color: _billBloc.statusPaid == 3 ?AppColors.colorOrange:AppColors.colorWhite,
-                               fontSize: AppFontSizes.fs12,
-                               fontWeight: FontWeight.bold),
-                         ),
-                       )
+                        GestureDetector(
+                          onTap: () {
+                            _billBloc.add(UnpaidEvent());
+                          },
+                          child: Text(
+                            "Chưa thanh toán",
+                            style: TextStyle(
+                                color: _billBloc.statusPaid == 3
+                                    ? AppColors.colorOrange
+                                    : AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs12,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -155,143 +212,147 @@ class BillState extends State<Bill> {
                 ),
               ),
             ),
-            _appBloc.isUser?Container():
-            Container(
-              width: AppDimensions.d100w,
-              height: AppDimensions.d10h,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    Colors.green,
-                    AppColors.colorFacebook,
-                  ],
-                ),
-                color: AppColors.mainColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(AppDimensions.radius3w),
-                  topRight: Radius.circular(AppDimensions.radius3w),
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2h),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+            _appBloc.isUser
+                ? Container()
+                : Container(
+                    width: AppDimensions.d100w,
+                    height: AppDimensions.d10h,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          Colors.green,
+                          AppColors.colorFacebook,
+                        ],
+                      ),
+                      color: AppColors.mainColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppDimensions.radius3w),
+                        topRight: Radius.circular(AppDimensions.radius3w),
+                      ),
+                    ),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: AppDimensions.d2h),
+                      child: Row(
                         children: [
-                          Text(
-                            "Tổng tiền",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Tổng tiền",
+                                  style: TextStyle(
+                                      color: AppColors.colorWhite,
+                                      fontSize: AppFontSizes.fs12),
+                                ),
+                                SizedBox(
+                                  height: AppDimensions.d1h,
+                                ),
+                                Text(
+                                  "${StringHelper.formatCurrency(_billBloc.totalPrice)} đ",
+                                  style: TextStyle(
+                                      color: AppColors.colorWhite,
+                                      fontSize: AppFontSizes.fs12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
                           ),
-                          SizedBox(
-                            height: AppDimensions.d1h,
-                          ),
-                          Text(
-                            "${StringHelper.formatCurrency(_billBloc.totalPrice)} đ",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs12,
-                                fontWeight: FontWeight.bold),
+                          GestureDetector(
+                            onTap: () => UIHelper.showDialogCommon(
+                                context: context,
+                                widget: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            "Lập hóa đơn",
+                                            style: TextStyle(
+                                                color: AppColors.colorBlack_87,
+                                                fontSize: AppFontSizes.fs14,
+                                                fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                        CloseDialog(
+                                          color: AppColors.colorBlack_38,
+                                          onClose: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Divider(),
+                                    Expanded(
+                                      child: BlocListener(
+                                        listener: (context, state) {
+                                          if (state is Loading) {
+                                            UIHelper.showLoadingCommon(
+                                                context: context);
+                                          }
+                                          if (state is CreateBillDone) {
+                                            Navigator.pop(context);
+                                            Fluttertoast.showToast(
+                                                msg: "Lập hóa đơn thành công",
+                                                toastLength:
+                                                    Toast.LENGTH_SHORT);
+                                          }
+                                        },
+                                        cubit: _billBloc,
+                                        child: BlocBuilder(
+                                          cubit: _billBloc,
+                                          builder: (context, state) {
+                                            return SingleChildScrollView(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  _buildTop(),
+                                                  Divider(),
+                                                  _buildfirst(),
+                                                  Divider(),
+                                                  _buildSecond(_appBloc),
+                                                  Divider(),
+                                                  _buildBottom(_appBloc),
+                                                  Divider(),
+                                                  _buildButton()
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )),
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: AppColors.colorWhite),
+                                  borderRadius: BorderRadius.circular(
+                                      AppDimensions.radius1_0w)),
+                              child: Padding(
+                                padding: EdgeInsets.all(AppDimensions.d1h),
+                                child: Text(
+                                  "Lập hóa đơn",
+                                  style: TextStyle(
+                                      color: AppColors.colorWhite,
+                                      fontSize: AppFontSizes.fs12),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => UIHelper.showDialogCommon(
-                          context: context,
-                          widget: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      "Lập hóa đơn",
-                                      style: TextStyle(
-                                          color: AppColors.colorBlack_87,
-                                          fontSize: AppFontSizes.fs14,
-                                          fontWeight: FontWeight.bold),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  CloseDialog(
-                                    color: AppColors.colorBlack_38,
-                                    onClose: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              ),
-                              Divider(),
-                              Expanded(
-                                child: BlocListener(
-                                  listener: (context, state) {
-                                    if (state is Loading) {
-                                      UIHelper.showLoadingCommon(
-                                          context: context);
-                                    }
-                                    if (state is CreateBillDone) {
-                                      Navigator.pop(context);
-                                      Fluttertoast.showToast(
-                                          msg: "Lập hóa đơn thành công",
-                                          toastLength: Toast.LENGTH_SHORT);
-                                    }
-                                  },
-                                  cubit: _billBloc,
-                                  child: BlocBuilder(
-                                    cubit: _billBloc,
-                                    builder: (context, state) {
-                                      return SingleChildScrollView(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            _buildTop(),
-                                            Divider(),
-                                            _buildfirst(),
-                                            Divider(),
-                                            _buildSecond(_appBloc),
-                                            Divider(),
-                                            _buildBottom(_appBloc),
-                                            Divider(),
-                                            _buildButton()
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              )
-                            ],
-                          )),
-                      behavior: HitTestBehavior.opaque,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.colorWhite),
-                            borderRadius: BorderRadius.circular(
-                                AppDimensions.radius1_0w)),
-                        child: Padding(
-                          padding: EdgeInsets.all(AppDimensions.d1h),
-                          child: Text(
-                            "Lập hóa đơn",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs12),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ],
         );
       },
@@ -859,6 +920,7 @@ class BillState extends State<Bill> {
       ),
     );
   }
+
   DateTime _showDateTime(BuildContext context) {
     return UIHelper.showDialogLogin(
       context: context,
@@ -869,7 +931,7 @@ class BillState extends State<Bill> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
                 child: Text(
@@ -880,7 +942,7 @@ class BillState extends State<Bill> {
                 ),
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   _billBloc.add(FilterDateEvent());
                   Navigator.pop(context);
                   _billBloc.add(UpdateUIEvent());
@@ -899,7 +961,6 @@ class BillState extends State<Bill> {
             child: CupertinoDatePicker(
                 mode: CupertinoDatePickerMode.date,
                 initialDateTime: DateTime.now(),
-
                 onDateTimeChanged: (dateTime) {
                   _billBloc.time = dateTime;
                 }),
@@ -908,5 +969,4 @@ class BillState extends State<Bill> {
       ),
     );
   }
-
 }

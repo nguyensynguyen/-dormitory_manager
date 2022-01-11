@@ -7,6 +7,7 @@ import 'package:dormitory_manager/model/response/all_room.dart';
 import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/room_bill.dart';
 import 'package:dormitory_manager/model/room_bill_detail.dart';
+import 'package:dormitory_manager/model/room_eqiupment.dart';
 import 'package:dormitory_manager/model/service.dart';
 import 'package:dormitory_manager/model/user.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +24,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   dynamic profile;
   List<Room> listAllDataRoom;
   List<Room> listAllDataRoomDisplay;
+  RoomEquipment equipment;
   Room roomContract;
   Room roomDisplay;
   Room room;

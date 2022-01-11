@@ -39,3 +39,8 @@ class AllPaidEvent extends BillEvent{
 class FilterDateEvent extends BillEvent{
 
 }
+
+class SearchDateEvent extends BillEvent{
+
+}
+

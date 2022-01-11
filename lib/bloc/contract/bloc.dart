@@ -3,6 +3,7 @@ import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/user.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_mailer/flutter_mailer.dart';
@@ -22,6 +23,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
   TextEditingController idCard = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController phone = TextEditingController();
+  TextEditingController search = TextEditingController();
   String messageErrors = "";
   List<User> tempContract = [];
   List<User> tempAllContract = [];
@@ -277,7 +279,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
       // yield Loading();
       listContract.clear();
       for (int i = 0; i < tempContract.length; i++) {
-        if (tempContract[i].registrationDate - tempContract[i].expirationDate >=
+        if ((DateTime.now().millisecondsSinceEpoch ~/1000) - tempContract[i].expirationDate >=
             0) {
           listContract.add(tempContract[i]);
         }
@@ -290,7 +292,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
       // yield Loading();
       listContract.clear();
       for (int i = 0; i < tempContract.length; i++) {
-        if (tempContract[i].registrationDate - tempContract[i].expirationDate <=
+        if ((DateTime.now().millisecondsSinceEpoch ~/1000)- tempContract[i].expirationDate <=
             0) {
           listContract.add(tempContract[i]);
         }
@@ -305,7 +307,18 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
       for (int i = 0; i < tempContract.length; i++) {
         listContract.add(tempContract[i]);
       }
+      yield Done();
     }
-    yield Done();
+
+    if(event is SearchContractEvent){
+      listContract.clear();
+      for (int i = 0; i < tempContract.length; i++) {
+        if(search.text == tempContract[i].room['room_name']){
+          listContract.add(tempContract[i]);
+        }
+        yield Done();
+      }
+    }
+
   }
 }

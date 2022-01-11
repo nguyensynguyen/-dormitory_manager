@@ -4,7 +4,9 @@ import 'package:dormitory_manager/bloc/bill/event.dart';
 import 'package:dormitory_manager/bloc/bill/state.dart';
 import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/room_bill.dart';
+import 'package:dormitory_manager/model/room_bill_detail.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BillBloc extends Bloc<BillEvent, BillState> {
@@ -17,6 +19,7 @@ class BillBloc extends Bloc<BillEvent, BillState> {
   List<RoomBill> tempAllBill = [];
   int statusPaid = 1;
   DateTime time = DateTime.now();
+  TextEditingController searchBill = TextEditingController();
 
   @override
   Stream<BillState> mapEventToState(BillEvent event) async* {
@@ -105,6 +108,9 @@ class BillBloc extends Bloc<BillEvent, BillState> {
               dateCreate: DateTime.now().millisecondsSinceEpoch ~/ 1000,
               roomId: event.appBloc.room.id,
               status: "unpaid",
+              roomBillDetail:billDetail.map<RoomBillDetail>((item) {
+                return RoomBillDetail.fromJson(item);
+              }).toList(),
               room: Room(
                   roomName: event.appBloc.room.roomName,
                   roomAmount: event.appBloc.room.roomAmount),
@@ -245,5 +251,15 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       yield* mapEventToState(TotalPriceEvent());
       yield LoadDataBillDone();
     }
+    if(event is SearchDateEvent){
+      listRoomBill.clear();
+      tempListBill.forEach((element) {
+        if(element.room.roomName == searchBill.text){
+          listRoomBill.add(element);
+        }
+      });
+      yield SearchDoneState();
+    }
   }
+
 }

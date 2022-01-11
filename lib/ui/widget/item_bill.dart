@@ -5,12 +5,14 @@ import 'package:dormitory_manager/bloc/bill/state.dart';
 import 'package:dormitory_manager/converts/time_format.dart';
 import 'package:dormitory_manager/helper/string_helper.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
+import 'package:dormitory_manager/model/room_bill.dart';
 import 'package:dormitory_manager/resources/colors.dart';
 import 'package:dormitory_manager/resources/dimensions.dart';
 import 'package:dormitory_manager/resources/fontsizes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 import 'close_dialog.dart';
 
@@ -18,19 +20,19 @@ class ItemBill extends StatelessWidget {
   BillBloc billBloc;
   AppBloc appBloc;
 
-  ItemBill({this.billBloc,this.appBloc});
+  ItemBill({this.billBloc, this.appBloc});
 
   @override
   Widget build(BuildContext context) {
     List<Widget> listItem = [];
     for (int i = 0; i < billBloc.listRoomBill.length; i++) {
-      if(appBloc.isUser){
-        if(appBloc.user.roomId == billBloc.listRoomBill[i].room.id){
-          appBloc.roomContract =  billBloc.listRoomBill[i].room;
+      if (appBloc.isUser) {
+        if (appBloc.user.roomId == billBloc.listRoomBill[i].room.id) {
+          appBloc.roomContract = billBloc.listRoomBill[i].room;
           listItem.add(GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-
+              _showDitailBill(billBloc.listRoomBill[i], context);
             },
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: AppDimensions.d1h),
@@ -132,15 +134,15 @@ class ItemBill extends StatelessWidget {
             ),
           ));
         }
-      }else{
+      } else {
         listItem.add(GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
             billBloc.bill = billBloc.listRoomBill[i];
             _showDialog(billBloc, context);
           },
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppDimensions.d1h),
+          child: Card(child: Padding(
+            padding: EdgeInsets.all( AppDimensions.d1h),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -233,14 +235,11 @@ class ItemBill extends StatelessWidget {
                             fontSize: AppFontSizes.fs11)),
                   ],
                 ),
-                Divider(),
               ],
             ),
-          ),
+          ),)
         ));
       }
-
-
     }
 
     return BlocListener(
@@ -312,10 +311,314 @@ class ItemBill extends StatelessWidget {
                 child: Text("Chưa thanh toán"),
               ),
               Divider(),
+              GestureDetector(
+                onTap: () {
+                  // Navigator.pop(context);
+                  _showDitailBill(billBloc.bill, context);
+                },
+                child: Text("Xem chi tiết hóa đơn"),
+              ),
+              Divider(),
             ],
           ),
         ),
       ]),
+    );
+  }
+
+  _showDetail(RoomBill bill) {
+    List<Widget> item = [];
+    bill.roomBillDetail.forEach((element) {
+      item.add(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Tên dịch vụ",
+                  style: TextStyle(
+                    fontSize: AppFontSizes.fs12,
+                  ),
+                ),
+                Text(
+                  "${element.serviceName}",
+                  style: TextStyle(
+                    fontSize: AppFontSizes.fs12,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: AppDimensions.d1h,
+            ),
+            element.serviceName == "điện"
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Số lượng sử dụng",
+                        style: TextStyle(
+                          fontSize: AppFontSizes.fs12,
+                        ),
+                      ),
+                      Text(
+                        "${element.amountUse} số",
+                        style: TextStyle(
+                          fontSize: AppFontSizes.fs12,
+                        ),
+                      ),
+                    ],
+                  )
+                : element.serviceName == "nước"
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Số lượng sử dụng",
+                            style: TextStyle(
+                              fontSize: AppFontSizes.fs12,
+                            ),
+                          ),
+                          Text(
+                            "${element.amountUse} số",
+                            style: TextStyle(
+                              fontSize: AppFontSizes.fs12,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+            SizedBox(
+              height: AppDimensions.d1h,
+            ),
+            element.serviceName == "điện"
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Số cũ",
+                        style: TextStyle(
+                          fontSize: AppFontSizes.fs12,
+                        ),
+                      ),
+                      Text(
+                        "${element.numberStart}",
+                        style: TextStyle(
+                          fontSize: AppFontSizes.fs12,
+                        ),
+                      ),
+                    ],
+                  )
+                : element.serviceName == "nước"
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Số cũ",
+                            style: TextStyle(
+                              fontSize: AppFontSizes.fs12,
+                            ),
+                          ),
+                          Text(
+                            "${element.numberStart}",
+                            style: TextStyle(
+                              fontSize: AppFontSizes.fs12,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+            SizedBox(
+              height: AppDimensions.d1h,
+            ),
+            element.serviceName == "điện"
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Số mới",
+                        style: TextStyle(
+                          fontSize: AppFontSizes.fs12,
+                        ),
+                      ),
+                      Text(
+                        "${element.numberEnd}",
+                        style: TextStyle(
+                          fontSize: AppFontSizes.fs12,
+                        ),
+                      ),
+                    ],
+                  )
+                : element.serviceName == "nước"
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Số mới",
+                            style: TextStyle(
+                              fontSize: AppFontSizes.fs12,
+                            ),
+                          ),
+                          Text(
+                            "${element.numberEnd}",
+                            style: TextStyle(
+                              fontSize: AppFontSizes.fs12,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+            SizedBox(
+              height: AppDimensions.d1h,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Tổng tiền sử dụng",
+                  style: TextStyle(
+                    fontSize: AppFontSizes.fs12,
+                  ),
+                ),
+                Text(
+                  "${StringHelper.formatCurrency(element.totalPrice)}đ",
+                  style: TextStyle(
+                    fontSize: AppFontSizes.fs12,
+                  ),
+                ),
+              ],
+            ),
+            Divider()
+          ],
+        ),
+      );
+    });
+    return Column(
+      children: item.map((e) {
+        return e;
+      }).toList(),
+    );
+  }
+
+  _showDitailBill(RoomBill bill, BuildContext context) {
+    return UIHelper.showDialogLogin(
+      context: context,
+      widget: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(AppDimensions.d1h),
+          child: Container(
+            width: AppDimensions.d100w,
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(AppDimensions.d1h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Chi tiết hóa đơn",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs14,
+                              color: AppColors.colorFacebook,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        CloseDialog(
+                          onClose: () {
+                            Navigator.pop(context);
+                          },
+                          color: AppColors.colorGrey_400,
+                        )
+                      ],
+                    ),
+                    Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Phòng ",
+                          style: TextStyle(
+                            fontSize: AppFontSizes.fs12,
+                          ),
+                        ),
+                        Text(
+                          "${bill.room.roomName} ",
+                          style: TextStyle(
+                            fontSize: AppFontSizes.fs12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Tiền nhà ",
+                          style: TextStyle(
+                            fontSize: AppFontSizes.fs12,
+                          ),
+                        ),
+                        Text(
+                          "${StringHelper.formatCurrency(bill.room.roomAmount)}đ",
+                          style: TextStyle(
+                            fontSize: AppFontSizes.fs12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Tiền Dịch vụ ",
+                          style: TextStyle(
+                            fontSize: AppFontSizes.fs12,
+                          ),
+                        ),
+                        Text(
+                          "${StringHelper.formatCurrency(bill.totalService)}đ",
+                          style: TextStyle(
+                            fontSize: AppFontSizes.fs12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                    _showDetail(bill),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Tổng tiền phòng ",
+                          style: TextStyle(
+                            fontSize: AppFontSizes.fs14,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        Text(
+                          "${StringHelper.formatCurrency(bill.totalPrice)}đ",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs14,
+                              color: AppColors.colorOrange,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Divider(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

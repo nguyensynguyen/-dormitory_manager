@@ -34,4 +34,5 @@ class CreateContractEvent extends ContractEvent {
 class ExpiredEvent extends ContractEvent {}
 class DueEvent extends ContractEvent {}
 class AllContractEvent extends ContractEvent {}
+class SearchContractEvent extends ContractEvent {}
 

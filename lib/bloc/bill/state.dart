@@ -15,3 +15,4 @@ class UpdateUIState extends BillState {}
 class UpdateBillState extends BillState {}
 class LoadingUpdateBillState extends BillState {}
 class TotalPriceState extends BillState {}
+class SearchDoneState extends BillState {}

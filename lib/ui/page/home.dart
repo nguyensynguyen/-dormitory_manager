@@ -1086,8 +1086,9 @@ class _buildHome extends State<BuildHome> {
                     Divider(),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: ItemEquipmnet(
-                          equipment: _appBloc,
+                        child: ItemEquipment(
+                          appBloc: _appBloc,
+                          allRoomBloc: _allRoomBloc,
                         ),
                       ),
                     )
@@ -1451,7 +1452,7 @@ class _buildHome extends State<BuildHome> {
                     Expanded(
                       child: SingleChildScrollView(
                         child: ItemService(
-                          equipment: _appBloc,
+                          appBloc: _appBloc,
                         ),
                       ),
                     )

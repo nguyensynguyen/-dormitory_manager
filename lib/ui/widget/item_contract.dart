@@ -288,7 +288,10 @@ class ItemContract extends StatelessWidget {
     for (int i = 0; i < contractBloc.listContract.length; i++) {
       widget.add(GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () {},
+        onTap: () {
+          contractBloc.user = contractBloc.listContract[i];
+          _showDialogSelect(context, index: i);
+        },
         child: Container(
           alignment: Alignment.topLeft,
           child: Padding(
@@ -303,10 +306,7 @@ class ItemContract extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        contractBloc.user = contractBloc.listContract[i];
-                        _showDialogSelect(context, index: i);
-                      },
+                      onTap: () {},
                       child: Image.asset(
                         'asset/image/add.png',
                         width: AppDimensions.d8w,
@@ -456,6 +456,15 @@ class ItemContract extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
+
+                  _showDialogDetailContract(context, index: index);
+                },
+                child: Text("Xem chi tiết hợp đồng"),
+              ),
+              Divider(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
                   _showConfirm(context, index: index);
                 },
                 child: Text("Xóa hợp đồng"),
@@ -465,6 +474,280 @@ class ItemContract extends StatelessWidget {
           ),
         ),
       ]),
+    );
+  }
+
+  _showDialogDetailContract(BuildContext context, {int index}) {
+    return UIHelper.showDialogLogin(
+      context: context,
+      widget: Column(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: CloseDialog(
+              color: Colors.grey,
+              onClose: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(AppDimensions.d1h),
+            child: Column(
+              children: [
+                Image.asset(
+                  "asset/image/user1.png",
+                  height: AppDimensions.d30h,
+                  width: AppDimensions.d30w,
+                ),
+                Container(
+                  width: AppDimensions.d100w,
+                  child: Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(AppDimensions.d1h),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            "Thông tin Hợp đồng",
+                            style: TextStyle(
+                                fontSize: AppFontSizes.fs12,
+                                color: AppColors.colorFacebook,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Họ và tên : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${contractBloc.listContract[index].userName}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.email,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Email : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${contractBloc.listContract[index].email}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.phone,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t SDT : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "0${contractBloc.listContract[index].phone}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.home,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Phòng : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${contractBloc.listContract[index].room['room_name'] ?? ""}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.date_range,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Ngày tháng năm sinh : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.listContract[index].birthDay * 1000))}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.indeterminate_check_box,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Số căn cước : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${contractBloc.listContract[index].idCard}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Địa chỉ : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${contractBloc.listContract[index].address}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.date_range,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Ngày đến : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.listContract[index].registrationDate * 1000))}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.date_range,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Ngày hết hạn : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(contractBloc.listContract[index].expirationDate * 1000))}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -482,7 +765,7 @@ class ItemContract extends StatelessWidget {
   }
 
   _showDateTime(BuildContext context, {int index}) {
-    DateTime time =DateTime.now();
+    DateTime time = DateTime.now();
     return UIHelper.showDialogLogin(
       context: context,
       widget: Padding(
@@ -492,7 +775,7 @@ class ItemContract extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
                 child: Text(
@@ -504,15 +787,17 @@ class ItemContract extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () {
-                  if(time.millisecondsSinceEpoch <= DateTime.now().millisecondsSinceEpoch){
-                   Fluttertoast.showToast(msg: "Ngày hết hạn không thể nhỏ hơn ngày hiện tại",toastLength: Toast.LENGTH_LONG) ;
-                   return;
+                  if (time.millisecondsSinceEpoch <=
+                      DateTime.now().millisecondsSinceEpoch) {
+                    Fluttertoast.showToast(
+                        msg: "Ngày hết hạn không thể nhỏ hơn ngày hiện tại",
+                        toastLength: Toast.LENGTH_LONG);
+                    return;
                   }
                   contractBloc.add(ExtendContractEvent(
                       id: contractBloc.user.id,
                       dateTime: time.millisecondsSinceEpoch ~/ 1000));
                   Navigator.pop(context);
-
                 },
                 child: Text(
                   "Xác nhận",
@@ -536,6 +821,4 @@ class ItemContract extends StatelessWidget {
       ),
     );
   }
-
-
 }

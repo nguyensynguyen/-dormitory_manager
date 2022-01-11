@@ -7,6 +7,7 @@ import 'package:dormitory_manager/helper/string_helper.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/model/message.dart';
 import 'package:dormitory_manager/model/room_eqiupment.dart';
+import 'package:dormitory_manager/model/service.dart';
 import 'package:dormitory_manager/resources/colors.dart';
 import 'package:dormitory_manager/resources/dimensions.dart';
 import 'package:dormitory_manager/resources/fontsizes.dart';
@@ -16,89 +17,105 @@ import 'package:flutter/material.dart';
 import 'close_dialog.dart';
 
 class ItemService extends StatelessWidget {
-  AppBloc equipment;
+  AppBloc appBloc;
 
-  ItemService({this.equipment});
+  ItemService({this.appBloc});
 
   @override
   Widget build(BuildContext context) {
-    return _buildItem(context, equipment);
+    return _buildService();
   }
 
-  _buildItem(BuildContext context, AppBloc equipment) {
+  _buildService(){
     List listItem = [];
-    int checkDisplayRoom = -1;
-    bool noneDisplay = false;
-    int index = 0;
-    for (int i = 0; i < equipment.listAllDataRoom.length; i++) {
-      listItem.addAll(equipment.listAllDataRoom[i].service.map<Widget>((e) {
-        if (equipment.listAllDataRoom[i].id == checkDisplayRoom) {
-          noneDisplay = true;
-        } else {
-          checkDisplayRoom = equipment.listAllDataRoom[i].id;
-          noneDisplay = false;
-          index = 0;
-        }
-        index++;
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            noneDisplay
-                ? Container()
-                : Text(
-                    equipment.listAllDataRoom[i].roomName,
+    appBloc.listAllDataRoom.forEach((element) {
+      if(element.service.length > 0){
+        listItem.add(Padding(
+          padding:  EdgeInsets.all(AppDimensions.d1h),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "Phòng : ",
+                    style: TextStyle(
+                        color: AppColors.colorFacebook,
+                        fontSize: AppFontSizes.fs14),
+                  ),
+                  Text(
+                    element.roomName,
                     style: TextStyle(
                         color: AppColors.colorFacebook,
                         fontWeight: FontWeight.bold,
                         fontSize: AppFontSizes.fs14),
                   ),
-            Row(
-              children: [
-                Icon(
-                  Icons.view_list,
-                  size: AppFontSizes.fs9,
+                ],
+              ),
+              _buildServiceItem(element.service),
+
+            ],),
+        ));
+      }
+    });
+    return SingleChildScrollView(
+      child: Column(
+        children: listItem.map<Widget>((e){
+          return Card(
+            color: Colors.grey[100],
+            child: e,);
+        }).toList(),
+      ),
+    );
+  }
+
+  _buildServiceItem(List<Service> service){
+    List<Widget> widget = [];
+    service.forEach((element) {
+      widget.add(Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.view_list,
+                size: AppFontSizes.fs9,
+              ),
+              Expanded(
+                child: Text(
+                  "\t${element.serviceName}",
+                  style: TextStyle(
+                      color: AppColors.colorBlack_54,
+                      fontSize: AppFontSizes.fs10),
                 ),
-                Expanded(
-                  child: Text(
-                    "\t${e.serviceName}",
+              ),
+              RichText(
+                text: TextSpan(children: <TextSpan>[
+                  TextSpan(
+                    text: "đơn giá: ",
                     style: TextStyle(
-                        color: AppColors.colorBlack_54,
-                        fontSize: AppFontSizes.fs10),
+                      color: AppColors.colorBlack_54,
+                      fontSize: AppFontSizes.fs10,
+                    ),
                   ),
-                ),
-                RichText(
-                  text: TextSpan(children: <TextSpan>[
-                    TextSpan(
-                      text: "đơn giá: ",
-                      style: TextStyle(
-                        color: AppColors.colorBlack_54,
+                  TextSpan(
+                    text: "${StringHelper.formatCurrency(element.unitPrice)}đ",
+                    style: TextStyle(
+                        color: AppColors.colorGreen,
                         fontSize: AppFontSizes.fs10,
-                      ),
-                    ),
-                    TextSpan(
-                      text: "${StringHelper.formatCurrency(e.unitPrice)}đ",
-                      style: TextStyle(
-                          color: AppColors.colorGreen,
-                          fontSize: AppFontSizes.fs10,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ]),
-                ),
-              ],
-            ),
-            index >= equipment.listAllDataRoom[i].roomEquipment.length
-                ? Divider()
-                : Container()
-          ],
-        );
-      }));
-    }
+                        fontWeight: FontWeight.bold),
+                  ),
+                ]),
+              ),
+            ],
+          ),
+        ],
+      ));
+    });
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: listItem.map<Widget>((item) {
-        return item;
+      children: widget.map<Widget>((e){
+        return e;
       }).toList(),
     );
   }

@@ -45,110 +45,102 @@ class ItemRoom extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.colorGrey_400),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(AppDimensions.radius1_0w),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Stack(
-                            children: [
-                              Container(),
-                              Positioned(
-                                child: Container(
-                                  child: Image.asset(
-                                    'asset/image/room.png',
-                                    width: AppDimensions.d10w,
-                                  ),
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(),
+                            Positioned(
+                              child: Container(
+                                child: Image.asset(
+                                  'asset/image/room.png',
+                                  width: AppDimensions.d10w,
                                 ),
                               ),
-                              Positioned(
-                                  left: 20,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        color: AppColors.colorGrey_400,
-                                        child: Text(
-                                          allRoomBloc.listAllDataRoomDisplay[i]
-                                                      .user.length <=
-                                                  0
-                                              ? "${allRoomBloc.listAllDataRoomDisplay[i].roomName}:Trống"
-                                              : allRoomBloc.listAllDataRoomDisplay[i]
-                                                          .user.length >=
-                                                      allRoomBloc
-                                                          .listAllDataRoomDisplay[i].maxPeople
-                                                  ? "${allRoomBloc.listAllDataRoomDisplay[i].roomName}: Full"
-                                                  : "${allRoomBloc.listAllDataRoomDisplay[i].roomName}: Đang ở",
-                                          style: TextStyle(
-                                              color: allRoomBloc.listAllDataRoomDisplay[i]
-                                                          .user.length <=
-                                                      0
-                                                  ? AppColors.colorBlack
-                                                  : allRoomBloc.listAllDataRoomDisplay[i]
-                                                              .user.length >=
-                                                          allRoomBloc
-                                                              .listAllDataRoomDisplay[i]
-                                                              .maxPeople
-                                                      ? AppColors.colorRed
-                                                      : AppColors.colorFacebook,
-                                              fontSize: AppFontSizes.fs10,
-                                              fontWeight: FontWeight.bold),
-                                        ),
+                            ),
+                            Positioned(
+                                left: 20,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      color: Colors.lightGreen,
+                                      child: Text(
+                                        allRoomBloc.listAllDataRoomDisplay[i]
+                                            .user.length <=
+                                            0
+                                            ? "${allRoomBloc.listAllDataRoomDisplay[i].roomName}:Trống"
+                                            : allRoomBloc.listAllDataRoomDisplay[i]
+                                            .user.length >=
+                                            allRoomBloc
+                                                .listAllDataRoomDisplay[i].maxPeople
+                                            ? "${allRoomBloc.listAllDataRoomDisplay[i].roomName}: Full"
+                                            : "${allRoomBloc.listAllDataRoomDisplay[i].roomName}: Đang ở",
+                                        style: TextStyle(
+                                            color: allRoomBloc.listAllDataRoomDisplay[i]
+                                                .user.length <=
+                                                0
+                                                ? AppColors.colorBlack
+                                                : allRoomBloc.listAllDataRoomDisplay[i]
+                                                .user.length >=
+                                                allRoomBloc
+                                                    .listAllDataRoomDisplay[i]
+                                                    .maxPeople
+                                                ? AppColors.colorRed
+                                                : Colors.white,
+                                            fontSize: AppFontSizes.fs10,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ],
-                                  ))
-                            ],
-                          ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Text(
-                                "Giá: ",
-                                style: TextStyle(fontSize: AppFontSizes.fs8),
+                                    ),
+                                  ],
+                                ))
+                          ],
+                        ),
+                        Divider(),
+                        Row(
+                          children: [
+                            Text(
+                              "Giá: ",
+                              style: TextStyle(fontSize: AppFontSizes.fs8),
+                            ),
+                            Text(
+                              "${StringHelper.formatCurrency(allRoomBloc.listAllDataRoomDisplay[i].roomAmount)}đ",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppFontSizes.fs10,
                               ),
-                              Text(
-                                "${StringHelper.formatCurrency(allRoomBloc.listAllDataRoomDisplay[i].roomAmount)}đ",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: AppFontSizes.fs10,
-                                ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "người/phòng: ",
+                              style: TextStyle(fontSize: AppFontSizes.fs8),
+                            ),
+                            Text(
+                              "${allRoomBloc.listAllDataRoomDisplay[i].maxPeople}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppFontSizes.fs10,
                               ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "người/phòng: ",
-                                style: TextStyle(fontSize: AppFontSizes.fs8),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text("Số người hiện tại: ",
+                                style: TextStyle(fontSize: AppFontSizes.fs8)),
+                            Text(
+                              "${allRoomBloc.listAllDataRoomDisplay[i].user?.length ?? 0}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppFontSizes.fs10,
                               ),
-                              Text(
-                                "${allRoomBloc.listAllDataRoomDisplay[i].maxPeople}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: AppFontSizes.fs10,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text("Số người hiện tại: ",
-                                  style: TextStyle(fontSize: AppFontSizes.fs8)),
-                              Text(
-                                "${allRoomBloc.listAllDataRoomDisplay[i].user?.length ?? 0}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: AppFontSizes.fs10,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
                   )
                 ],
               )
@@ -164,7 +156,7 @@ class ItemRoom extends StatelessWidget {
         // mainAxisSpacing: 10,
         crossAxisCount: 3,
         children: listItem.map<Widget>((item) {
-          return item;
+          return Card(child: item,color: Colors.grey[100],);
         }).toList());
   }
 

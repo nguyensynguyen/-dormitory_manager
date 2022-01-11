@@ -228,7 +228,14 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
       });
       yield UpdateUIRoomState();
     }
-
+    if(event is UpdateRoomEquipmentEvent){
+      yield UpdateServicesState();
+      var data = await _managerProvider.updateEquipment(id:event.appBloc.equipment.id ,data:{"status":status});
+      if(data != null){
+        event.appBloc.equipment.status = status;
+        yield UpdateServicesDoneState();
+      }
+    }
   }
 
   reset() {

@@ -51,4 +51,12 @@ class RoomAllEvent extends RoomEvent {
   RoomAllEvent({this.appBloc});
 }
 
+class UpdateRoomEquipmentEvent extends RoomEvent {
+  AppBloc appBloc;
+  int id;
+  String status;
+  UpdateRoomEquipmentEvent({this.appBloc,this.id,this.status});
+
+}
+
 
