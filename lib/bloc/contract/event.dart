@@ -29,10 +29,19 @@ class UpdateUIContractEvent extends ContractEvent {}
 
 class CreateContractEvent extends ContractEvent {
   AppBloc appBloc;
+
   CreateContractEvent({this.appBloc});
 }
-class ExpiredEvent extends ContractEvent {}
-class DueEvent extends ContractEvent {}
-class AllContractEvent extends ContractEvent {}
-class SearchContractEvent extends ContractEvent {}
 
+class ExpiredEvent extends ContractEvent {}
+
+class DueEvent extends ContractEvent {}
+
+class AllContractEvent extends ContractEvent {}
+
+class SearchContractEvent extends ContractEvent {
+}
+class ChangePassUserEvent extends ContractEvent {
+  AppBloc appBloc;
+  ChangePassUserEvent({this.appBloc});
+}

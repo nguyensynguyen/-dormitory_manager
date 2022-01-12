@@ -92,29 +92,83 @@ class ReportState extends State<Report> {
                                   fontSize: AppFontSizes.fs14,
                                   fontWeight: FontWeight.bold),
                             ),
-                            _appBloc.isUser? GestureDetector(
-                              onTap: () => _showDialogReport(),
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: AppDimensions.d18w,
-                                height: AppDimensions.d10h,
-                                decoration: BoxDecoration(
-                                  color: AppColors.colorOrange,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(AppDimensions.radius1_0w),
+                            SizedBox(
+                              width: AppDimensions.d1h,
+                            ),
+                            _appBloc.isUser
+                                ? Expanded(child: Container())
+                                : Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: AppColors.colorWhite,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  AppDimensions.radius1_0w))),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(0.0),
+                                        child: Center(
+                                          child: TextField(
+                                            decoration:
+                                                InputDecoration.collapsed(
+                                              hintText: "Tìm theo phòng",
+                                              border: InputBorder.none,
+                                            ),
+                                            controller: _reportBloc.search,
+                                            style: TextStyle(
+                                                fontSize: AppFontSizes.fs9),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                child: Text(
-                                  "Thêm",
-                                  style: TextStyle(
-                                    color: AppColors.colorWhite,
-                                    fontSize: AppFontSizes.fs12,
+                            SizedBox(
+                              width: AppDimensions.d0_5h,
+                            ),
+                            _appBloc.isUser
+                                ? Container()
+                                : GestureDetector(
+                                    onTap: () {
+                                      if (_reportBloc.search.text != "") {
+                                        _reportBloc.add(SearchReportEvent());
+                                      }
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: AppColors.colorWhite,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  AppDimensions.radius1_0w))),
+                                      child: Icon(
+                                        Icons.search,
+                                        color: AppColors.colorRed,
+                                      ),
+                                    ),
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ):Container()
-
+                            _appBloc.isUser
+                                ? GestureDetector(
+                                    onTap: () => _showDialogReport(),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: AppDimensions.d18w,
+                                      height: AppDimensions.d10h,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.colorOrange,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              AppDimensions.radius1_0w),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Thêm",
+                                        style: TextStyle(
+                                          color: AppColors.colorWhite,
+                                          fontSize: AppFontSizes.fs12,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  )
+                                : Container()
                           ],
                         ),
                       ),
@@ -128,21 +182,25 @@ class ReportState extends State<Report> {
                             child: Text(
                               "Tất cả",
                               style: TextStyle(
-                                  color: _reportBloc.statusTab ==1?AppColors.colorOrange: AppColors.colorWhite,
+                                  color: _reportBloc.statusTab == 1
+                                      ? AppColors.colorOrange
+                                      : AppColors.colorWhite,
                                   fontSize: AppFontSizes.fs12),
                             ),
-                            onTap: (){
+                            onTap: () {
                               _reportBloc.add(AllReportEvent());
                             },
                           ),
                           GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               _reportBloc.add(FixingReportEvent());
                             },
                             child: Text(
                               "Đang sửa",
                               style: TextStyle(
-                                  color: _reportBloc.statusTab ==2?AppColors.colorOrange: AppColors.colorWhite,
+                                  color: _reportBloc.statusTab == 2
+                                      ? AppColors.colorOrange
+                                      : AppColors.colorWhite,
                                   fontSize: AppFontSizes.fs12),
                             ),
                           ),
@@ -150,10 +208,12 @@ class ReportState extends State<Report> {
                             child: Text(
                               "Đã sửa",
                               style: TextStyle(
-                                  color: _reportBloc.statusTab ==3?AppColors.colorOrange: AppColors.colorWhite,
+                                  color: _reportBloc.statusTab == 3
+                                      ? AppColors.colorOrange
+                                      : AppColors.colorWhite,
                                   fontSize: AppFontSizes.fs12),
                             ),
-                            onTap: (){
+                            onTap: () {
                               _reportBloc.add(FixedReportEvent());
                             },
                           ),
@@ -185,148 +245,149 @@ class ReportState extends State<Report> {
       widget: BlocListener(
         cubit: _reportBloc,
         listener: (context, state) {
-          if(state is LoadingCreateState){
+          if (state is LoadingCreateState) {
             UIHelper.showLoadingCommon(context: context);
           }
-          if(state is CreateDoneState){
+          if (state is CreateDoneState) {
             Fluttertoast.showToast(msg: "Gửi thành công");
             Navigator.pop(context);
           }
         },
         child: BlocBuilder(
           cubit: _reportBloc,
-          builder: (context,state){
-         return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Nhập nội dung",
-                        style: TextStyle(
-                            fontSize: AppFontSizes.fs14,
-                            fontWeight: FontWeight.bold),
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Nhập nội dung",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs14,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    CloseDialog(
-                      color: AppColors.colorBlack_54,
-                      onClose: () {
-                        Navigator.pop(context);
+                      CloseDialog(
+                        color: AppColors.colorBlack_54,
+                        onClose: () {
+                          Navigator.pop(context);
 //                        _reportBloc.add(UpdateUIReportEvent());
-                      },
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(AppDimensions.d1h),
-                child: GestureDetector(
-                  child: Container(
-                    width: AppDimensions.d100w,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.colorGrey_300),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(AppDimensions.radius1_5w),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(AppDimensions.d0_5h),
-                      child: Row(
-                        children: [
-                          Text("${_appBloc.room1?.roomName ?? ""}"),
-                          Expanded(
-                            child: Container(),
-                          ),
-                        ],
-                      ),
-                    ),
+                        },
+                      )
+                    ],
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Tiêu đề",
-                      style: TextStyle(
-                        color: AppColors.colorBlack_87,
-                        fontSize: AppFontSizes.fs10,
+                Padding(
+                  padding: EdgeInsets.all(AppDimensions.d1h),
+                  child: GestureDetector(
+                    child: Container(
+                      width: AppDimensions.d100w,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.colorGrey_300),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppDimensions.radius1_5w),
+                        ),
                       ),
-                    ),
-                    Container(
-                      child: CupertinoTextField(
-                        controller: _reportBloc.title,
-                        style: TextStyle(
-                            fontSize: AppFontSizes.fs10,
-                            color: AppColors.colorBlack_87),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Nội dung",
-                      style: TextStyle(
-                        color: AppColors.colorBlack_87,
-                        fontSize: AppFontSizes.fs10,
-                      ),
-                    ),
-                    Container(
-                      child: CupertinoTextField(
-                        controller: _reportBloc.content,
-                        maxLines: 10,
-                        style: TextStyle(
-                            fontSize: AppFontSizes.fs10,
-                            color: AppColors.colorBlack_87),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.all(AppDimensions.d1h),
-                child: GestureDetector(
-                  onTap: () {
-                    _reportBloc.add(CreateMessage(appBloc: _appBloc));
-                  },
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: AppDimensions.d100w,
-                    decoration: BoxDecoration(
-                      boxShadow: [],
-                      color: AppColors.colorOrange,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(AppDimensions.radius1_0w),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(AppDimensions.d2h),
-                      child: Text(
-                        "Gửi",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.colorWhite,
+                      child: Padding(
+                        padding: EdgeInsets.all(AppDimensions.d0_5h),
+                        child: Row(
+                          children: [
+                            Text("${_appBloc.room1?.roomName ?? ""}"),
+                            Expanded(
+                              child: Container(),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ),
-              )
-            ],
-          );
-        },),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Tiêu đề",
+                        style: TextStyle(
+                          color: AppColors.colorBlack_87,
+                          fontSize: AppFontSizes.fs10,
+                        ),
+                      ),
+                      Container(
+                        child: CupertinoTextField(
+                          controller: _reportBloc.title,
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs10,
+                              color: AppColors.colorBlack_87),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Nội dung",
+                        style: TextStyle(
+                          color: AppColors.colorBlack_87,
+                          fontSize: AppFontSizes.fs10,
+                        ),
+                      ),
+                      Container(
+                        child: CupertinoTextField(
+                          controller: _reportBloc.content,
+                          maxLines: 10,
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs10,
+                              color: AppColors.colorBlack_87),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                Padding(
+                  padding: EdgeInsets.all(AppDimensions.d1h),
+                  child: GestureDetector(
+                    onTap: () {
+                      _reportBloc.add(CreateMessage(appBloc: _appBloc));
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: AppDimensions.d100w,
+                      decoration: BoxDecoration(
+                        boxShadow: [],
+                        color: AppColors.colorOrange,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppDimensions.radius1_0w),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(AppDimensions.d2h),
+                        child: Text(
+                          "Gửi",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.colorWhite,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+        ),
       ),
     );
   }

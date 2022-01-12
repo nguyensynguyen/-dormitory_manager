@@ -22,4 +22,7 @@ class ApiUrl {
   static String createReport = 'manager/create_message';
   static String createManager = 'manager/create_manager';
   static String updateEquipment = 'manager/update_equipment';
+  static String changPassUser = 'manager/change_password_user';
+  static String changPassManager = 'manager/change_password_manager';
+  static String changProfileManager = 'manager/update_profile_manager';
 }

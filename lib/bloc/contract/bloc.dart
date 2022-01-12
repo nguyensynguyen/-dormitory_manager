@@ -1,6 +1,7 @@
 import 'package:dormitory_manager/bloc/contract/state.dart';
 import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/user.dart';
+import 'package:dormitory_manager/provider/login_provider.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +25,13 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
   TextEditingController address = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController search = TextEditingController();
+  TextEditingController oldPass = TextEditingController();
+  TextEditingController newPass = TextEditingController();
   String messageErrors = "";
   List<User> tempContract = [];
   List<User> tempAllContract = [];
   int statusTab = 1;
+  LoginProvider loginProvider = LoginProvider();
 
   @override
   Stream<ContractState> mapEventToState(ContractEvent event) async* {
@@ -56,6 +60,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
             });
           });
         } else {
+          await Future.delayed(Duration(seconds: 2));
           listContract.forEach((user) {
             if (user.roomId == room.id) {
               user.room = {"room_name": ""};
@@ -81,6 +86,8 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
 
         if (statusTab == 1) {
           yield* mapEventToState(AllContractEvent());
+        } else if (statusTab == 4) {
+          yield* mapEventToState(SearchContractEvent());
         } else {
           yield* mapEventToState(DueEvent());
         }
@@ -216,6 +223,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
             registrationDate: user1.registrationDate,
             password: "1",
             managerId: event.appBloc.manager.id,
+            idCard: int.tryParse(idCard.text),
             expirationDate: user1.expirationDate,
             room: {"room_name": room.roomName},
             roomId: room.id));
@@ -229,6 +237,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
             birthDay: user1.birthDay,
             registrationDate: user1.registrationDate,
             password: "1",
+            idCard: int.tryParse(idCard.text),
             managerId: event.appBloc.manager.id,
             expirationDate: user1.expirationDate,
             room: {"room_name": room.roomName},
@@ -243,6 +252,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
             birthDay: user1.birthDay,
             registrationDate: user1.registrationDate,
             password: "1",
+            idCard: int.tryParse(idCard.text),
             managerId: event.appBloc.manager.id,
             expirationDate: user1.expirationDate,
             room: {"room_name": room.roomName},
@@ -279,7 +289,8 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
       // yield Loading();
       listContract.clear();
       for (int i = 0; i < tempContract.length; i++) {
-        if ((DateTime.now().millisecondsSinceEpoch ~/1000) - tempContract[i].expirationDate >=
+        if ((DateTime.now().millisecondsSinceEpoch ~/ 1000) -
+                tempContract[i].expirationDate >=
             0) {
           listContract.add(tempContract[i]);
         }
@@ -292,7 +303,8 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
       // yield Loading();
       listContract.clear();
       for (int i = 0; i < tempContract.length; i++) {
-        if ((DateTime.now().millisecondsSinceEpoch ~/1000)- tempContract[i].expirationDate <=
+        if ((DateTime.now().millisecondsSinceEpoch ~/ 1000) -
+                tempContract[i].expirationDate <=
             0) {
           listContract.add(tempContract[i]);
         }
@@ -310,15 +322,35 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
       yield Done();
     }
 
-    if(event is SearchContractEvent){
+    if (event is SearchContractEvent) {
+      statusTab = 4;
       listContract.clear();
       for (int i = 0; i < tempContract.length; i++) {
-        if(search.text == tempContract[i].room['room_name']){
+        if (search.text == tempContract[i].room['room_name']) {
           listContract.add(tempContract[i]);
         }
         yield Done();
       }
     }
 
+    if(event is ChangePassUserEvent){
+      Map data = {
+        "email": event.appBloc.user.email,
+        "old_password": oldPass.text,
+        "password": newPass.text,
+      };
+      yield LoadingChangePassState();
+      var res =await loginProvider.changePassUser(datas: data);
+      if(res != null){
+        oldPass.text = "";
+        newPass.text = "";
+        yield ChangPassDoneState();
+      }
+      else{
+        yield ChangePassError();
+
+      }
+
+    }
   }
 }

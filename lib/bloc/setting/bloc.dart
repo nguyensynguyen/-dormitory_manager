@@ -20,6 +20,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         event.appBloc.isUser = true;
         event.appBloc.profile = jsonDecode(dataUser) ?? null;
         event.appBloc.user = User.fromJson(jsonDecode(dataUser)) ?? null;
+        event.appBloc.displayManagerForUsre = Manager.fromJson(jsonDecode(dataUser)['Manager']) ?? null;
         yield AuthSuccess();
       } else if (dataManager != null) {
         event.appBloc.isUser = false;

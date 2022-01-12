@@ -1,5 +1,7 @@
 import 'package:dormitory_manager/resources/colors.dart';
 import 'package:dormitory_manager/resources/dimensions.dart';
+import 'package:dormitory_manager/resources/fontsizes.dart';
+import 'package:dormitory_manager/ui/widget/close_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -139,7 +141,6 @@ class UIHelper {
       duration: Duration(milliseconds: 500),
     );
   }
-
 
   static loading() {
     return Container(
@@ -334,6 +335,63 @@ class UIHelper {
                       ),
                     ],
                   )),
+            ),
+          );
+        });
+  }
+
+  static showChangePass(
+      {String message,
+        Widget widget,
+      Function onTap,
+      BuildContext context,
+      TextEditingController oldPass,
+      TextEditingController newPass}) {
+    return showAnimatedDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(AppDimensions.radius2w),
+                  topLeft: Radius.circular(AppDimensions.radius2w),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(AppDimensions.radius1_0w))),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                          child: Container(
+                        color: Colors.transparent,
+                      )),
+                      Container(
+                        width: AppDimensions.d100w,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(AppDimensions.radius1_0w))),
+                        child: widget,
+                      ),
+                      Expanded(
+                          child: Container(
+                        color: Colors.transparent,
+                      )),
+                    ],
+                  ),
+                ),
+              ),
             ),
           );
         });

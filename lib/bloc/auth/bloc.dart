@@ -24,6 +24,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   TextEditingController nameManager = TextEditingController();
   TextEditingController phoneManager = TextEditingController();
   TextEditingController addressManager = TextEditingController();
+  TextEditingController oldPass = TextEditingController();
+  TextEditingController newPass = TextEditingController();
   String errorsMessage = "";
 
   @override
@@ -40,6 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (res != null) {
           event.appBloc.profile = User.fromJson(res['data']);
           event.appBloc.user = User.fromJson(res['data']);
+          event.appBloc.displayManagerForUsre = Manager.fromJson(res['data']['Manager']);
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString("user", jsonEncode(res['data']));
           yield LoginDone();
@@ -62,7 +65,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       }
     }
-
 
     if (event is LogOutEvent) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -126,5 +128,55 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
        yield CreateErrors();
      }
     }
+    if(event is ChangePassWordManager){
+      Map data = {
+        "email": event.appBloc.manager.email,
+        "old_password": oldPass.text,
+        "password": newPass.text,
+      };
+      yield LoadingChangePassState();
+      var res =await _loginProvider.changePassManager(datas: data);
+      if(res != null){
+        oldPass.text = "";
+        newPass.text = "";
+        yield ChangPassDoneState();
+      }
+      else{
+        yield ChangePassError();
+
+      }
+
+    }
+
+    if(event is ChangeProfileManager){
+      Map data = {
+        "id":event.appBloc.manager.id,
+        "email": emailManager.text,
+        "manager_name":nameManager.text,
+        "phone":int.tryParse(phoneManager.text),
+        "address": addressManager.text,
+      };
+      yield LoadingChangePassState();
+      var res =await _loginProvider.changeProfileManager(datas: data,id: event.appBloc.manager.id);
+      if(res != null){
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString("manager",jsonEncode(data));
+        var updateM = prefs.get("manager");
+
+        event.appBloc.manager =
+            Manager.fromJson(jsonDecode(updateM));
+        nameManager.text ="";
+        emailManager.text ="";
+        phoneManager.text ="";
+        addressManager.text ="";
+        yield ChangPassDoneState();
+      }
+      else{
+        yield ChangePassError();
+
+      }
+
+    }
+
   }
 }

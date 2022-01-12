@@ -13,3 +13,15 @@ class LogOutEvent extends AuthEvent{
 
 class CreateManager extends AuthEvent{
 }
+
+class ChangePassWordManager extends AuthEvent{
+  AppBloc appBloc;
+  ChangePassWordManager({this.appBloc});
+}
+
+class ChangeProfileManager extends AuthEvent{
+  AppBloc appBloc;
+  ChangeProfileManager({this.appBloc});
+}
+
+class UpdateUI extends AuthEvent{}

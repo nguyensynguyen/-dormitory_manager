@@ -47,5 +47,66 @@ class LoginProvider {
     }
   }
 
+  Future<dynamic> changePassManager({dynamic datas}) async {
+    try {
+      var res = await _dio.post(
+        "${ApiUrl.baseUrl + ApiUrl.changPassManager}",
+        data: datas,
+        options: Options(
+            receiveDataWhenStatusError: true,
+            receiveTimeout: 50,
+            sendTimeout: 50),
+      );
+      if (res.data['success']) {
+        return res.data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<dynamic> changePassUser({dynamic datas}) async {
+    try {
+      var res = await _dio.post(
+        "${ApiUrl.baseUrl + ApiUrl.changPassUser}",
+        data: datas,
+        options: Options(
+            receiveDataWhenStatusError: true,
+            receiveTimeout: 50,
+            sendTimeout: 50),
+      );
+      if (res.data['success']) {
+        return res.data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+
+  Future<dynamic> changeProfileManager({dynamic datas,int id}) async {
+    try {
+      var res = await _dio.post(
+        "${ApiUrl.baseUrl + ApiUrl.changProfileManager}/$id",
+        data: datas,
+        options: Options(
+            receiveDataWhenStatusError: true,
+            receiveTimeout: 50,
+            sendTimeout: 50),
+      );
+      if (res.data['success']) {
+        return res.data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
 
 }

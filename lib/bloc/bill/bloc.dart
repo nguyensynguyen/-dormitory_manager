@@ -108,7 +108,7 @@ class BillBloc extends Bloc<BillEvent, BillState> {
               dateCreate: DateTime.now().millisecondsSinceEpoch ~/ 1000,
               roomId: event.appBloc.room.id,
               status: "unpaid",
-              roomBillDetail:billDetail.map<RoomBillDetail>((item) {
+              roomBillDetail: billDetail.map<RoomBillDetail>((item) {
                 return RoomBillDetail.fromJson(item);
               }).toList(),
               room: Room(
@@ -168,6 +168,8 @@ class BillBloc extends Bloc<BillEvent, BillState> {
         });
         if (statusPaid == 1) {
           yield* mapEventToState(AllPaidEvent());
+        } else if (statusPaid == 4) {
+          yield* mapEventToState(SearchDateEvent());
         } else {
           if (event.status == "paid") {
             yield* mapEventToState(UnpaidEvent());
@@ -251,15 +253,15 @@ class BillBloc extends Bloc<BillEvent, BillState> {
       yield* mapEventToState(TotalPriceEvent());
       yield LoadDataBillDone();
     }
-    if(event is SearchDateEvent){
+    if (event is SearchDateEvent) {
+      statusPaid = 4;
       listRoomBill.clear();
       tempListBill.forEach((element) {
-        if(element.room.roomName == searchBill.text){
+        if (element.room.roomName == searchBill.text) {
           listRoomBill.add(element);
         }
       });
       yield SearchDoneState();
     }
   }
-
 }

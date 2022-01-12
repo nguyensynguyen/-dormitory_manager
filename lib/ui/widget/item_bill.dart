@@ -136,109 +136,110 @@ class ItemBill extends StatelessWidget {
         }
       } else {
         listItem.add(GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            billBloc.bill = billBloc.listRoomBill[i];
-            _showDialog(billBloc, context);
-          },
-          child: Card(child: Padding(
-            padding: EdgeInsets.all( AppDimensions.d1h),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              billBloc.bill = billBloc.listRoomBill[i];
+              _showDialog(billBloc, context);
+            },
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(AppDimensions.d1h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.asset(
-                      'asset/image/bill.png',
-                      width: AppDimensions.d8w,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'asset/image/bill.png',
+                          width: AppDimensions.d8w,
+                        ),
+                        SizedBox(
+                          width: AppDimensions.d1h,
+                        ),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${billBloc.listRoomBill[i].room.roomName}",
+                                style: TextStyle(
+                                    color: AppColors.colorBlack,
+                                    fontSize: AppFontSizes.fs12),
+                              ),
+                              Text(
+                                "ngày tạo: ${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(billBloc.listRoomBill[i].dateCreate * 1000))}",
+                                style: TextStyle(
+                                    color: AppColors.colorBlack_38,
+                                    fontSize: AppFontSizes.fs10),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "${StringHelper.formatCurrency(billBloc.listRoomBill[i].totalPrice)} đ",
+                              style: TextStyle(
+                                  color: AppColors.colorBlack,
+                                  fontSize: AppFontSizes.fs12,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              billBloc.listRoomBill[i].status == "paid"
+                                  ? "Đã thanh toán"
+                                  : "Chưa thanh toán",
+                              style: TextStyle(
+                                color: billBloc.listRoomBill[i].status == "paid"
+                                    ? AppColors.colorGreen
+                                    : AppColors.colorRed,
+                                fontSize: AppFontSizes.fs10,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                     SizedBox(
-                      width: AppDimensions.d1h,
+                      height: AppDimensions.d1h,
                     ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${billBloc.listRoomBill[i].room.roomName}",
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Tiền nhà",
                             style: TextStyle(
                                 color: AppColors.colorBlack,
-                                fontSize: AppFontSizes.fs12),
-                          ),
-                          Text(
-                            "ngày tạo: ${DateTimeFormat.formatDate(DateTime.fromMillisecondsSinceEpoch(billBloc.listRoomBill[i].dateCreate * 1000))}",
+                                fontSize: AppFontSizes.fs11)),
+                        Text(
+                            "${StringHelper.formatCurrency(billBloc.listRoomBill[i].room.roomAmount)} đ",
                             style: TextStyle(
-                                color: AppColors.colorBlack_38,
-                                fontSize: AppFontSizes.fs10),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          "${StringHelper.formatCurrency(billBloc.listRoomBill[i].totalPrice)} đ",
-                          style: TextStyle(
-                              color: AppColors.colorBlack,
-                              fontSize: AppFontSizes.fs12,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          billBloc.listRoomBill[i].status == "paid"
-                              ? "Đã thanh toán"
-                              : "Chưa thanh toán",
-                          style: TextStyle(
-                            color: billBloc.listRoomBill[i].status == "paid"
-                                ? AppColors.colorGreen
-                                : AppColors.colorRed,
-                            fontSize: AppFontSizes.fs10,
-                          ),
-                        ),
+                                color: AppColors.colorBlack,
+                                fontSize: AppFontSizes.fs11)),
                       ],
-                    )
+                    ),
+                    SizedBox(
+                      height: AppDimensions.d1h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Tiền dịch vụ",
+                            style: TextStyle(
+                                color: AppColors.colorBlack,
+                                fontSize: AppFontSizes.fs11)),
+                        Text(
+                            "${StringHelper.formatCurrency(billBloc.listRoomBill[i].totalService)} đ",
+                            style: TextStyle(
+                                color: AppColors.colorBlack,
+                                fontSize: AppFontSizes.fs11)),
+                      ],
+                    ),
                   ],
                 ),
-                SizedBox(
-                  height: AppDimensions.d1h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Tiền nhà",
-                        style: TextStyle(
-                            color: AppColors.colorBlack,
-                            fontSize: AppFontSizes.fs11)),
-                    Text(
-                        "${StringHelper.formatCurrency(billBloc.listRoomBill[i].room.roomAmount)} đ",
-                        style: TextStyle(
-                            color: AppColors.colorBlack,
-                            fontSize: AppFontSizes.fs11)),
-                  ],
-                ),
-                SizedBox(
-                  height: AppDimensions.d1h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Tiền dịch vụ",
-                        style: TextStyle(
-                            color: AppColors.colorBlack,
-                            fontSize: AppFontSizes.fs11)),
-                    Text(
-                        "${StringHelper.formatCurrency(billBloc.listRoomBill[i].totalService)} đ",
-                        style: TextStyle(
-                            color: AppColors.colorBlack,
-                            fontSize: AppFontSizes.fs11)),
-                  ],
-                ),
-              ],
-            ),
-          ),)
-        ));
+              ),
+            )));
       }
     }
 
@@ -598,9 +599,8 @@ class ItemBill extends StatelessWidget {
                         Text(
                           "Tổng tiền phòng ",
                           style: TextStyle(
-                            fontSize: AppFontSizes.fs14,
-                            fontWeight: FontWeight.bold
-                          ),
+                              fontSize: AppFontSizes.fs14,
+                              fontWeight: FontWeight.bold),
                         ),
                         Text(
                           "${StringHelper.formatCurrency(bill.totalPrice)}đ",

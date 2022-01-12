@@ -138,6 +138,7 @@ class _buildHome extends State<BuildHome> {
       cubit: _allRoomBloc,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: AppDimensions.d100w,
@@ -171,7 +172,7 @@ class _buildHome extends State<BuildHome> {
                       children: [
                         Expanded(
                           child: Text(
-                            "Dormitory",
+                            "Trang chủ",
                             style: TextStyle(
                                 color: AppColors.colorWhite,
                                 fontSize: AppFontSizes.fs14,
@@ -230,7 +231,621 @@ class _buildHome extends State<BuildHome> {
               ],
             ),
           ),
-          _appBloc.isUser ? _buildUser() : _buildManager()
+          _appBloc.isUser ? _buildUser() : _buildManager(),
+          _appBloc.isUser
+              ? _buildProfileManagerForUser()
+              : _buildProfileManager()
+        ],
+      ),
+    );
+  }
+
+  _buildProfileManager() {
+    return BlocBuilder(
+      builder: (context, state) {
+        return Padding(
+          padding: EdgeInsets.all(AppDimensions.d1h),
+          child: Column(
+            children: [
+              Image.asset(
+                "asset/image/manager.png",
+                width: AppDimensions.d30w,
+              ),
+              Container(
+                width: AppDimensions.d100w,
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsets.all(AppDimensions.d1h),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Divider(),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.person,
+                              color: AppColors.colorFacebook,
+                            ),
+                            Text(
+                              "\t \t Họ và tên : ",
+                              style: TextStyle(
+                                  fontSize: AppFontSizes.fs8,
+                                  color: AppColors.colorGrey_400,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "${_appBloc.manager.managerName}",
+                              style: TextStyle(
+                                  fontSize: AppFontSizes.fs10,
+                                  color: AppColors.colorFacebook,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: AppDimensions.d0_5h,
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.email,
+                              color: AppColors.colorFacebook,
+                            ),
+                            Text(
+                              "\t \t Email : ",
+                              style: TextStyle(
+                                  fontSize: AppFontSizes.fs8,
+                                  color: AppColors.colorGrey_400,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "${_appBloc.manager.email}",
+                              style: TextStyle(
+                                  fontSize: AppFontSizes.fs10,
+                                  color: AppColors.colorFacebook,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: AppDimensions.d0_5h,
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.phone,
+                              color: AppColors.colorFacebook,
+                            ),
+                            Text(
+                              "\t \t SDT : ",
+                              style: TextStyle(
+                                  fontSize: AppFontSizes.fs8,
+                                  color: AppColors.colorGrey_400,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "0${_appBloc.manager.phone}",
+                              style: TextStyle(
+                                  fontSize: AppFontSizes.fs10,
+                                  color: AppColors.colorFacebook,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: AppDimensions.d0_5h,
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              color: AppColors.colorFacebook,
+                            ),
+                            Text(
+                              "\t \t Địa chỉ : ",
+                              style: TextStyle(
+                                  fontSize: AppFontSizes.fs8,
+                                  color: AppColors.colorGrey_400,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "${_appBloc.manager.address}",
+                              style: TextStyle(
+                                  fontSize: AppFontSizes.fs10,
+                                  color: AppColors.colorFacebook,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: AppDimensions.d0_5h,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _showChangeInfoManager(context);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: AppDimensions.d8h,
+                            decoration: BoxDecoration(
+                              color: AppColors.colorFacebook,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(AppDimensions.radius1_0w),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(AppDimensions.d1h),
+                              child: Text(
+                                "Cập nhật thông tin",
+                                style: TextStyle(
+                                    color: AppColors.colorWhite,
+                                    fontSize: AppFontSizes.fs12,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: AppDimensions.d0_5h,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _showChangePass(context);
+                          },
+                          child: Container(
+                            height: AppDimensions.d8h,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: AppColors.colorOrange,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(AppDimensions.radius1_0w),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(AppDimensions.d1h),
+                              child: Text(
+                                "Đổi mật khẩu",
+                                style: TextStyle(
+                                    color: AppColors.colorWhite,
+                                    fontSize: AppFontSizes.fs12,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      cubit: _authBloc,
+    );
+  }
+
+  _showChangePass(BuildContext context, {int index}) {
+    return UIHelper.showChangePass(
+      newPass: _authBloc.newPass,
+      oldPass: _authBloc.oldPass,
+      context: context,
+      message: "Đổi mật khẩu",
+      widget: BlocListener(
+        cubit: _authBloc,
+        listener: (context, state) {
+          if (state is LoadingChangePassState) {
+            UIHelper.showLoadingCommon(context: context);
+          }
+          if (state is ChangPassDoneState) {
+            Fluttertoast.showToast(
+                msg: "Đổi mật khẩu thành công", toastLength: Toast.LENGTH_LONG);
+            Navigator.pop(context);
+          }
+          if (state is ChangePassError) {
+            Fluttertoast.showToast(
+                msg: "Đổi mật khẩu thất bại", toastLength: Toast.LENGTH_LONG);
+            Navigator.pop(context);
+          }
+        },
+        child: BlocBuilder(
+          cubit: _authBloc,
+          builder: (context, st) {
+            return Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Đổi mật khẩu',
+                        style: TextStyle(
+                            fontFamily: "San",
+                            fontSize: AppFontSizes.fs14,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      CloseDialog(
+                        color: AppColors.colorGrey_400,
+                        onClose: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "Mật khẩu cũ",
+                    style: TextStyle(fontFamily: "San"),
+                  ),
+                  CupertinoTextField(
+                    controller: _authBloc.oldPass,
+                    placeholderStyle: TextStyle(
+                        color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Text(
+                    "Mật khẩu mới",
+                    style: TextStyle(fontFamily: "San"),
+                  ),
+                  CupertinoTextField(
+                    controller: _authBloc.newPass,
+                    placeholderStyle: TextStyle(
+                        color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (_authBloc.oldPass.text == "") {
+                        Fluttertoast.showToast(
+                            msg: "Nhập mật khẩu cũ",
+                            toastLength: Toast.LENGTH_LONG);
+                        return;
+                      }
+                      if (_authBloc.newPass.text == "") {
+                        Fluttertoast.showToast(
+                            msg: "Nhập mật khẩu mới",
+                            toastLength: Toast.LENGTH_LONG);
+                        return;
+                      }
+                      _authBloc.add(ChangePassWordManager(appBloc: _appBloc));
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: AppDimensions.d8h,
+                      decoration: BoxDecoration(
+                        color: AppColors.colorOrange,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppDimensions.radius1_0w),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(AppDimensions.d1h),
+                        child: Text(
+                          "Đổi mật khẩu",
+                          style: TextStyle(
+                              color: AppColors.colorWhite,
+                              fontSize: AppFontSizes.fs12,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  _showChangeInfoManager(BuildContext context, {int index}) {
+    return UIHelper.showChangePass(
+      newPass: _authBloc.newPass,
+      oldPass: _authBloc.oldPass,
+      context: context,
+      message: "Đổi mật khẩu",
+      widget: BlocListener(
+        cubit: _authBloc,
+        listener: (context, state) {
+          if (state is LoadingChangePassState) {
+            UIHelper.showLoadingCommon(context: context);
+          }
+          if (state is ChangPassDoneState) {
+            Fluttertoast.showToast(
+                msg: "Cập nhật thông tin thành công",
+                toastLength: Toast.LENGTH_LONG);
+            Navigator.pop(context);
+          }
+          if (state is ChangePassError) {
+            Fluttertoast.showToast(
+                msg: "Cập nhật thông tin thất bại",
+                toastLength: Toast.LENGTH_LONG);
+            Navigator.pop(context);
+          }
+        },
+        child: BlocBuilder(
+          cubit: _authBloc,
+          builder: (context, st) {
+            return Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Cập nhật thông tin',
+                        style: TextStyle(
+                            fontFamily: "San",
+                            fontSize: AppFontSizes.fs14,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      CloseDialog(
+                        color: AppColors.colorGrey_400,
+                        onClose: () {
+                          Navigator.pop(context);
+                          _allRoomBloc.add(UpdateUIRoomEvent());
+                        },
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "Họ tên",
+                    style: TextStyle(fontFamily: "San"),
+                  ),
+                  CupertinoTextField(
+                    controller: _authBloc.nameManager,
+                    placeholderStyle: TextStyle(
+                        color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Text(
+                    "Email",
+                    style: TextStyle(fontFamily: "San"),
+                  ),
+                  CupertinoTextField(
+                    controller: _authBloc.emailManager,
+                    placeholderStyle: TextStyle(
+                        color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Text(
+                    "Số điện thoại",
+                    style: TextStyle(fontFamily: "San"),
+                  ),
+                  CupertinoTextField(
+                    controller: _authBloc.phoneManager,
+                    placeholderStyle: TextStyle(
+                        color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
+                  Text(
+                    "Địa chỉ",
+                    style: TextStyle(fontFamily: "San"),
+                  ),
+                  CupertinoTextField(
+                    controller: _authBloc.addressManager,
+                    placeholderStyle: TextStyle(
+                        color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      if (_authBloc.nameManager.text == "") {
+                        Fluttertoast.showToast(
+                            msg: "Nhập tên", toastLength: Toast.LENGTH_LONG);
+                        return;
+                      }
+                      if (_authBloc.emailManager.text == "") {
+                        Fluttertoast.showToast(
+                            msg: "Nhập email", toastLength: Toast.LENGTH_LONG);
+                        return;
+                      }
+                      if (_authBloc.phoneManager.text == "") {
+                        Fluttertoast.showToast(
+                            msg: "Nhập số điện thoại",
+                            toastLength: Toast.LENGTH_LONG);
+                        return;
+                      }
+                      if (_authBloc.addressManager.text == "") {
+                        Fluttertoast.showToast(
+                            msg: "Nhập địa chỉ",
+                            toastLength: Toast.LENGTH_LONG);
+                        return;
+                      }
+                      _authBloc.add(ChangeProfileManager(appBloc: _appBloc));
+                      // _allRoomBloc.add(UpdateUIRoomEvent());
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: AppDimensions.d8h,
+                      decoration: BoxDecoration(
+                        color: AppColors.colorOrange,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppDimensions.radius1_0w),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(AppDimensions.d1h),
+                        child: Text(
+                          "Đổi mật khẩu",
+                          style: TextStyle(
+                              color: AppColors.colorWhite,
+                              fontSize: AppFontSizes.fs12,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  _buildProfileManagerForUser() {
+    return Padding(
+      padding: EdgeInsets.all(AppDimensions.d1h),
+      child: Column(
+        children: [
+          Text(
+            "Thông tin người quản lý ",
+            style: TextStyle(
+                fontSize: AppFontSizes.fs16,
+                color: AppColors.colorFacebook,
+                fontWeight: FontWeight.bold),
+          ),
+          Text(
+            "Thắc mắc hãy liên hệ thông tin dưới ",
+            style: TextStyle(
+                fontSize: AppFontSizes.fs12,
+                color: AppColors.colorFacebook,
+                fontFamily: "San"),
+          ),
+          SizedBox(
+            height: AppDimensions.d0_5h,
+          ),
+          Image.asset(
+            "asset/image/manager.png",
+            width: AppDimensions.d30w,
+          ),
+          Container(
+            width: AppDimensions.d100w,
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(AppDimensions.d1h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Divider(),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person,
+                          color: AppColors.colorFacebook,
+                        ),
+                        Text(
+                          "\t \t Họ và tên : ",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs8,
+                              color: AppColors.colorGrey_400,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${_appBloc?.displayManagerForUsre?.managerName ?? ""}",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs10,
+                              color: AppColors.colorFacebook,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: AppDimensions.d0_5h,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.email,
+                          color: AppColors.colorFacebook,
+                        ),
+                        Text(
+                          "\t \t Email : ",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs8,
+                              color: AppColors.colorGrey_400,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${_appBloc.displayManagerForUsre.email}",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs10,
+                              color: AppColors.colorFacebook,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: AppDimensions.d0_5h,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.phone,
+                          color: AppColors.colorFacebook,
+                        ),
+                        Text(
+                          "\t \t SDT : ",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs8,
+                              color: AppColors.colorGrey_400,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "0${_appBloc.displayManagerForUsre.phone}",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs10,
+                              color: AppColors.colorFacebook,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: AppDimensions.d0_5h,
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          color: AppColors.colorFacebook,
+                        ),
+                        Text(
+                          "\t \t Địa chỉ : ",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs8,
+                              color: AppColors.colorGrey_400,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${_appBloc.displayManagerForUsre.address}",
+                          style: TextStyle(
+                              fontSize: AppFontSizes.fs10,
+                              color: AppColors.colorFacebook,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
 import 'package:dormitory_manager/bloc/contract/bloc.dart';
 import 'package:dormitory_manager/bloc/contract/event.dart';
+import 'package:dormitory_manager/bloc/contract/state.dart';
 import 'package:dormitory_manager/converts/time_format.dart';
 import 'package:dormitory_manager/helper/string_helper.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
@@ -9,6 +10,7 @@ import 'package:dormitory_manager/resources/dimensions.dart';
 import 'package:dormitory_manager/resources/fontsizes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -22,17 +24,16 @@ class ItemContract extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appBloc.isUser ? _buildProfileUsre() : _buildItem(context);
+    return appBloc.isUser ? _buildProfileUsre(context) : _buildItem(context);
   }
 
-  _buildProfileUsre() {
+  _buildProfileUsre(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(AppDimensions.d1h),
       child: Column(
         children: [
           Image.asset(
-            "asset/image/user1.png",
-            height: AppDimensions.d30h,
+            "asset/image/profile.png",
             width: AppDimensions.d30w,
           ),
           Container(
@@ -273,6 +274,35 @@ class ItemContract extends StatelessWidget {
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: AppDimensions.d1h,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _showChangePass(context);
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: AppDimensions.d8h,
+                        decoration: BoxDecoration(
+                          color: AppColors.colorOrange,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(AppDimensions.radius1_0w),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(AppDimensions.d1h),
+                          child: Text(
+                            "Đổi mật khẩu",
+                            style: TextStyle(
+                                color: AppColors.colorWhite,
+                                fontSize: AppFontSizes.fs12,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -496,8 +526,7 @@ class ItemContract extends StatelessWidget {
             child: Column(
               children: [
                 Image.asset(
-                  "asset/image/user1.png",
-                  height: AppDimensions.d30h,
+                  "asset/image/profile.png",
                   width: AppDimensions.d30w,
                 ),
                 Container(
@@ -511,9 +540,10 @@ class ItemContract extends StatelessWidget {
                           Text(
                             "Thông tin Hợp đồng",
                             style: TextStyle(
-                                fontSize: AppFontSizes.fs12,
+                                fontSize: AppFontSizes.fs16,
                                 color: AppColors.colorFacebook,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "San"),
                           ),
                           Divider(),
                           Row(
@@ -762,6 +792,124 @@ class ItemContract extends StatelessWidget {
         cancel: () {
           Navigator.pop(context);
         });
+  }
+
+  _showChangePass(BuildContext context, {int index}) {
+    return UIHelper.showChangePass(
+      newPass: contractBloc.newPass,
+      oldPass: contractBloc.oldPass,
+      context: context,
+      message: "Đổi mật khẩu",
+      widget: BlocListener(
+        cubit: contractBloc,
+        listener: (context,state){
+          if(state is LoadingChangePassState){
+            UIHelper.showLoadingCommon(context: context);
+          }
+          if(state is ChangPassDoneState){
+            Fluttertoast.showToast(
+                msg: "Đổi mật khẩu thành công", toastLength: Toast.LENGTH_LONG);
+            Navigator.pop(context);
+          }
+          if(state is ChangePassError){
+            Fluttertoast.showToast(
+                msg: "Đổi mật khẩu thất bại", toastLength: Toast.LENGTH_LONG);
+            Navigator.pop(context);
+          }
+        },
+        child: BlocBuilder(
+          cubit: contractBloc,
+          builder: (context,st){
+            return Padding(
+              padding:  EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Đổi mật khẩu',
+                        style: TextStyle(
+                            fontFamily: "San",
+                            fontSize: AppFontSizes.fs14,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Expanded(
+                        child: Container(),
+                      ),
+                      CloseDialog(
+                        color: AppColors.colorGrey_400,
+                        onClose: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "Mật khẩu cũ",
+                    style: TextStyle(fontFamily: "San"),
+                  ),
+                  CupertinoTextField(
+                    controller: contractBloc.oldPass,
+                    placeholderStyle:
+                    TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  ),
+                  SizedBox(height: AppDimensions.d1h,),
+                  Text(
+                    "Mật khẩu mới",
+                    style: TextStyle(fontFamily: "San"),
+                  ),
+                  CupertinoTextField(
+                    controller: contractBloc.newPass,
+                    placeholderStyle:
+                    TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  ),
+                  SizedBox(height: AppDimensions.d1h,),
+
+                  GestureDetector(
+                    onTap: () {
+                      if (contractBloc.oldPass.text == "") {
+                        Fluttertoast.showToast(
+                            msg: "Nhập mật khẩu cũ", toastLength: Toast.LENGTH_LONG);
+                        return;
+                      }
+                      if (contractBloc.newPass.text == "") {
+                        Fluttertoast.showToast(
+                            msg: "Nhập mật khẩu mới", toastLength: Toast.LENGTH_LONG);
+                        return;
+                      }
+                      contractBloc.add(ChangePassUserEvent(appBloc: appBloc));
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: AppDimensions.d8h,
+                      decoration: BoxDecoration(
+                        color: AppColors.colorOrange,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(AppDimensions.radius1_0w),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(AppDimensions.d1h),
+                        child: Text(
+                          "Đổi mật khẩu",
+                          style: TextStyle(
+                              color: AppColors.colorWhite,
+                              fontSize: AppFontSizes.fs12,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   _showDateTime(BuildContext context, {int index}) {

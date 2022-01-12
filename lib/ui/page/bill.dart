@@ -93,49 +93,54 @@ class BillState extends State<Bill> {
                           SizedBox(
                             width: AppDimensions.d1h,
                           ),
-                          _appBloc.isUser?Expanded(child: Container()):Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: AppColors.colorWhite,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                          AppDimensions.radius1_0w))),
-                              child: Padding(
-                                padding: EdgeInsets.all(0.0),
-                                child: Center(
-                                  child: TextField(
-                                    decoration: InputDecoration.collapsed(
-                                      hintText: "Tìm theo phòng",
-                                      border: InputBorder.none,
+                          _appBloc.isUser
+                              ? Expanded(child: Container())
+                              : Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: AppColors.colorWhite,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                AppDimensions.radius1_0w))),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(0.0),
+                                      child: Center(
+                                        child: TextField(
+                                          decoration: InputDecoration.collapsed(
+                                            hintText: "Tìm theo phòng",
+                                            border: InputBorder.none,
+                                          ),
+                                          controller: _billBloc.searchBill,
+                                          style: TextStyle(
+                                              fontSize: AppFontSizes.fs9),
+                                        ),
+                                      ),
                                     ),
-                                    controller: _billBloc.searchBill,
-                                    style: TextStyle(fontSize: AppFontSizes.fs9),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
                           SizedBox(
                             width: AppDimensions.d1h,
                           ),
-                        _appBloc.isUser?Container(): GestureDetector(
-                            onTap: () {
-                              if (_billBloc.searchBill.text != "") {
-                                _billBloc.add(SearchDateEvent());
-                              }
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: AppColors.colorWhite,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                          AppDimensions.radius1_0w))),
-                              child: Icon(
-                                Icons.search,
-                                color: AppColors.colorRed,
-                              ),
-                            ),
-                          ),
+                          _appBloc.isUser
+                              ? Container()
+                              : GestureDetector(
+                                  onTap: () {
+                                    if (_billBloc.searchBill.text != "") {
+                                      _billBloc.add(SearchDateEvent());
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: AppColors.colorWhite,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                AppDimensions.radius1_0w))),
+                                    child: Icon(
+                                      Icons.search,
+                                      color: AppColors.colorRed,
+                                    ),
+                                  ),
+                                ),
                           SizedBox(
                             width: AppDimensions.d1h,
                           ),

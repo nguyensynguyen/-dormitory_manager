@@ -20,6 +20,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   AppState get initialState => Initial();
   User user;
   Manager manager;
+  Manager displayManager;
   bool isUser = false;
   dynamic profile;
   List<Room> listAllDataRoom;
@@ -30,6 +31,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   Room room;
   Room room1;
   RoomBill roomBill;
+  Manager displayManagerForUsre;
   List<RoomBillDetail> roomBillDetail = [];
   List<Service> listService;
   double totalPrice = 0.0;
