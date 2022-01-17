@@ -39,6 +39,9 @@ dependencies:
   flutter_datetime_picker: any
   url_launcher: any
   flutter_mailer: any
+  firebase_messaging: ^6.0.16
+  firebase_core: ^0.7.0
+  pull_to_refresh: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

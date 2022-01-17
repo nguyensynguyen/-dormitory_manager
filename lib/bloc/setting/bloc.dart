@@ -3,6 +3,7 @@ import 'package:dormitory_manager/bloc/setting/event.dart';
 import 'package:dormitory_manager/bloc/setting/state.dart';
 import 'package:dormitory_manager/model/manager.dart';
 import 'package:dormitory_manager/model/user.dart';
+import 'package:dormitory_manager/provider/login_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,9 +18,11 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       var dataManager = prefs.getString("manager");
 
       if (dataUser != null) {
+        LoginProvider loginProvider = LoginProvider();
         event.appBloc.isUser = true;
         event.appBloc.profile = jsonDecode(dataUser) ?? null;
         event.appBloc.user = User.fromJson(jsonDecode(dataUser)) ?? null;
+        event.appBloc.devicesToken = await loginProvider.getToken(id: event.appBloc.user.managerId)??"";
         event.appBloc.displayManagerForUsre = Manager.fromJson(jsonDecode(dataUser)['Manager']) ?? null;
         yield AuthSuccess();
       } else if (dataManager != null) {

@@ -6,6 +6,7 @@ import 'package:dormitory_manager/model/room.dart';
 import 'package:dormitory_manager/model/user.dart';
 import 'package:dormitory_manager/provider/login_provider.dart';
 import 'package:dormitory_manager/provider/manager_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   TextEditingController oldPass = TextEditingController();
   TextEditingController newPass = TextEditingController();
   String errorsMessage = "";
+  FirebaseMessaging messaging = FirebaseMessaging();
 
   @override
   Stream<AuthState> mapEventToState(AuthEvent event) async* {
@@ -43,8 +45,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           event.appBloc.profile = User.fromJson(res['data']);
           event.appBloc.user = User.fromJson(res['data']);
           event.appBloc.displayManagerForUsre = Manager.fromJson(res['data']['Manager']);
-          SharedPreferences prefs = await SharedPreferences.getInstance();
+          event.appBloc.devicesToken = event.appBloc.displayManagerForUsre.deviceToken;
+
+              SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString("user", jsonEncode(res['data']));
+
           yield LoginDone();
         } else {
           errorsMessage = "Email hoặc mật khẩu không đúng";
@@ -53,10 +58,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         var res = await _loginProvider.loginManager(datas: data);
         if (res != null) {
+          messaging.getToken().then((token) {
+            event.appBloc.devicesToken = token;
+            print('Device token: $token'); // Print the Token in Console
+          });
           event.appBloc.profile = Manager.fromJson(res['data']);
           event.appBloc.manager = Manager.fromJson(res['data']);
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString("manager", jsonEncode(res['data']));
+          await _loginProvider.changeProfileManager(id: event.appBloc.manager.id,datas: {"device_token": event.appBloc.devicesToken});
           // yield* mapEventToState(GetDataRoomEvent(appBloc: event.appBloc));
           yield LoginDone();
         } else {
@@ -71,6 +81,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (event.appBloc.isUser) {
         await prefs.remove('user');
       } else {
+        await _loginProvider.changeProfileManager(id: event.appBloc.manager.id,datas: {"device_token":""});
+//       await messaging.deleteInstanceID();
         await prefs.remove('manager');
       }
       event.appBloc.manager = null;

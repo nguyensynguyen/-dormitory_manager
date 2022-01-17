@@ -5,6 +5,7 @@ import 'package:dormitory_manager/bloc/report/bloc.dart';
 import 'package:dormitory_manager/bloc/report/event.dart';
 import 'package:dormitory_manager/bloc/report/state.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
+import 'package:dormitory_manager/provider/login_provider.dart';
 import 'package:dormitory_manager/resources/colors.dart';
 import 'package:dormitory_manager/resources/dimensions.dart';
 import 'package:dormitory_manager/resources/fontsizes.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Report extends StatefulWidget {
   @override
@@ -27,6 +29,8 @@ class Report extends StatefulWidget {
 class ReportState extends State<Report> {
   ReportBloc _reportBloc;
   AppBloc _appBloc;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -35,6 +39,8 @@ class ReportState extends State<Report> {
     _reportBloc = new ReportBloc();
     _reportBloc.add(GetAllMessage(appBloc: _appBloc));
   }
+
+  List<String> items = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
   @override
   Widget build(BuildContext context) {
@@ -223,20 +229,58 @@ class ReportState extends State<Report> {
                   ],
                 ),
               ),
-              _reportBloc.listMessage.isNotEmpty
-                  ? Expanded(
-                      child: SingleChildScrollView(
-                          child: ItemReport(
-                        reportBloc: _reportBloc,
-                        appBloc: _appBloc,
-                      )),
-                    )
-                  : Container(),
+              Expanded(
+                child: SmartRefresher(
+                  enablePullDown: true,
+                  enablePullUp: false,
+                  header: WaterDropHeader(),
+                  footer: CustomFooter(
+                    builder: (BuildContext context, LoadStatus mode) {
+                      Widget body;
+                      if (mode == LoadStatus.idle) {
+                        body = Text("pull up load");
+                      } else if (mode == LoadStatus.loading) {
+                        body = CupertinoActivityIndicator();
+                      } else if (mode == LoadStatus.failed) {
+                        body = Text("Load Failed!Click retry!");
+                      } else if (mode == LoadStatus.canLoading) {
+                        body = Text("release to load more");
+                      } else {
+                        body = Text("No more Data");
+                      }
+                      return Container(
+                        height: 55.0,
+                        child: Center(child: body),
+                      );
+                    },
+                  ),
+                  controller: _refreshController,
+                  onRefresh: _onRefresh,
+                  child: _reportBloc.listMessage.isNotEmpty
+                      ? SingleChildScrollView(
+                              child: ItemReport(
+                            reportBloc: _reportBloc,
+                            appBloc: _appBloc,
+                          )
+                        )
+                      : Container(),
+                ),
+              ),
             ],
           );
         },
       ),
     );
+  }
+
+  void _onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    _reportBloc.add(GetAllMessage(appBloc: _appBloc));
+    if(_appBloc.isUser){
+      _appBloc.devicesToken = await LoginProvider().getToken(id: _appBloc.user.managerId)??"";
+    }
+
+    _refreshController.refreshCompleted();
   }
 
   _showDialogReport() {

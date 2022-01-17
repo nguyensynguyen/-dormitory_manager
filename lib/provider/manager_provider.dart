@@ -288,4 +288,18 @@ class ManagerProvider {
       return null;
     }
   }
+
+  Future<dynamic> notification({dynamic data}) async {
+    try {
+      dio.options.headers["Authorization"] = "key=AAAA4x1ijq8:APA91bGbkDudoRUpd8XOQH-8A1rnTi42e3XLFOrgv5DQbOHyS-QdX3dnYIk1S8uf0Xn25C-m25v5WFoH_quYhO0rLhww1SJi-Xc3b7NC7feJwoqBYJhQd2os9awV7G2wiK44xZGip-4s";
+      dio.options.headers["Content-Type"] = "application/json";
+      var res = await dio.post("${ApiUrl.notification}",
+          data: data);
+      return true;
+    } catch (e) {
+      return null;
+    }
+  }
+
+
 }

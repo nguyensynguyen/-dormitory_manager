@@ -5,7 +5,8 @@ class Manager{
   String address;
   int phone;
   String password;
-  Manager({this.id,this.managerName,this.email,this.phone,this.address,this.password});
+  String deviceToken;
+  Manager({this.id,this.managerName,this.email,this.phone,this.address,this.password,this.deviceToken});
 
   factory Manager.fromJson(Map<String,dynamic> json)=> Manager(
 id: json['id'],
@@ -14,5 +15,6 @@ email: json['email'],
 address: json['address'],
 phone: json['phone'],
 password: json['password'],
+deviceToken: json['device_token'],
   );
 }

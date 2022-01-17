@@ -1,5 +1,5 @@
 class ApiUrl {
-  static String baseUrl = 'http://192.168.1.68:3000/api/';
+  static String baseUrl = 'http://192.168.2.116:3000/api/';
   static String loginUser = 'user/login_user';
   static String loginManager = 'manager/login_manager';
   static String getAppRoom = 'manager/get_all_room';
@@ -25,4 +25,6 @@ class ApiUrl {
   static String changPassUser = 'manager/change_password_user';
   static String changPassManager = 'manager/change_password_manager';
   static String changProfileManager = 'manager/update_profile_manager';
+  static String notification = 'https://fcm.googleapis.com/fcm/send';
+  static String getToken = 'manager/get_data_manager';
 }

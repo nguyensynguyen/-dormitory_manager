@@ -136,295 +136,306 @@ class _buildHome extends State<BuildHome> {
         }
       },
       cubit: _allRoomBloc,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: AppDimensions.d100w,
-            height: AppDimensions.d14h,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomLeft,
-                colors: [
-                  Colors.green,
-                  AppColors.colorFacebook,
-                ],
-              ),
-              color: AppColors.mainColor,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(AppDimensions.radius3w),
-                bottomRight: Radius.circular(AppDimensions.radius3w),
-              ),
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: heightStatusBar,
+      child:BlocBuilder(
+        cubit: _allRoomBloc,
+        builder: (context,state){
+          return  Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: AppDimensions.d100w,
+                height: AppDimensions.d14h,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Colors.green,
+                      AppColors.colorFacebook,
+                    ],
+                  ),
+                  color: AppColors.mainColor,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(AppDimensions.radius3w),
+                    bottomRight: Radius.circular(AppDimensions.radius3w),
+                  ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(AppDimensions.d1h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "Trang chủ",
-                            style: TextStyle(
-                                color: AppColors.colorWhite,
-                                fontSize: AppFontSizes.fs14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        BlocListener(
-                          listener: (context, state) {
-                            if (state is LogOutDone) {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(builder: (ctx) => Login()),
-                                  (Route<dynamic> route) => true);
-                            }
-                          },
-                          cubit: _authBloc,
-                          child: Center(
-                            child: GestureDetector(
-                              onTap: () {
-                                _authBloc.add(LogOutEvent(appBloc: _appBloc));
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: heightStatusBar,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(AppDimensions.d1h),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Trang chủ",
+                                style: TextStyle(
+                                    color: AppColors.colorWhite,
+                                    fontSize: AppFontSizes.fs14,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            BlocListener(
+                              listener: (context, state) {
+                                if (state is LogOutDone) {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(builder: (ctx) => Login()),
+                                          (Route<dynamic> route) => true);
+                                }
                               },
-                              child: Container(
-                                alignment: Alignment.center,
-                                height: AppDimensions.d10h,
-                                decoration: BoxDecoration(
-                                  color: AppColors.colorOrange,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(AppDimensions.radius1_0w),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(AppDimensions.d1h),
-                                  child: Text(
-                                    "Đăng xuất",
-                                    style: TextStyle(
-                                        color: AppColors.colorWhite,
-                                        fontSize: AppFontSizes.fs12,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
+                              cubit: _authBloc,
+                              child: Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _authBloc.add(LogOutEvent(appBloc: _appBloc));
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    height: AppDimensions.d10h,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.colorOrange,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(AppDimensions.radius1_0w),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(AppDimensions.d1h),
+                                      child: Text(
+                                        "Đăng xuất",
+                                        style: TextStyle(
+                                            color: AppColors.colorWhite,
+                                            fontSize: AppFontSizes.fs12,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        )
-                      ],
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.all(AppDimensions.d1h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [],
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.all(AppDimensions.d1h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          _appBloc.isUser ? _buildUser() : _buildManager(),
-          _appBloc.isUser
-              ? _buildProfileManagerForUser()
-              : _buildProfileManager()
-        ],
+              ),
+              _appBloc.isUser ? _buildUser() : _buildManager(),
+              _appBloc.isUser
+                  ? _buildProfileManagerForUser()
+                  : _buildProfileManager()
+            ],
+          );
+        },
       ),
     );
   }
 
   _buildProfileManager() {
-    return BlocBuilder(
-      builder: (context, state) {
-        return Padding(
-          padding: EdgeInsets.all(AppDimensions.d1h),
-          child: Column(
-            children: [
-              Image.asset(
-                "asset/image/manager.png",
-                width: AppDimensions.d30w,
-              ),
-              Container(
-                width: AppDimensions.d100w,
-                child: Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(AppDimensions.d1h),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Divider(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.person,
-                              color: AppColors.colorFacebook,
-                            ),
-                            Text(
-                              "\t \t Họ và tên : ",
-                              style: TextStyle(
-                                  fontSize: AppFontSizes.fs8,
-                                  color: AppColors.colorGrey_400,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "${_appBloc.manager.managerName}",
-                              style: TextStyle(
-                                  fontSize: AppFontSizes.fs10,
-                                  color: AppColors.colorFacebook,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: AppDimensions.d0_5h,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.email,
-                              color: AppColors.colorFacebook,
-                            ),
-                            Text(
-                              "\t \t Email : ",
-                              style: TextStyle(
-                                  fontSize: AppFontSizes.fs8,
-                                  color: AppColors.colorGrey_400,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "${_appBloc.manager.email}",
-                              style: TextStyle(
-                                  fontSize: AppFontSizes.fs10,
-                                  color: AppColors.colorFacebook,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: AppDimensions.d0_5h,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.phone,
-                              color: AppColors.colorFacebook,
-                            ),
-                            Text(
-                              "\t \t SDT : ",
-                              style: TextStyle(
-                                  fontSize: AppFontSizes.fs8,
-                                  color: AppColors.colorGrey_400,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "0${_appBloc.manager.phone}",
-                              style: TextStyle(
-                                  fontSize: AppFontSizes.fs10,
-                                  color: AppColors.colorFacebook,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: AppDimensions.d0_5h,
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              color: AppColors.colorFacebook,
-                            ),
-                            Text(
-                              "\t \t Địa chỉ : ",
-                              style: TextStyle(
-                                  fontSize: AppFontSizes.fs8,
-                                  color: AppColors.colorGrey_400,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "${_appBloc.manager.address}",
-                              style: TextStyle(
-                                  fontSize: AppFontSizes.fs10,
-                                  color: AppColors.colorFacebook,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: AppDimensions.d0_5h,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            _showChangeInfoManager(context);
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: AppDimensions.d8h,
-                            decoration: BoxDecoration(
-                              color: AppColors.colorFacebook,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(AppDimensions.radius1_0w),
+    return BlocListener(
+      listener: (context,state){
+
+      },
+      cubit: _authBloc,
+      child: BlocBuilder(
+        cubit: _authBloc,
+        builder: (context, state) {
+          return Padding(
+            padding: EdgeInsets.all(AppDimensions.d1h),
+            child: Column(
+              children: [
+                Image.asset(
+                  "asset/image/manager.png",
+                  width: AppDimensions.d30w,
+                ),
+                Container(
+                  width: AppDimensions.d100w,
+                  child: Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(AppDimensions.d1h),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Divider(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.person,
+                                color: AppColors.colorFacebook,
                               ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(AppDimensions.d1h),
-                              child: Text(
-                                "Cập nhật thông tin",
+                              Text(
+                                "\t \t Họ và tên : ",
                                 style: TextStyle(
-                                    color: AppColors.colorWhite,
-                                    fontSize: AppFontSizes.fs12,
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
                                     fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                "${_appBloc?.manager?.managerName}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.email,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Email : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${_appBloc?.manager?.email}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.phone,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t SDT : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "0${_appBloc?.manager?.phone}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: AppColors.colorFacebook,
+                              ),
+                              Text(
+                                "\t \t Địa chỉ : ",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs8,
+                                    color: AppColors.colorGrey_400,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${_appBloc?.manager?.address}",
+                                style: TextStyle(
+                                    fontSize: AppFontSizes.fs10,
+                                    color: AppColors.colorFacebook,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              _showChangeInfoManager(context);
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: AppDimensions.d8h,
+                              decoration: BoxDecoration(
+                                color: AppColors.colorFacebook,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(AppDimensions.radius1_0w),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(AppDimensions.d1h),
+                                child: Text(
+                                  "Cập nhật thông tin",
+                                  style: TextStyle(
+                                      color: AppColors.colorWhite,
+                                      fontSize: AppFontSizes.fs12,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: AppDimensions.d0_5h,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            _showChangePass(context);
-                          },
-                          child: Container(
-                            height: AppDimensions.d8h,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: AppColors.colorOrange,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(AppDimensions.radius1_0w),
+                          SizedBox(
+                            height: AppDimensions.d0_5h,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              _showChangePass(context);
+                            },
+                            child: Container(
+                              height: AppDimensions.d8h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: AppColors.colorOrange,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(AppDimensions.radius1_0w),
+                                ),
                               ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(AppDimensions.d1h),
-                              child: Text(
-                                "Đổi mật khẩu",
-                                style: TextStyle(
-                                    color: AppColors.colorWhite,
-                                    fontSize: AppFontSizes.fs12,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                              child: Padding(
+                                padding: EdgeInsets.all(AppDimensions.d1h),
+                                child: Text(
+                                  "Đổi mật khẩu",
+                                  style: TextStyle(
+                                      color: AppColors.colorWhite,
+                                      fontSize: AppFontSizes.fs12,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-      cubit: _authBloc,
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -556,7 +567,6 @@ class _buildHome extends State<BuildHome> {
       newPass: _authBloc.newPass,
       oldPass: _authBloc.oldPass,
       context: context,
-      message: "Đổi mật khẩu",
       widget: BlocListener(
         cubit: _authBloc,
         listener: (context, state) {
@@ -651,6 +661,9 @@ class _buildHome extends State<BuildHome> {
                     placeholderStyle: TextStyle(
                         color: Colors.grey, fontSize: AppFontSizes.fs12),
                   ),
+                  SizedBox(
+                    height: AppDimensions.d1h,
+                  ),
                   GestureDetector(
                     onTap: () {
                       if (_authBloc.nameManager.text == "") {
@@ -690,7 +703,7 @@ class _buildHome extends State<BuildHome> {
                       child: Padding(
                         padding: EdgeInsets.all(AppDimensions.d1h),
                         child: Text(
-                          "Đổi mật khẩu",
+                          "Lưu thông tin",
                           style: TextStyle(
                               color: AppColors.colorWhite,
                               fontSize: AppFontSizes.fs12,

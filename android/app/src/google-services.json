@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "975450574511",
+    "project_id": "domitorys",
+    "storage_bucket": "domitorys.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975450574511:android:eb1134e86eddde81008e5a",
+        "android_client_info": {
+          "package_name": "com.example.dormitory_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "975450574511-ceui7isresejad4icsjmmu9iiahv9uoi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0K7I7QLZOQ0n8GZMbmqJMpDcOKlyChQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "975450574511-ceui7isresejad4icsjmmu9iiahv9uoi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

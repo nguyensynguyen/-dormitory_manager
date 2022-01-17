@@ -108,5 +108,12 @@ class LoginProvider {
     }
   }
 
-
+  Future<dynamic> getToken({int id}) async {
+    try {
+      var res = await _dio.get("${ApiUrl.baseUrl + ApiUrl.getToken}/$id");
+      return res.data['data']['device_token'];
+    } catch (e) {
+      return null;
+    }
+  }
 }

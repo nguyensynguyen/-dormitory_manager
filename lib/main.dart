@@ -1,13 +1,16 @@
 import 'dart:io';
 import 'package:dormitory_manager/bloc/app_bloc/bloc.dart';
 import 'package:dormitory_manager/ui/page/splash.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {

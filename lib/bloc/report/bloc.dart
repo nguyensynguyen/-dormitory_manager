@@ -33,6 +33,8 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
       }
 
       if (res != null) {
+        listMessage.clear();
+        tempListMessage.clear();
         listMessage = res.mess;
         listMessage.forEach((element) {
           tempListMessage.add(element);
@@ -80,6 +82,15 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
       yield LoadingCreateState();
       var res = await _managerProvider.createReport(data: data);
       if (res != null) {
+        Map dataNoti = {
+          "registration_ids": [
+            "${event.appBloc.devicesToken}"
+          ],
+          "notification": {
+            "title": "Thông báo",
+            "body": "bạn có 1 yêu cầu sửa chữa sự cố từ phòng ${event.appBloc.room1.roomName}"
+          }
+        };
         listMessage.add(Message(
             title: title.text,
             content: content.text,
@@ -88,7 +99,7 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
             room: Room(roomName: event.appBloc.room1.roomName),
             user: User(userName: event.appBloc.user.userName),
             userId: event.appBloc.user.id));
-
+        await _managerProvider.notification(data: dataNoti);
         tempListMessage.add(Message(
             title: title.text,
             content: content.text,

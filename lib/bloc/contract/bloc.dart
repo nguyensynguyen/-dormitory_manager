@@ -46,6 +46,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
             await _managerProvider.getAllContract(id: event.appBloc.manager.id);
       }
       if (res != null) {
+
         listContract = res.user;
         listContract.forEach((element) {
           tempAllContract.add(element);
@@ -60,11 +61,11 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
             });
           });
         } else {
-          await Future.delayed(Duration(seconds: 2));
           listContract.forEach((user) {
-            if (user.roomId == room.id) {
-              user.room = {"room_name": ""};
-            }
+            event.appBloc.listAllDataRoom = [];
+//            if (user.roomId == room.id) {
+//              user.room = {"room_name": ""};
+//            }
           });
         }
 
