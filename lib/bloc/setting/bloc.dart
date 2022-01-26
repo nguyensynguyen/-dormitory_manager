@@ -12,13 +12,14 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
 
   @override
   Stream<SettingState> mapEventToState(SettingEvent event) async* {
+    LoginProvider loginProvider = LoginProvider();
+
     if (event is SetDataLogin) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var dataUser = prefs.getString("user");
       var dataManager = prefs.getString("manager");
 
       if (dataUser != null) {
-        LoginProvider loginProvider = LoginProvider();
         event.appBloc.isUser = true;
         event.appBloc.profile = jsonDecode(dataUser) ?? null;
         event.appBloc.user = User.fromJson(jsonDecode(dataUser)) ?? null;
@@ -33,6 +34,19 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         yield AuthSuccess();
       } else {
         yield AuthFail();
+      }
+    }
+
+    if(event is GetAllManagerEvent){
+      List<dynamic> allManager = await loginProvider.getAllManager();
+      if(allManager != null){
+        allManager.forEach((element) {
+          event.appBloc.listManager.add(Manager(
+            id: element['id'],
+            email: element['email'],
+            phone: element['phone']
+          ));
+        });
       }
     }
   }

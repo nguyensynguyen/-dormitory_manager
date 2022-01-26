@@ -39,6 +39,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   String roomName = "";
   int roomId;
   String devicesToken = "";
+  List<Manager> listManager = [];
 
   @override
   Stream<AppState> mapEventToState(AppEvent event) async* {}

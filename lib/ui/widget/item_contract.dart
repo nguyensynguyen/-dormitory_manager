@@ -338,9 +338,8 @@ class ItemContract extends StatelessWidget {
                     GestureDetector(
                       onTap: () {},
                       child: Image.asset(
-                        'asset/image/add.png',
+                        'asset/image/contract.png',
                         width: AppDimensions.d8w,
-                        color: AppColors.colorFacebook,
                       ),
                     ),
                     SizedBox(
@@ -808,11 +807,13 @@ class ItemContract extends StatelessWidget {
           }
           if(state is ChangPassDoneState){
             Fluttertoast.showToast(
+                backgroundColor: AppColors.colorFacebook,
                 msg: "Đổi mật khẩu thành công", toastLength: Toast.LENGTH_LONG);
             Navigator.pop(context);
           }
           if(state is ChangePassError){
             Fluttertoast.showToast(
+                backgroundColor: AppColors.colorFacebook,
                 msg: "Đổi mật khẩu thất bại", toastLength: Toast.LENGTH_LONG);
             Navigator.pop(context);
           }
@@ -850,20 +851,36 @@ class ItemContract extends StatelessWidget {
                     "Mật khẩu cũ",
                     style: TextStyle(fontFamily: "San"),
                   ),
-                  CupertinoTextField(
-                    controller: contractBloc.oldPass,
-                    placeholderStyle:
-                    TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.colorGrey_300),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(AppDimensions.radius1_5w),
+                      ),
+                    ),
+                    child: CupertinoTextField(
+                      controller: contractBloc.oldPass,
+                      placeholderStyle:
+                      TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
+                    ),
                   ),
                   SizedBox(height: AppDimensions.d1h,),
                   Text(
                     "Mật khẩu mới",
                     style: TextStyle(fontFamily: "San"),
                   ),
-                  CupertinoTextField(
-                    controller: contractBloc.newPass,
-                    placeholderStyle:
-                    TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.colorGrey_300),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(AppDimensions.radius1_5w),
+                      ),
+                    ),
+                    child: CupertinoTextField(
+                      controller: contractBloc.newPass,
+                      placeholderStyle:
+                      TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
+                    ),
                   ),
                   SizedBox(height: AppDimensions.d1h,),
 
@@ -871,11 +888,13 @@ class ItemContract extends StatelessWidget {
                     onTap: () {
                       if (contractBloc.oldPass.text == "") {
                         Fluttertoast.showToast(
+                            backgroundColor: AppColors.colorFacebook,
                             msg: "Nhập mật khẩu cũ", toastLength: Toast.LENGTH_LONG);
                         return;
                       }
                       if (contractBloc.newPass.text == "") {
                         Fluttertoast.showToast(
+                            backgroundColor: AppColors.colorFacebook,
                             msg: "Nhập mật khẩu mới", toastLength: Toast.LENGTH_LONG);
                         return;
                       }
@@ -938,6 +957,7 @@ class ItemContract extends StatelessWidget {
                   if (time.millisecondsSinceEpoch <=
                       DateTime.now().millisecondsSinceEpoch) {
                     Fluttertoast.showToast(
+                        backgroundColor: AppColors.colorFacebook,
                         msg: "Ngày hết hạn không thể nhỏ hơn ngày hiện tại",
                         toastLength: Toast.LENGTH_LONG);
                     return;

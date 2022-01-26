@@ -16,6 +16,7 @@ class CreateContractErrorsState extends ContractState {}
 
 class UpdateDoneContractState extends ContractState {}
 class Done extends ContractState {}
+class ExpiredDone extends ContractState {}
 
 class LoadingChangePassState extends ContractState {}
 class ChangPassDoneState extends ContractState {}

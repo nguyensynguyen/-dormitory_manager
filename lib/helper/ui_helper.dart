@@ -83,6 +83,43 @@ class UIHelper {
     );
   }
 
+  static showDialogLogin1({context, Widget widget}) {
+    showAnimatedDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                    color: Colors.transparent,
+                  ),
+
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.colorWhite,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(AppDimensions.radius2w),
+                        topLeft: Radius.circular(AppDimensions.radius2w),
+                      ),
+                    ),
+                    child: widget ?? Container(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      animationType: DialogTransitionType.slideFromBottomFade,
+      curve: Curves.fastOutSlowIn,
+      duration: Duration(milliseconds: 500),
+    );
+  }
+
   static showDialogLogin({context, Widget widget}) {
     showAnimatedDialog(
       context: context,
@@ -99,15 +136,15 @@ class UIHelper {
                   ),
                 ),
                 Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.colorWhite,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(AppDimensions.radius2w),
-                      topLeft: Radius.circular(AppDimensions.radius2w),
+                    decoration: BoxDecoration(
+                      color: AppColors.colorWhite,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(AppDimensions.radius2w),
+                        topLeft: Radius.circular(AppDimensions.radius2w),
+                      ),
                     ),
+                    child: widget ?? Container(),
                   ),
-                  child: widget ?? Container(),
-                ),
               ],
             ),
           ),
@@ -118,7 +155,7 @@ class UIHelper {
       duration: Duration(milliseconds: 500),
     );
   }
-
+  
   static showDialogReport({context, Widget widget}) {
     showAnimatedDialog(
       context: context,

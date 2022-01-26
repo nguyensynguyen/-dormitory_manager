@@ -12,6 +12,8 @@ class LogOutEvent extends AuthEvent{
 }
 
 class CreateManager extends AuthEvent{
+  AppBloc appBloc;
+  CreateManager({this.appBloc});
 }
 
 class ChangePassWordManager extends AuthEvent{

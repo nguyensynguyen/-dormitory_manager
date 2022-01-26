@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:dormitory_manager/contrains/api_url.dart';
+import 'package:dormitory_manager/model/manager.dart';
 import 'package:dormitory_manager/model/response/all_room.dart';
 import 'package:dormitory_manager/model/response/login.dart';
 
@@ -112,6 +113,15 @@ class LoginProvider {
     try {
       var res = await _dio.get("${ApiUrl.baseUrl + ApiUrl.getToken}/$id");
       return res.data['data']['device_token'];
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<dynamic> getAllManager({int id}) async {
+    try {
+      var res = await _dio.get("${ApiUrl.baseUrl + ApiUrl.allDataManager}");
+      return res.data['data'];
     } catch (e) {
       return null;
     }

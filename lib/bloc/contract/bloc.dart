@@ -92,7 +92,7 @@ class ContractBloc extends Bloc<ContractEvent, ContractState> {
         } else {
           yield* mapEventToState(DueEvent());
         }
-        yield GetDone();
+        yield ExpiredDone();
       }
     }
 

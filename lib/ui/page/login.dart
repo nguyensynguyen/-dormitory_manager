@@ -53,7 +53,11 @@ class LoginState extends State<Login> {
           }
 
           if (state is LoginFail) {
-           Fluttertoast.showToast(msg: _authBloc.errorsMessage,toastLength: Toast.LENGTH_LONG);
+            Fluttertoast.showToast(
+              msg: _authBloc.errorsMessage,
+              toastLength: Toast.LENGTH_LONG,
+              backgroundColor: AppColors.colorFacebook,
+            );
             Navigator.pop(context);
           }
         },
@@ -102,6 +106,13 @@ class LoginState extends State<Login> {
                                 height: AppDimensions.d1h,
                               ),
                               Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: AppColors.colorGrey_300),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(AppDimensions.radius1_5w),
+                                  ),
+                                ),
                                 width: AppDimensions.d70w,
                                 child: CupertinoTextField(
                                     controller: _authBloc.email,
@@ -111,6 +122,13 @@ class LoginState extends State<Login> {
                                 height: AppDimensions.d1h,
                               ),
                               Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: AppColors.colorGrey_300),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(AppDimensions.radius1_5w),
+                                  ),
+                                ),
                                 width: AppDimensions.d70w,
                                 child: CupertinoTextField(
                                   controller: _authBloc.password,
@@ -306,11 +324,17 @@ class LoginState extends State<Login> {
           listener: (context, state) {
             if (state is CreateDone) {
               Navigator.pop(context);
-              Fluttertoast.showToast(msg: "Đăng ký thành công",toastLength: Toast.LENGTH_LONG);
+              Fluttertoast.showToast(
+                  backgroundColor: AppColors.colorFacebook,
+                  msg: "Đăng ký thành công",
+                  toastLength: Toast.LENGTH_LONG);
             }
             if (state is CreateErrors) {
               Navigator.pop(context);
-              Fluttertoast.showToast(msg: _authBloc.errorsMessage,toastLength: Toast.LENGTH_LONG);
+              Fluttertoast.showToast(
+                  backgroundColor: AppColors.colorFacebook,
+                  msg: _authBloc.errorsMessage,
+                  toastLength: Toast.LENGTH_LONG);
             }
             if (state is LoadingCreate) {
               UIHelper.showLoadingCommon(context: context);
@@ -339,7 +363,7 @@ class LoginState extends State<Login> {
                             child: Padding(
                               padding: EdgeInsets.all(AppDimensions.d1h),
                               child: Text(
-                                "Đăng ký tài khoản cho người quản lí",
+                                "Đăng ký tài khoản cho người quản lý",
                                 style: TextStyle(
                                     color: AppColors.colorFacebook,
                                     fontSize: AppFontSizes.fs16,
@@ -388,8 +412,8 @@ class LoginState extends State<Login> {
                                 hintText: "Nhập mật khẩu",
                                 textEditingController:
                                     _authBloc.passwordManager),
-                            _buildButton(ontap: (){
-                              _authBloc.add(CreateManager());
+                            _buildButton(ontap: () {
+                              _authBloc.add(CreateManager(appBloc: _appBloc));
                             })
                           ],
                         ),
@@ -402,9 +426,10 @@ class LoginState extends State<Login> {
       ),
     );
   }
+
   _buildButton({Function ontap}) {
     return Padding(
-      padding: EdgeInsets.all(AppDimensions.d1h),
+      padding: EdgeInsets.symmetric(vertical: AppDimensions.d1h),
       child: GestureDetector(
         onTap: ontap,
         behavior: HitTestBehavior.opaque,
@@ -432,6 +457,7 @@ class LoginState extends State<Login> {
       ),
     );
   }
+
   _intput(
       {String title,
       String hintText,
@@ -448,10 +474,16 @@ class LoginState extends State<Login> {
               fontWeight: FontWeight.bold),
         ),
         Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.colorGrey_300),
+            borderRadius: BorderRadius.all(
+              Radius.circular(AppDimensions.radius1_5w),
+            ),
+          ),
           child: CupertinoTextField(
             inputFormatters: formatter1 == null ? [] : formatter1,
             controller: textEditingController,
-            placeholder: hintText,
+            placeholder: "",
             placeholderStyle:
                 TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
           ),

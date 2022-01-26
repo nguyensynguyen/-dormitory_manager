@@ -27,4 +27,5 @@ class ApiUrl {
   static String changProfileManager = 'manager/update_profile_manager';
   static String notification = 'https://fcm.googleapis.com/fcm/send';
   static String getToken = 'manager/get_data_manager';
+  static String allDataManager = 'manager/get_all_manager';
 }

@@ -13,6 +13,7 @@ import 'package:dormitory_manager/resources/dimensions.dart';
 import 'package:dormitory_manager/resources/fontsizes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'close_dialog.dart';
 
@@ -23,7 +24,12 @@ class ItemService extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildService();
+    return BlocBuilder(
+      cubit: appBloc,
+      builder: (context,state){
+        return _buildService();
+      },
+    );
   }
 
   _buildService(){

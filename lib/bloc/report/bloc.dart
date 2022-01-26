@@ -87,8 +87,8 @@ class ReportBloc extends Bloc<ReportEvent, ReportState> {
             "${event.appBloc.devicesToken}"
           ],
           "notification": {
-            "title": "Thông báo",
-            "body": "bạn có 1 yêu cầu sửa chữa sự cố từ phòng ${event.appBloc.room1.roomName}"
+            "title": "${title.text}",
+            "body": "Bạn có 1 yêu cầu sự cố từ phòng ${event.appBloc.room1.roomName}"
           }
         };
         listMessage.add(Message(

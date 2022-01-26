@@ -304,6 +304,7 @@ class BillState extends State<Bill> {
                                           if (state is CreateBillDone) {
                                             Navigator.pop(context);
                                             Fluttertoast.showToast(
+                                                backgroundColor: AppColors.colorFacebook,
                                                 msg: "Lập hóa đơn thành công",
                                                 toastLength:
                                                     Toast.LENGTH_SHORT);
@@ -407,7 +408,6 @@ class BillState extends State<Bill> {
             height: AppDimensions.d1h,
           ),
           GestureDetector(
-            onTap: () => _showDialog(_appBloc),
             child: Container(
                 width: AppDimensions.d100w,
                 decoration: BoxDecoration(
@@ -576,27 +576,25 @@ class BillState extends State<Bill> {
                                   ),
                                 ),
                                 Container(
-                                  child: CupertinoTextField(
-                                    inputFormatters: _formatter,
-                                    controller: appBloc
-                                        .listService[i].startNumberTextEdit,
-                                    onChanged: (text) {
-                                      appBloc.listService[i].totalService =
-                                          (appBloc.listService[i].numberStart -
-                                                  int.tryParse(appBloc
-                                                      .listService[i]
-                                                      .startNumberTextEdit
-                                                      .text)) *
-                                              appBloc.listService[i].unitPrice;
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: AppColors.colorGrey_300),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(AppDimensions.radius1_5w),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(AppDimensions.d1h),
+                                      child: Row(
+                                        children: [
+                                          Text("${appBloc
+                                              .listService[i].numberStart}"),
+                                          Expanded(
+                                            child: Container(),
+                                          ),
 
-                                      _billBloc.add(UpdateUIEvent());
-                                    },
-                                    placeholder:
-                                        "${appBloc.listService[i].numberStart}",
-                                    placeholderStyle:
-                                        TextStyle(color: Colors.black),
-                                  ),
-                                ),
+                                        ],
+                                      ),
+                                    )),
                               ],
                             ),
                           ),
@@ -614,8 +612,16 @@ class BillState extends State<Bill> {
                                     fontSize: AppFontSizes.fs10,
                                   ),
                                 ),
+
                                 Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: AppColors.colorGrey_300),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(AppDimensions.radius1_5w),
+                                    ),
+                                  ),
                                   child: CupertinoTextField(
+                                    decoration: BoxDecoration(border: null),
                                     inputFormatters: _formatter,
                                     controller: appBloc
                                         .listService[i].endNumberTextEdit,

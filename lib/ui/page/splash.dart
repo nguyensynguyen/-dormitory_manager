@@ -31,6 +31,7 @@ class SplashState extends State<Splash> {
     _appBloc = BlocProvider.of<AppBloc>(context);
     _settingBloc = SettingBloc();
     _settingBloc.add(SetDataLogin(appBloc: _appBloc));
+    _settingBloc.add(GetAllManagerEvent(appBloc: _appBloc));
   }
 
   @override

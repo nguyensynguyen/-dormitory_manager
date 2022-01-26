@@ -94,6 +94,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if(event is CreateManager){
       yield LoadingCreate();
+
       if(nameManager.text == ""){
         errorsMessage = "Hãy nhập họ tên";
         yield CreateErrors();
@@ -118,6 +119,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         errorsMessage = "Hãy nhập mật khẩu ";
         yield CreateErrors();
         return;
+      }
+      for(int i =0 ;i< event.appBloc.listManager.length ;i ++){
+        if(emailManager.text == event.appBloc.listManager[i].email){
+          errorsMessage = "Email đã được đăng ký trước đó";
+          yield CreateErrors();
+          return;
+        }
       }
       Map data ={
         "manager_name":nameManager.text,

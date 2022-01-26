@@ -19,18 +19,17 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
   TextEditingController textRoomName = TextEditingController();
   TextEditingController textPrice = TextEditingController();
   TextEditingController textMaxP = TextEditingController();
-  TextEditingController textWater = TextEditingController();
-  TextEditingController textElectron = TextEditingController();
-  TextEditingController textUnitWater = TextEditingController();
-  TextEditingController textUnitElectron = TextEditingController();
-  TextEditingController textInternet = TextEditingController();
-  TextEditingController textVs = TextEditingController();
-  TextEditingController textGx = TextEditingController();
+  TextEditingController textUnitService = TextEditingController();
+  TextEditingController textNameService = TextEditingController();
+  TextEditingController textOldNumberService = TextEditingController();
+
   TextEditingController textEquipment = TextEditingController();
+  int iCheckTypeService = 1;
 
   List<bool> checkDv = [false, false, false];
   int roomId;
   Room room;
+  Room roomCreateService;
   String status = 'Hoạt động';
 
   @override
@@ -38,10 +37,10 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
     if (event is GetDataRoomEvent) {
       yield LoadingState();
       var data;
-      if(event.appBloc.isUser){
-        data = await _managerProvider.getAllRoom(id: event.appBloc.user.managerId);
-
-      }else{
+      if (event.appBloc.isUser) {
+        data =
+            await _managerProvider.getAllRoom(id: event.appBloc.user.managerId);
+      } else {
         data = await _managerProvider.getAllRoom(id: event.appBloc.manager.id);
       }
       if (data != null) {
@@ -57,10 +56,11 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
         event.appBloc.listAllDataRoomDisplay = data['data'].map<Room>((item) {
           return Room.fromJson(item);
         }).toList();
-        if(event.appBloc.isUser){
+        if (event.appBloc.isUser) {
           event.appBloc.listAllDataRoom.forEach((element) {
-            if(event.appBloc.user.roomId == element.id){
-              event.appBloc.room1 = Room(id: element.id,roomName: element.roomName);
+            if (event.appBloc.user.roomId == element.id) {
+              event.appBloc.room1 =
+                  Room(id: element.id, roomName: element.roomName);
             }
           });
         }
@@ -76,7 +76,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
         "room_name": textRoomName.text,
         "room_amount": double.tryParse(textPrice.text),
         "max_people": int.tryParse(textMaxP.text),
-        "total_current_people":0,
+        "total_current_people": 0,
         "manager_id": event.appBloc.manager.id,
         "date_create_bill": date_create_bill.millisecondsSinceEpoch ~/ 1000
       };
@@ -88,7 +88,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
           roomName: res['data']['room_name'],
           dateCreateBill: res['data']['date_create_bill'],
           maxPeople: res['data']['max_people'],
-          totalCurrentPeople:0,
+          totalCurrentPeople: 0,
           roomAmount: data['room_amount'],
         ));
 
@@ -97,7 +97,7 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
           roomName: res['data']['room_name'],
           dateCreateBill: res['data']['date_create_bill'],
           maxPeople: res['data']['max_people'],
-          totalCurrentPeople:0,
+          totalCurrentPeople: 0,
           roomAmount: data['room_amount'],
         ));
         room = Room(
@@ -108,6 +108,29 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
             totalCurrentPeople: res['data']['total_current_people'],
             roomAmount: data['room_amount'],
             managerId: event.appBloc.manager.id);
+        event.appBloc.listAllDataRoom.add(Room(
+            id: room.id,
+            roomName: room.roomName,
+            dateCreateBill: room.dateCreateBill,
+            maxPeople: room.maxPeople,
+            totalCurrentPeople: 0,
+            roomAmount: room.roomAmount,
+            service: [],
+            roomEquipment: [],
+            user: [],
+            managerId: event.appBloc.manager.id));
+
+        event.appBloc.listAllDataRoomDisplay.add(Room(
+            id: room.id,
+            roomName: room.roomName,
+            dateCreateBill: room.dateCreateBill,
+            maxPeople: room.maxPeople,
+            totalCurrentPeople: 0,
+            roomAmount: room.roomAmount,
+            service: [],
+            roomEquipment: [],
+            user: [],
+            managerId: event.appBloc.manager.id));
         yield CreateRoomDone();
       }
     }
@@ -121,56 +144,32 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
           "unit_price": e.unitPrice,
           "number_start": e.numberStart,
           "unit": e.unit,
-          "room_id": room.id
+          "room_id": roomCreateService.id
         });
       }).toList();
       var res = await _managerProvider.createService(data: data);
       if (res != null) {
+        roomCreateService.service.add(listService[0]);
 
-        event.appBloc.listAllDataRoom.add(Room(
-            id: room.id,
-            roomName: room.roomName,
-            dateCreateBill: room.dateCreateBill,
-            maxPeople: room.maxPeople,
-            totalCurrentPeople: 0,
-            roomAmount: room.roomAmount,
-            service: listService,
-            roomEquipment: [],
-            user: [],
-            managerId: event.appBloc.manager.id));
-
-        event.appBloc.listAllDataRoomDisplay.add(Room(
-            id: room.id,
-            roomName: room.roomName,
-            dateCreateBill: room.dateCreateBill,
-            maxPeople: room.maxPeople,
-            totalCurrentPeople: 0,
-            roomAmount: room.roomAmount,
-            service: listService,
-            roomEquipment: [],
-            user: [],
-            managerId: event.appBloc.manager.id));
 
         reset();
         yield CreateServiceDone();
       }
     }
 
-    if(event is CreateEquipmentEvent){
-
+    if (event is CreateEquipmentEvent) {
       yield LoadingCreateEquipmentState();
       Map data = {
-        "room_equipment_name":textEquipment.text,
-        "room_id":room.id,
-        "status":status
+        "room_equipment_name": textEquipment.text,
+        "room_id": room.id,
+        "status": status
       };
       var res = await _managerProvider.createEquipment(data: data);
-      if(res != null){
+      if (res != null) {
         room.roomEquipment.add(RoomEquipment(
-          roomEquipmentName: textEquipment.text,
-          roomId: room.id,
-          status: status
-        ));
+            roomEquipmentName: textEquipment.text,
+            roomId: room.id,
+            status: status));
         room = null;
         textEquipment.text = "";
         yield CreateEquipmentDoneState();
@@ -181,57 +180,56 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
       yield UpdateUIRoomState();
     }
 
-    if(event is RoomLiveEvent){
+    if (event is RoomLiveEvent) {
       event.appBloc.listAllDataRoomDisplay.clear();
       tempListRoom.forEach((room) {
-        if(room.user == null){
-          room.user =[];
+        if (room.user == null) {
+          room.user = [];
         }
-        if(room.user.length >0 && room.user.length < room.maxPeople){
+        if (room.user.length > 0 && room.user.length < room.maxPeople) {
           event.appBloc.listAllDataRoomDisplay.add(room);
         }
       });
       yield UpdateUIRoomState();
     }
 
-    if(event is RoomFullEvent){
-
+    if (event is RoomFullEvent) {
       event.appBloc.listAllDataRoomDisplay.clear();
       tempListRoom.forEach((room) {
-        if(room.user == null){
-          room.user =[];
+        if (room.user == null) {
+          room.user = [];
         }
-        if(room.user.length >0 && room.user.length >= room.maxPeople){
+        if (room.user.length > 0 && room.user.length >= room.maxPeople) {
           event.appBloc.listAllDataRoomDisplay.add(room);
         }
       });
       yield UpdateUIRoomState();
     }
 
-    if(event is RoomEmptyEvent){
-
+    if (event is RoomEmptyEvent) {
       event.appBloc.listAllDataRoomDisplay.clear();
       tempListRoom.forEach((room) {
-        if(room.user == null){
-          room.user =[];
+        if (room.user == null) {
+          room.user = [];
         }
-        if(room.user.length <=0 ){
+        if (room.user.length <= 0) {
           event.appBloc.listAllDataRoomDisplay.add(room);
         }
       });
       yield UpdateUIRoomState();
     }
-    if(event is RoomAllEvent){
+    if (event is RoomAllEvent) {
       event.appBloc.listAllDataRoomDisplay.clear();
       tempListRoom.forEach((room) {
-          event.appBloc.listAllDataRoomDisplay.add(room);
+        event.appBloc.listAllDataRoomDisplay.add(room);
       });
       yield UpdateUIRoomState();
     }
-    if(event is UpdateRoomEquipmentEvent){
+    if (event is UpdateRoomEquipmentEvent) {
       yield UpdateServicesState();
-      var data = await _managerProvider.updateEquipment(id:event.appBloc.equipment.id ,data:{"status":status});
-      if(data != null){
+      var data = await _managerProvider.updateEquipment(
+          id: event.appBloc.equipment.id, data: {"status": status});
+      if (data != null) {
         event.appBloc.equipment.status = status;
         yield UpdateServicesDoneState();
       }
@@ -243,13 +241,9 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
     textRoomName.text = "";
     textPrice.text = "";
     textMaxP.text = "";
-    textWater.text = "";
-    textElectron.text = "";
-    textUnitWater.text = "";
-    textUnitElectron.text = "";
-    textInternet.text = "";
-    textVs.text = "";
-    textGx.text = "";
+    textUnitService.text = "";
+    textNameService.text = "";
+    textOldNumberService.text = "";
     checkDv = [false, false, false];
     room = null;
   }

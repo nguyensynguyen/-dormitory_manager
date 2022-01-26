@@ -293,7 +293,7 @@ class ReportState extends State<Report> {
             UIHelper.showLoadingCommon(context: context);
           }
           if (state is CreateDoneState) {
-            Fluttertoast.showToast(msg: "Gửi thành công");
+            Fluttertoast.showToast(msg: "Gửi thành công",backgroundColor: AppColors.colorFacebook,);
             Navigator.pop(context);
           }
         },

@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'close_dialog.dart';
 
@@ -43,7 +44,7 @@ class ItemBill extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Image.asset(
-                        'asset/image/bill.png',
+                        'asset/image/invoice.png',
                         width: AppDimensions.d8w,
                       ),
                       SizedBox(
@@ -151,7 +152,7 @@ class ItemBill extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Image.asset(
-                          'asset/image/bill.png',
+                          'asset/image/invoice.png',
                           width: AppDimensions.d8w,
                         ),
                         SizedBox(
@@ -247,6 +248,11 @@ class ItemBill extends StatelessWidget {
       cubit: billBloc,
       listener: (context, state) {
         if (state is UpdateBillState) {
+          Fluttertoast.showToast(
+              msg: "Cập nhật thành công",
+              backgroundColor: AppColors.colorFacebook,
+              toastLength:
+              Toast.LENGTH_SHORT);
           Navigator.pop(context);
         }
         if (state is LoadingUpdateBillState) {

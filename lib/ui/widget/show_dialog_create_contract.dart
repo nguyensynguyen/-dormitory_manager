@@ -35,13 +35,17 @@ class CreateContract extends StatelessWidget {
         if (state is CreateContractDoneState) {
           Navigator.pop(context);
           Fluttertoast.showToast(
-              msg: "Tạo thành công", toastLength: Toast.LENGTH_LONG);
+              backgroundColor: AppColors.colorFacebook,
+              msg: "Tạo thành công",
+              toastLength: Toast.LENGTH_LONG);
         }
 
         if (state is CreateContractErrorsState) {
           Navigator.pop(context);
           Fluttertoast.showToast(
-              msg: contractBloc.messageErrors, toastLength: Toast.LENGTH_LONG);
+              backgroundColor: AppColors.colorFacebook,
+              msg: contractBloc.messageErrors,
+              toastLength: Toast.LENGTH_LONG);
         }
       },
       child: BlocBuilder(
@@ -81,7 +85,7 @@ class CreateContract extends StatelessWidget {
                 height: AppDimensions.d1h,
               ),
               _noneInputDate(
-                  title: "Ngày sinh *",
+                  title: "Ngày sinh",
                   onTap: () {
                     _showDateTime(context, onTap: () {
                       if (contractBloc.time != null) {
@@ -163,10 +167,16 @@ class CreateContract extends StatelessWidget {
               fontWeight: FontWeight.bold),
         ),
         Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.colorGrey_300),
+            borderRadius: BorderRadius.all(
+              Radius.circular(AppDimensions.radius1_5w),
+            ),
+          ),
           child: CupertinoTextField(
             inputFormatters: formatter1 == null ? [] : formatter1,
             controller: textEditingController,
-            placeholder: hintText,
+            placeholder: "",
             placeholderStyle:
                 TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
           ),
@@ -338,7 +348,7 @@ class CreateContract extends StatelessWidget {
 
   _buildButton({Function ontap}) {
     return Padding(
-      padding: EdgeInsets.all(AppDimensions.d1h),
+      padding: EdgeInsets.symmetric(vertical: AppDimensions.d1h),
       child: GestureDetector(
         onTap: ontap,
         behavior: HitTestBehavior.opaque,

@@ -156,27 +156,27 @@ class BillBloc extends Bloc<BillEvent, BillState> {
           .updateBill(data: {"status": event.status}, id: event.id);
       if (data) {
         bill.status = event.status;
-        tempListBill.forEach((element) {
-          if (element.id == event.id) {
-            element.status = event.status;
-          }
-        });
-        tempAllBill.forEach((element) {
-          if (element.id == event.id) {
-            element.status = event.status;
-          }
-        });
-        if (statusPaid == 1) {
-          yield* mapEventToState(AllPaidEvent());
-        } else if (statusPaid == 4) {
-          yield* mapEventToState(SearchDateEvent());
-        } else {
-          if (event.status == "paid") {
-            yield* mapEventToState(UnpaidEvent());
-          } else {
-            yield* mapEventToState(PaidEvent());
-          }
-        }
+//        tempListBill.forEach((element) {
+//          if (element.id == event.id) {
+//            element.status = event.status;
+//          }
+//        });
+//        tempAllBill.forEach((element) {
+//          if (element.id == event.id) {
+//            element.status = event.status;
+//          }
+//        });
+//        if (statusPaid == 1) {
+//          yield* mapEventToState(AllPaidEvent());
+//        } else if (statusPaid == 4) {
+//          yield* mapEventToState(SearchDateEvent());
+//        } else {
+//          if (event.status == "paid") {
+//            yield* mapEventToState(UnpaidEvent());
+//          } else {
+//            yield* mapEventToState(PaidEvent());
+//          }
+//        }
 
         yield UpdateBillState();
       }

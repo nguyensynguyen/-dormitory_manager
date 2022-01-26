@@ -38,7 +38,7 @@ AppBloc appBloc;
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.asset(
-                      'asset/image/report1.png',
+                      'asset/image/warning.png',
                       width: AppDimensions.d10w,
                     ),
                     SizedBox(
@@ -118,7 +118,7 @@ AppBloc appBloc;
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.asset(
-                      'asset/image/report1.png',
+                      'asset/image/warning.png',
                       width: AppDimensions.d10w,
                     ),
                     SizedBox(

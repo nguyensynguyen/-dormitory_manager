@@ -6,3 +6,8 @@ class SetDataLogin extends SettingEvent{
   AppBloc appBloc;
   SetDataLogin({this.appBloc});
 }
+
+class GetAllManagerEvent extends SettingEvent{
+  AppBloc appBloc;
+  GetAllManagerEvent({this.appBloc});
+}

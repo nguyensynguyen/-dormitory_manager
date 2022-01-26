@@ -12,6 +12,7 @@ import 'package:dormitory_manager/ui/widget/show_dialog_create_contract.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Contract extends StatefulWidget {
   @override
@@ -45,6 +46,15 @@ class _contract extends State<Contract> {
         }
         if (state is GetDone) {
           Navigator.pop(context);
+        }
+        if (state is ExpiredDone) {
+          Fluttertoast.showToast(
+              msg: "Gia hạn thành công",
+              backgroundColor: AppColors.colorFacebook,
+              toastLength:
+              Toast.LENGTH_SHORT);
+          Navigator.pop(context);
+
         }
       },
       child: BlocBuilder(
