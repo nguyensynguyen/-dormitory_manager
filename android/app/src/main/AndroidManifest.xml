@@ -10,6 +10,8 @@
         android:label="dormitory_manager"
         android:icon="@mipmap/ic_launcher">
         <activity
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

@@ -21,6 +21,7 @@ import 'package:dormitory_manager/ui/widget/equipment_item.dart';
 import 'package:dormitory_manager/ui/widget/item_room.dart';
 import 'package:dormitory_manager/ui/widget/item_service.dart';
 import 'package:dormitory_manager/ui/widget/show_dialog_create_contract.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'bill.dart';
 import 'login.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_mailer/flutter_mailer.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -39,10 +39,29 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int _curentIndex = 0;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('ic_launcher');
+  FirebaseMessaging messaging = FirebaseMessaging();
 
   @override
   void initState() {
     super.initState();
+    messaging.configure(
+      onMessage: (Map<String, dynamic> response) async {
+        print("onMessage: $response");
+        _showPublicNotification(
+            title: response['notification']['title'],
+            content: response['notification']['body']);
+      },
+      onLaunch: (Map<String, dynamic> response) async {
+        print("onLaunch: l");
+      },
+      onResume: (Map<String, dynamic> response) async {
+        print("onResume: b");
+      },
+    );
   }
 
   final _tab = [
@@ -53,6 +72,36 @@ class HomePageState extends State<HomePage> {
       child: Report(),
     ),
   ];
+
+  routerPage() async {
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (String payload) async {
+      if (payload != null) {
+        if (payload == "report") {
+          setState(() {
+            _curentIndex = 3;
+          });
+        }
+      }
+    });
+  }
+
+  Future<void> _showPublicNotification({String title, String content}) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails("1000", "", "",
+            importance: Importance.max,
+            priority: Priority.high,
+            ticker: 'ticker',
+            visibility: NotificationVisibility.public);
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, '$title', '$content', platformChannelSpecifics,
+        payload: 'report');
+    routerPage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +161,8 @@ class _buildHome extends State<BuildHome> {
   AllRoomBloc _allRoomBloc;
   final List<TextInputFormatter> _formatter = [NumberFormats()];
   final List<TextInputFormatter> _formatter1 = [NumberFormats(isInt: true)];
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
@@ -225,7 +276,7 @@ class _buildHome extends State<BuildHome> {
                                   ),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -458,13 +509,15 @@ class _buildHome extends State<BuildHome> {
           if (state is ChangPassDoneState) {
             Fluttertoast.showToast(
                 backgroundColor: AppColors.colorFacebook,
-                msg: "Đổi mật khẩu thành công", toastLength: Toast.LENGTH_LONG);
+                msg: "Đổi mật khẩu thành công",
+                toastLength: Toast.LENGTH_LONG);
             Navigator.pop(context);
           }
           if (state is ChangePassError) {
             Fluttertoast.showToast(
                 backgroundColor: AppColors.colorFacebook,
-                msg: "Đổi mật khẩu thất bại", toastLength: Toast.LENGTH_LONG);
+                msg: "Đổi mật khẩu thất bại",
+                toastLength: Toast.LENGTH_LONG);
             Navigator.pop(context);
           }
         },
@@ -499,7 +552,10 @@ class _buildHome extends State<BuildHome> {
                   ),
                   Text(
                     "Mật khẩu cũ",
-                    style: TextStyle(fontFamily: "San",fontSize: AppFontSizes.fs10,fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: "San",
+                        fontSize: AppFontSizes.fs10,
+                        fontWeight: FontWeight.bold),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -519,7 +575,10 @@ class _buildHome extends State<BuildHome> {
                   ),
                   Text(
                     "Mật khẩu mới",
-                    style: TextStyle(fontFamily: "San",fontSize: AppFontSizes.fs10,fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: "San",
+                        fontSize: AppFontSizes.fs10,
+                        fontWeight: FontWeight.bold),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -644,7 +703,10 @@ class _buildHome extends State<BuildHome> {
                   ),
                   Text(
                     "Họ tên",
-                    style: TextStyle(fontFamily: "San", fontSize: AppFontSizes.fs10,fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: "San",
+                        fontSize: AppFontSizes.fs10,
+                        fontWeight: FontWeight.bold),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -664,7 +726,10 @@ class _buildHome extends State<BuildHome> {
                   ),
                   Text(
                     "Email",
-                    style: TextStyle(fontFamily: "San", fontSize: AppFontSizes.fs10,fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: "San",
+                        fontSize: AppFontSizes.fs10,
+                        fontWeight: FontWeight.bold),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -684,7 +749,10 @@ class _buildHome extends State<BuildHome> {
                   ),
                   Text(
                     "Số điện thoại",
-                    style: TextStyle(fontFamily: "San", fontSize: AppFontSizes.fs10,fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: "San",
+                        fontSize: AppFontSizes.fs10,
+                        fontWeight: FontWeight.bold),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -704,7 +772,10 @@ class _buildHome extends State<BuildHome> {
                   ),
                   Text(
                     "Địa chỉ",
-                    style: TextStyle(fontFamily: "San", fontSize: AppFontSizes.fs10,fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontFamily: "San",
+                        fontSize: AppFontSizes.fs10,
+                        fontWeight: FontWeight.bold),
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -727,13 +798,15 @@ class _buildHome extends State<BuildHome> {
                       if (_authBloc.nameManager.text == "") {
                         Fluttertoast.showToast(
                             backgroundColor: AppColors.colorFacebook,
-                            msg: "Nhập tên", toastLength: Toast.LENGTH_LONG);
+                            msg: "Nhập tên",
+                            toastLength: Toast.LENGTH_LONG);
                         return;
                       }
                       if (_authBloc.emailManager.text == "") {
                         Fluttertoast.showToast(
                             backgroundColor: AppColors.colorFacebook,
-                            msg: "Nhập email", toastLength: Toast.LENGTH_LONG);
+                            msg: "Nhập email",
+                            toastLength: Toast.LENGTH_LONG);
                         return;
                       }
                       if (_authBloc.phoneManager.text == "") {
@@ -1240,8 +1313,7 @@ class _buildHome extends State<BuildHome> {
             Fluttertoast.showToast(
                 backgroundColor: AppColors.colorFacebook,
                 msg: "Thêm phòng thành công",
-                toastLength:
-                Toast.LENGTH_SHORT);
+                toastLength: Toast.LENGTH_SHORT);
           }
         },
         child: BlocBuilder(
@@ -1344,9 +1416,9 @@ class _buildHome extends State<BuildHome> {
                               ),
                             ),
                             Container(
-
                               decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.colorGrey_300),
+                                border:
+                                    Border.all(color: AppColors.colorGrey_300),
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(AppDimensions.radius1_5w),
                                 ),
@@ -1414,8 +1486,7 @@ class _buildHome extends State<BuildHome> {
             Fluttertoast.showToast(
                 backgroundColor: AppColors.colorFacebook,
                 msg: "Thêm dịch vụ thành công",
-                toastLength:
-                Toast.LENGTH_SHORT);
+                toastLength: Toast.LENGTH_SHORT);
             return;
           }
         },
@@ -1477,7 +1548,8 @@ class _buildHome extends State<BuildHome> {
                           padding: EdgeInsets.all(AppDimensions.d1h),
                           child: Row(
                             children: [
-                              Text(_allRoomBloc.roomCreateService?.roomName ?? ""),
+                              Text(_allRoomBloc.roomCreateService?.roomName ??
+                                  ""),
                               Expanded(
                                 child: Container(),
                               ),
@@ -1511,7 +1583,8 @@ class _buildHome extends State<BuildHome> {
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: AppColors.colorGrey_300),
+                                  border: Border.all(
+                                      color: AppColors.colorGrey_300),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(AppDimensions.radius1_5w),
                                   ),
@@ -1545,20 +1618,18 @@ class _buildHome extends State<BuildHome> {
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: AppColors.colorGrey_300),
+                                  border: Border.all(
+                                      color: AppColors.colorGrey_300),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(AppDimensions.radius1_5w),
                                   ),
                                 ),
                                 child: CupertinoTextField(
-
-                                  controller: allRoomBloc.textUnitService,
-                                  inputFormatters:[
-                                    WhitelistingTextInputFormatter.digitsOnly,
-                                    CurrencyInputFormatter()
-
-                                  ]
-                                ),
+                                    controller: allRoomBloc.textUnitService,
+                                    inputFormatters: [
+                                      WhitelistingTextInputFormatter.digitsOnly,
+                                      CurrencyInputFormatter()
+                                    ]),
                               ),
                             ],
                           ),
@@ -1721,9 +1792,11 @@ class _buildHome extends State<BuildHome> {
                                     ),
                                     Container(
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: AppColors.colorGrey_300),
+                                        border: Border.all(
+                                            color: AppColors.colorGrey_300),
                                         borderRadius: BorderRadius.all(
-                                          Radius.circular(AppDimensions.radius1_5w),
+                                          Radius.circular(
+                                              AppDimensions.radius1_5w),
                                         ),
                                       ),
                                       child: CupertinoTextField(
@@ -1760,14 +1833,16 @@ class _buildHome extends State<BuildHome> {
                                         ),
                                         Container(
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: AppColors.colorGrey_300),
+                                            border: Border.all(
+                                                color: AppColors.colorGrey_300),
                                             borderRadius: BorderRadius.all(
-                                              Radius.circular(AppDimensions.radius1_5w),
+                                              Radius.circular(
+                                                  AppDimensions.radius1_5w),
                                             ),
                                           ),
                                           child: CupertinoTextField(
-                                            controller:
-                                                allRoomBloc.textOldNumberService,
+                                            controller: allRoomBloc
+                                                .textOldNumberService,
                                             inputFormatters: _formatter1,
                                             placeholderStyle: TextStyle(
                                                 color: Colors.grey,
@@ -1797,7 +1872,8 @@ class _buildHome extends State<BuildHome> {
                             return;
                           } else {
                             if (_allRoomBloc.iCheckTypeService == 1) {
-                              if(_allRoomBloc.textOldNumberService.text == ""){
+                              if (_allRoomBloc.textOldNumberService.text ==
+                                  "") {
                                 Fluttertoast.showToast(
                                     backgroundColor: AppColors.colorFacebook,
                                     msg: "Nhập số cũ",
@@ -1806,13 +1882,16 @@ class _buildHome extends State<BuildHome> {
                               }
                               allRoomBloc.listService.add(
                                 Service(
-                                  serviceName: _allRoomBloc.textNameService.text,
+                                  serviceName:
+                                      _allRoomBloc.textNameService.text,
                                   numberStart: int.tryParse(
                                       allRoomBloc.textOldNumberService.text),
                                   unit: "kw/h",
                                   roomId: allRoomBloc.roomId,
-                                  unitPrice: double.tryParse(
-                                      allRoomBloc.textUnitService.text.replaceAll(".", '').trim()),
+                                  unitPrice: double.tryParse(allRoomBloc
+                                      .textUnitService.text
+                                      .replaceAll(".", '')
+                                      .trim()),
                                   totalService: 0.0,
                                   isCheck: false,
                                   startNumberTextEdit: TextEditingController(),
@@ -1820,7 +1899,8 @@ class _buildHome extends State<BuildHome> {
                                 ),
                               );
                             } else if (_allRoomBloc.iCheckTypeService == 2) {
-                              if(_allRoomBloc.textOldNumberService.text == ""){
+                              if (_allRoomBloc.textOldNumberService.text ==
+                                  "") {
                                 Fluttertoast.showToast(
                                     backgroundColor: AppColors.colorFacebook,
                                     msg: "Nhập số cũ",
@@ -1829,13 +1909,16 @@ class _buildHome extends State<BuildHome> {
                               }
                               allRoomBloc.listService.add(
                                 Service(
-                                  serviceName: _allRoomBloc.textNameService.text,
+                                  serviceName:
+                                      _allRoomBloc.textNameService.text,
                                   numberStart: int.tryParse(
                                       allRoomBloc.textOldNumberService.text),
                                   unit: "đ/m3",
                                   roomId: allRoomBloc.roomId,
-                                  unitPrice: double.tryParse(
-                                      allRoomBloc.textUnitService.text.replaceAll(".", '').trim()),
+                                  unitPrice: double.tryParse(allRoomBloc
+                                      .textUnitService.text
+                                      .replaceAll(".", '')
+                                      .trim()),
                                   totalService: 0.0,
                                   isCheck: false,
                                   startNumberTextEdit: TextEditingController(),
@@ -1845,12 +1928,15 @@ class _buildHome extends State<BuildHome> {
                             } else {
                               allRoomBloc.listService.add(
                                 Service(
-                                  serviceName: _allRoomBloc.textNameService.text,
+                                  serviceName:
+                                      _allRoomBloc.textNameService.text,
                                   numberStart: 0,
                                   unit: "",
                                   roomId: allRoomBloc.roomId,
-                                  unitPrice: double.tryParse(
-                                      allRoomBloc.textUnitService.text.replaceAll(".", '').trim()),
+                                  unitPrice: double.tryParse(allRoomBloc
+                                      .textUnitService.text
+                                      .replaceAll(".", '')
+                                      .trim()),
                                   totalService: 0.0,
                                   isCheck: false,
                                   startNumberTextEdit: TextEditingController(),
@@ -1981,7 +2067,8 @@ class _buildHome extends State<BuildHome> {
             Navigator.pop(context);
             Fluttertoast.showToast(
                 backgroundColor: AppColors.colorFacebook,
-                msg: "Thêm thiết bị thành công", toastLength: Toast.LENGTH_SHORT);
+                msg: "Thêm thiết bị thành công",
+                toastLength: Toast.LENGTH_SHORT);
             return;
           }
         },
@@ -2035,7 +2122,6 @@ class _buildHome extends State<BuildHome> {
                       _showDialogListRoom(_appBloc);
                     },
                     child: Container(
-
                       width: AppDimensions.d100w,
                       decoration: BoxDecoration(
                         border: Border.all(color: AppColors.colorGrey_300),
@@ -2104,7 +2190,6 @@ class _buildHome extends State<BuildHome> {
                       _showStatusEqipment();
                     },
                     child: Container(
-
                       width: AppDimensions.d100w,
                       decoration: BoxDecoration(
                         border: Border.all(color: AppColors.colorGrey_300),
@@ -2228,28 +2313,28 @@ class _buildHome extends State<BuildHome> {
 
   _showDialogListRoomCreateService(AppBloc appBloc) {
     List<Widget> widget = []..insert(
-      0,
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                "Chọn phòng",
-                style: TextStyle(
-                    fontSize: AppFontSizes.fs14, fontWeight: FontWeight.bold),
+        0,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppDimensions.d2w),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Chọn phòng",
+                  style: TextStyle(
+                      fontSize: AppFontSizes.fs14, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            CloseDialog(
-              color: AppColors.colorBlack_54,
-              onClose: () {
-                Navigator.pop(context);
-              },
-            )
-          ],
+              CloseDialog(
+                color: AppColors.colorBlack_54,
+                onClose: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
     for (int i = 0; i < appBloc.listAllDataRoom.length; i++) {
       widget.add(Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -2266,8 +2351,6 @@ class _buildHome extends State<BuildHome> {
                 _allRoomBloc.roomCreateService = appBloc.listAllDataRoom[i];
                 Navigator.pop(context);
                 _allRoomBloc.add(UpdateUIRoomEvent());
-
-
               },
               child: Text(
                 "${appBloc.listAllDataRoom[i].roomName}",
@@ -2285,13 +2368,12 @@ class _buildHome extends State<BuildHome> {
     return UIHelper.showDialogLogin(
       context: context,
       widget: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.map<Widget>((e) {
-              return e;
-            }).toList(),
-          ),
-
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: widget.map<Widget>((e) {
+            return e;
+          }).toList(),
+        ),
       ),
     );
   }
@@ -2456,14 +2538,12 @@ class _buildHome extends State<BuildHome> {
               }),
         ));
   }
-
-
 }
+
 class CurrencyInputFormatter extends TextInputFormatter {
-
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-
-    if(newValue.selection.baseOffset == 0){
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.selection.baseOffset == 0) {
       print(true);
       return newValue;
     }
@@ -2472,7 +2552,6 @@ class CurrencyInputFormatter extends TextInputFormatter {
 
     final formatter = NumberFormat.currency(locale: 'vi');
 
-
     String newText = formatter.format(value).replaceAll('VND', '').trim();
 
     return newValue.copyWith(
@@ -2480,4 +2559,3 @@ class CurrencyInputFormatter extends TextInputFormatter {
         selection: new TextSelection.collapsed(offset: newText.length));
   }
 }
-

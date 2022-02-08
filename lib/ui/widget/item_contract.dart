@@ -358,7 +358,7 @@ class ItemContract extends StatelessWidget {
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "${contractBloc.listContract[i]?.room['room_name']}",
+                            "${contractBloc.listContract[i]?.room['room_name']?? ""}",
                             style: TextStyle(
                                 color: AppColors.colorBlack_38,
                                 fontSize: AppFontSizes.fs10),

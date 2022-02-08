@@ -28,6 +28,7 @@ class LoginProvider {
       return null;
     }
   }
+
   Future<dynamic> loginManager({dynamic datas}) async {
     try {
       var res = await _dio.post(
@@ -88,8 +89,7 @@ class LoginProvider {
     }
   }
 
-
-  Future<dynamic> changeProfileManager({dynamic datas,int id}) async {
+  Future<dynamic> changeProfileManager({dynamic datas, int id}) async {
     try {
       var res = await _dio.post(
         "${ApiUrl.baseUrl + ApiUrl.changProfileManager}/$id",

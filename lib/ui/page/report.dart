@@ -150,10 +150,11 @@ class ReportState extends State<Report> {
                                       ),
                                     ),
                                   ),
-
-                            _appBloc.isUser?SizedBox(
-                              width: AppDimensions.d2_5h,
-                            ):Container(),
+                            _appBloc.isUser
+                                ? SizedBox(
+                                    width: AppDimensions.d2_5h,
+                                  )
+                                : Container(),
                             _appBloc.isUser
                                 ? GestureDetector(
                                     onTap: () => _showDialogReport(),
@@ -262,11 +263,10 @@ class ReportState extends State<Report> {
                   onRefresh: _onRefresh,
                   child: _reportBloc.listMessage.isNotEmpty
                       ? SingleChildScrollView(
-                              child: ItemReport(
-                            reportBloc: _reportBloc,
-                            appBloc: _appBloc,
-                          )
-                        )
+                          child: ItemReport(
+                          reportBloc: _reportBloc,
+                          appBloc: _appBloc,
+                        ))
                       : Container(),
                 ),
               ),
@@ -280,8 +280,9 @@ class ReportState extends State<Report> {
   void _onRefresh() async {
     await Future.delayed(Duration(milliseconds: 1000));
     _reportBloc.add(GetAllMessage(appBloc: _appBloc));
-    if(_appBloc.isUser){
-      _appBloc.devicesToken = await LoginProvider().getToken(id: _appBloc.user.managerId)??"";
+    if (_appBloc.isUser) {
+      _appBloc.devicesToken =
+          await LoginProvider().getToken(id: _appBloc.user.managerId) ?? "";
     }
 
     _refreshController.refreshCompleted();
@@ -297,7 +298,10 @@ class ReportState extends State<Report> {
             UIHelper.showLoadingCommon(context: context);
           }
           if (state is CreateDoneState) {
-            Fluttertoast.showToast(msg: "Gửi thành công",backgroundColor: AppColors.colorFacebook,);
+            Fluttertoast.showToast(
+              msg: "Gửi thành công",
+              backgroundColor: AppColors.colorFacebook,
+            );
             Navigator.pop(context);
           }
         },

@@ -74,7 +74,8 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
       yield LoadingCreateRoomState();
       Map data = {
         "room_name": textRoomName.text,
-        "room_amount": double.tryParse(textPrice.text.replaceAll(".", '').trim()),
+        "room_amount":
+            double.tryParse(textPrice.text.replaceAll(".", '').trim()),
         "max_people": int.tryParse(textMaxP.text),
         "total_current_people": 0,
         "manager_id": event.appBloc.manager.id,
@@ -150,7 +151,6 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
       var res = await _managerProvider.createService(data: data);
       if (res != null) {
         roomCreateService.service.add(listService[0]);
-
 
         reset();
         yield CreateServiceDone();

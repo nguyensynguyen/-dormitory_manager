@@ -44,10 +44,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (res != null) {
           event.appBloc.profile = User.fromJson(res['data']);
           event.appBloc.user = User.fromJson(res['data']);
-          event.appBloc.displayManagerForUsre = Manager.fromJson(res['data']['Manager']);
-          event.appBloc.devicesToken = event.appBloc.displayManagerForUsre.deviceToken;
+          event.appBloc.displayManagerForUsre =
+              Manager.fromJson(res['data']['Manager']);
+          event.appBloc.devicesToken =
+              event.appBloc.displayManagerForUsre.deviceToken;
 
-              SharedPreferences prefs = await SharedPreferences.getInstance();
+          SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString("user", jsonEncode(res['data']));
 
           yield LoginDone();
@@ -66,7 +68,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           event.appBloc.manager = Manager.fromJson(res['data']);
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString("manager", jsonEncode(res['data']));
-          await _loginProvider.changeProfileManager(id: event.appBloc.manager.id,datas: {"device_token": event.appBloc.devicesToken});
+          await _loginProvider.changeProfileManager(
+              id: event.appBloc.manager.id,
+              datas: {"device_token": event.appBloc.devicesToken});
           // yield* mapEventToState(GetDataRoomEvent(appBloc: event.appBloc));
           yield LoginDone();
         } else {
@@ -81,7 +85,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (event.appBloc.isUser) {
         await prefs.remove('user');
       } else {
-        await _loginProvider.changeProfileManager(id: event.appBloc.manager.id,datas: {"device_token":""});
+        await _loginProvider.changeProfileManager(
+            id: event.appBloc.manager.id, datas: {"device_token": ""});
 //       await messaging.deleteInstanceID();
         await prefs.remove('manager');
       }
@@ -92,111 +97,104 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       yield LogOutDone();
     }
 
-    if(event is CreateManager){
+    if (event is CreateManager) {
       yield LoadingCreate();
 
-      if(nameManager.text == ""){
+      if (nameManager.text == "") {
         errorsMessage = "Hãy nhập họ tên";
         yield CreateErrors();
         return;
       }
-      if(emailManager.text == ""){
+      if (emailManager.text == "") {
         errorsMessage = "Hãy nhập email";
         yield CreateErrors();
         return;
       }
-      if(phoneManager.text == ""){
+      if (phoneManager.text == "") {
         errorsMessage = "Hãy nhập số điện thoại";
         yield CreateErrors();
         return;
       }
-      if(addressManager.text == ""){
+      if (addressManager.text == "") {
         errorsMessage = "Hãy nhập địa chỉ ";
         yield CreateErrors();
         return;
       }
-      if(passwordManager.text == ""){
+      if (passwordManager.text == "") {
         errorsMessage = "Hãy nhập mật khẩu ";
         yield CreateErrors();
         return;
       }
-      for(int i =0 ;i< event.appBloc.listManager.length ;i ++){
-        if(emailManager.text == event.appBloc.listManager[i].email){
+      for (int i = 0; i < event.appBloc.listManager.length; i++) {
+        if (emailManager.text == event.appBloc.listManager[i].email) {
           errorsMessage = "Email đã được đăng ký trước đó";
           yield CreateErrors();
           return;
         }
       }
-      Map data ={
-        "manager_name":nameManager.text,
-        "email":emailManager.text,
-        "phone":phoneManager.text ,
-        "address":addressManager.text,
-        "password":passwordManager.text,
+      Map data = {
+        "manager_name": nameManager.text,
+        "email": emailManager.text,
+        "phone": phoneManager.text,
+        "address": addressManager.text,
+        "password": passwordManager.text,
       };
-     var res = await _managerProvider.createManager(data: data);
-     if(res != null){
-       nameManager.text ="";
-       emailManager.text ="";
-       phoneManager.text ="";
-       addressManager.text ="";
-       passwordManager.text ="";
+      var res = await _managerProvider.createManager(data: data);
+      if (res != null) {
+        nameManager.text = "";
+        emailManager.text = "";
+        phoneManager.text = "";
+        addressManager.text = "";
+        passwordManager.text = "";
 
-       yield CreateDone();
-     }else{
-       errorsMessage = "Tạo tài khoản thất bại";
-       yield CreateErrors();
-     }
+        yield CreateDone();
+      } else {
+        errorsMessage = "Tạo tài khoản thất bại";
+        yield CreateErrors();
+      }
     }
-    if(event is ChangePassWordManager){
+    if (event is ChangePassWordManager) {
       Map data = {
         "email": event.appBloc.manager.email,
         "old_password": oldPass.text,
         "password": newPass.text,
       };
       yield LoadingChangePassState();
-      var res =await _loginProvider.changePassManager(datas: data);
-      if(res != null){
+      var res = await _loginProvider.changePassManager(datas: data);
+      if (res != null) {
         oldPass.text = "";
         newPass.text = "";
         yield ChangPassDoneState();
-      }
-      else{
+      } else {
         yield ChangePassError();
-
       }
-
     }
 
-    if(event is ChangeProfileManager){
+    if (event is ChangeProfileManager) {
       Map data = {
-        "id":event.appBloc.manager.id,
+        "id": event.appBloc.manager.id,
         "email": emailManager.text,
-        "manager_name":nameManager.text,
-        "phone":int.tryParse(phoneManager.text),
+        "manager_name": nameManager.text,
+        "phone": int.tryParse(phoneManager.text),
         "address": addressManager.text,
       };
       yield LoadingChangePassState();
-      var res =await _loginProvider.changeProfileManager(datas: data,id: event.appBloc.manager.id);
-      if(res != null){
+      var res = await _loginProvider.changeProfileManager(
+          datas: data, id: event.appBloc.manager.id);
+      if (res != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString("manager",jsonEncode(data));
+        await prefs.setString("manager", jsonEncode(data));
         var updateM = prefs.get("manager");
 
-        event.appBloc.manager =
-            Manager.fromJson(jsonDecode(updateM));
-        nameManager.text ="";
-        emailManager.text ="";
-        phoneManager.text ="";
-        addressManager.text ="";
+        event.appBloc.manager = Manager.fromJson(jsonDecode(updateM));
+        nameManager.text = "";
+        emailManager.text = "";
+        phoneManager.text = "";
+        addressManager.text = "";
         yield ChangPassDoneState();
-      }
-      else{
+      } else {
         yield ChangePassError();
-
       }
-
     }
-
   }
 }
