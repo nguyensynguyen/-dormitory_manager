@@ -7,6 +7,7 @@ import 'package:dormitory_manager/bloc/auth/event.dart';
 import 'package:dormitory_manager/bloc/auth/state.dart';
 import 'package:dormitory_manager/bloc/contract/event.dart';
 import 'package:dormitory_manager/helper/input_format.dart';
+import 'package:dormitory_manager/helper/string_helper.dart';
 import 'package:dormitory_manager/helper/ui_helper.dart';
 import 'package:dormitory_manager/model/service.dart';
 import 'package:dormitory_manager/resources/colors.dart';
@@ -20,6 +21,7 @@ import 'package:dormitory_manager/ui/widget/equipment_item.dart';
 import 'package:dormitory_manager/ui/widget/item_room.dart';
 import 'package:dormitory_manager/ui/widget/item_service.dart';
 import 'package:dormitory_manager/ui/widget/show_dialog_create_contract.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -108,8 +110,8 @@ class _buildHome extends State<BuildHome> {
   AuthBloc _authBloc;
   AppBloc _appBloc;
   AllRoomBloc _allRoomBloc;
-  final List<TextInputFormatter> _formatter = [NumberFormat()];
-  final List<TextInputFormatter> _formatter1 = [NumberFormat(isInt: true)];
+  final List<TextInputFormatter> _formatter = [NumberFormats()];
+  final List<TextInputFormatter> _formatter1 = [NumberFormats(isInt: true)];
 
   @override
   void initState() {
@@ -1315,7 +1317,10 @@ class _buildHome extends State<BuildHome> {
                           ),
                         ),
                         child: CupertinoTextField(
-                          inputFormatters: _formatter,
+                          inputFormatters: [
+                            WhitelistingTextInputFormatter.digitsOnly,
+                            CurrencyInputFormatter()
+                          ],
                           controller: allRoomBloc.textPrice,
                           placeholderStyle: TextStyle(color: Colors.black),
                         ),
@@ -1546,8 +1551,13 @@ class _buildHome extends State<BuildHome> {
                                   ),
                                 ),
                                 child: CupertinoTextField(
+
                                   controller: allRoomBloc.textUnitService,
-                                  inputFormatters: _formatter,
+                                  inputFormatters:[
+                                    WhitelistingTextInputFormatter.digitsOnly,
+                                    CurrencyInputFormatter()
+
+                                  ]
                                 ),
                               ),
                             ],
@@ -1802,7 +1812,7 @@ class _buildHome extends State<BuildHome> {
                                   unit: "kw/h",
                                   roomId: allRoomBloc.roomId,
                                   unitPrice: double.tryParse(
-                                      allRoomBloc.textUnitService.text),
+                                      allRoomBloc.textUnitService.text.replaceAll(".", '').trim()),
                                   totalService: 0.0,
                                   isCheck: false,
                                   startNumberTextEdit: TextEditingController(),
@@ -1825,7 +1835,7 @@ class _buildHome extends State<BuildHome> {
                                   unit: "đ/m3",
                                   roomId: allRoomBloc.roomId,
                                   unitPrice: double.tryParse(
-                                      allRoomBloc.textUnitService.text),
+                                      allRoomBloc.textUnitService.text.replaceAll(".", '').trim()),
                                   totalService: 0.0,
                                   isCheck: false,
                                   startNumberTextEdit: TextEditingController(),
@@ -1840,7 +1850,7 @@ class _buildHome extends State<BuildHome> {
                                   unit: "",
                                   roomId: allRoomBloc.roomId,
                                   unitPrice: double.tryParse(
-                                      allRoomBloc.textUnitService.text),
+                                      allRoomBloc.textUnitService.text.replaceAll(".", '').trim()),
                                   totalService: 0.0,
                                   isCheck: false,
                                   startNumberTextEdit: TextEditingController(),
@@ -2446,4 +2456,28 @@ class _buildHome extends State<BuildHome> {
               }),
         ));
   }
+
+
 }
+class CurrencyInputFormatter extends TextInputFormatter {
+
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+
+    if(newValue.selection.baseOffset == 0){
+      print(true);
+      return newValue;
+    }
+
+    double value = double.parse(newValue.text);
+
+    final formatter = NumberFormat.currency(locale: 'vi');
+
+
+    String newText = formatter.format(value).replaceAll('VND', '').trim();
+
+    return newValue.copyWith(
+        text: newText,
+        selection: new TextSelection.collapsed(offset: newText.length));
+  }
+}
+

@@ -99,7 +99,7 @@ class ReportState extends State<Report> {
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
-                              width: AppDimensions.d1h,
+                              width: AppDimensions.d2_5h,
                             ),
                             _appBloc.isUser
                                 ? Expanded(child: Container())
@@ -150,6 +150,10 @@ class ReportState extends State<Report> {
                                       ),
                                     ),
                                   ),
+
+                            _appBloc.isUser?SizedBox(
+                              width: AppDimensions.d2_5h,
+                            ):Container(),
                             _appBloc.isUser
                                 ? GestureDetector(
                                     onTap: () => _showDialogReport(),

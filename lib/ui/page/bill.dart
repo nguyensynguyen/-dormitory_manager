@@ -28,8 +28,8 @@ class Bill extends StatefulWidget {
 class BillState extends State<Bill> {
   BillBloc _billBloc;
   AppBloc _appBloc;
-  final List<TextInputFormatter> _formatter = [NumberFormat()];
-  final List<TextInputFormatter> _formatter1 = [NumberFormat(isInt: true)];
+  final List<TextInputFormatter> _formatter = [NumberFormats()];
+  final List<TextInputFormatter> _formatter1 = [NumberFormats(isInt: true)];
 
   @override
   void initState() {
@@ -91,7 +91,7 @@ class BillState extends State<Bill> {
                                 fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
-                            width: AppDimensions.d1h,
+                            width: AppDimensions.d2_5h,
                           ),
                           _appBloc.isUser
                               ? Expanded(child: Container())
@@ -119,7 +119,7 @@ class BillState extends State<Bill> {
                                   ),
                                 ),
                           SizedBox(
-                            width: AppDimensions.d1h,
+                            width: AppDimensions.d0_5h,
                           ),
                           _appBloc.isUser
                               ? Container()
@@ -142,7 +142,7 @@ class BillState extends State<Bill> {
                                   ),
                                 ),
                           SizedBox(
-                            width: AppDimensions.d1h,
+                            width: AppDimensions.d2_5h,
                           ),
                           GestureDetector(
                               onTap: () {

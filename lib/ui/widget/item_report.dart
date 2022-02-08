@@ -350,16 +350,6 @@ AppBloc appBloc;
             children: [
               Expanded(
                 child: _buildButton(
-                    text: "Tiếp nhận",
-                    onTap: () {
-                      reportBloc.message = message;
-                      reportBloc.add(UpdateMessage(id: message.id,status: "fixing"));
-                      Navigator.pop(context);
-                    },
-                    color: AppColors.colorOrange),
-              ),
-              Expanded(
-                child: _buildButton(
                     text: "Hoàn thành",
                     onTap: () {
                       reportBloc.message = message;

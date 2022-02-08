@@ -458,7 +458,7 @@ class ItemContract extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      "Cập nhật hóa đơn",
+                      "Cập nhật hợp đồng",
                       style: TextStyle(
                           fontSize: AppFontSizes.fs14,
                           fontWeight: FontWeight.bold),

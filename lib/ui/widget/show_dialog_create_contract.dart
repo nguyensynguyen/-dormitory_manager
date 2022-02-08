@@ -19,8 +19,8 @@ import 'close_dialog.dart';
 class CreateContract extends StatelessWidget {
   ContractBloc contractBloc;
   AppBloc appBloc;
-  final List<TextInputFormatter> _formatter = [NumberFormat()];
-  final List<TextInputFormatter> _formatter1 = [NumberFormat(isInt: true)];
+  final List<TextInputFormatter> _formatter = [NumberFormats()];
+  final List<TextInputFormatter> _formatter1 = [NumberFormats(isInt: true)];
 
   CreateContract({this.contractBloc, this.appBloc});
 

@@ -70,11 +70,11 @@ class AllRoomBloc extends Bloc<RoomEvent, RoomState> {
     }
 
     if (event is CreateRoomEvent) {
-      DateTime date_create_bill = DateTime.now().subtract(Duration(days: 30));
+      DateTime date_create_bill = DateTime.now().subtract(Duration(days: 31));
       yield LoadingCreateRoomState();
       Map data = {
         "room_name": textRoomName.text,
-        "room_amount": double.tryParse(textPrice.text),
+        "room_amount": double.tryParse(textPrice.text.replaceAll(".", '').trim()),
         "max_people": int.tryParse(textMaxP.text),
         "total_current_people": 0,
         "manager_id": event.appBloc.manager.id,

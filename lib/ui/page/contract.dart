@@ -140,7 +140,7 @@ class _contract extends State<Contract> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(
-                                    width: AppDimensions.d0_5h,
+                                    width: AppDimensions.d2_5h,
                                   ),
                                   _appBloc.isUser
                                       ? Expanded(child: Container())
@@ -198,7 +198,7 @@ class _contract extends State<Contract> {
                                           ),
                                         ),
                                   SizedBox(
-                                    width: AppDimensions.d0_5h,
+                                    width: AppDimensions.d2_5h,
                                   ),
                                   GestureDetector(
                                     onTap: () {
@@ -213,18 +213,7 @@ class _contract extends State<Contract> {
                                               AppDimensions.radius1_0w),
                                         ),
                                       ),
-                                      child: Padding(
-                                        padding:
-                                            EdgeInsets.all(AppDimensions.d0_5h),
-                                        child: Text(
-                                          "Thêm hợp đồng",
-                                          style: TextStyle(
-                                              color: AppColors.colorWhite,
-                                              fontSize: AppFontSizes.fs12,
-                                              fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
+                                      child: Icon(Icons.add,color: AppColors.colorWhite,),
                                     ),
                                   )
                                 ],

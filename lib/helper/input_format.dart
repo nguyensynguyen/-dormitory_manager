@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 
-class NumberFormat extends TextInputFormatter {
+class NumberFormats extends TextInputFormatter {
   final bool isInt;
 
-  NumberFormat({this.isInt = false});
+  NumberFormats({this.isInt = false});
 
   @override
   TextEditingValue formatEditUpdate(
