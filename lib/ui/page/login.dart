@@ -132,6 +132,7 @@ class LoginState extends State<Login> {
                                 width: AppDimensions.d70w,
                                 child: CupertinoTextField(
                                   controller: _authBloc.password,
+                                  obscureText: true,
                                   placeholder: "Mật khẩu",
                                 ),
                               ),
@@ -410,6 +411,7 @@ class LoginState extends State<Login> {
                             _intput(
                                 title: "Mật khẩu",
                                 hintText: "Nhập mật khẩu",
+                                isPassword: true,
                                 textEditingController:
                                     _authBloc.passwordManager),
                             _buildButton(ontap: () {
@@ -462,6 +464,7 @@ class LoginState extends State<Login> {
       {String title,
       String hintText,
       TextEditingController textEditingController,
+        bool isPassword,
       List<TextInputFormatter> formatter1}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -483,6 +486,7 @@ class LoginState extends State<Login> {
           child: CupertinoTextField(
             inputFormatters: formatter1 == null ? [] : formatter1,
             controller: textEditingController,
+            obscureText: isPassword ?? false,
             placeholder: "",
             placeholderStyle:
                 TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),

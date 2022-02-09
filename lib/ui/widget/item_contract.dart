@@ -358,7 +358,8 @@ class ItemContract extends StatelessWidget {
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "${contractBloc.listContract[i]?.room['room_name']?? ""}",
+                            contractBloc.listContract[i].room !=null?
+                            "${contractBloc.listContract[i]?.room['room_name']}":"",
                             style: TextStyle(
                                 color: AppColors.colorBlack_38,
                                 fontSize: AppFontSizes.fs10),
@@ -859,6 +860,7 @@ class ItemContract extends StatelessWidget {
                       ),
                     ),
                     child: CupertinoTextField(
+                      obscureText: true,
                       controller: contractBloc.oldPass,
                       placeholderStyle:
                       TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),
@@ -877,6 +879,7 @@ class ItemContract extends StatelessWidget {
                       ),
                     ),
                     child: CupertinoTextField(
+                      obscureText: true,
                       controller: contractBloc.newPass,
                       placeholderStyle:
                       TextStyle(color: Colors.grey, fontSize: AppFontSizes.fs12),

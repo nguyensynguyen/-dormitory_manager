@@ -565,6 +565,7 @@ class _buildHome extends State<BuildHome> {
                       ),
                     ),
                     child: CupertinoTextField(
+                      obscureText: true,
                       controller: _authBloc.oldPass,
                       placeholderStyle: TextStyle(
                           color: Colors.grey, fontSize: AppFontSizes.fs10),
@@ -588,6 +589,7 @@ class _buildHome extends State<BuildHome> {
                       ),
                     ),
                     child: CupertinoTextField(
+                      obscureText: true,
                       controller: _authBloc.newPass,
                       placeholderStyle: TextStyle(
                           color: Colors.grey, fontSize: AppFontSizes.fs10),
